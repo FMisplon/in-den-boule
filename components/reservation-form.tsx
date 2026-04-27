@@ -5,6 +5,7 @@ import { submitReservation } from "@/app/actions/inquiries";
 import { FormFeedback } from "@/components/form-feedback";
 import { NewsletterOptIn } from "@/components/newsletter-opt-in";
 import { SubmitButton } from "@/components/submit-button";
+import { useTrackFormSuccess } from "@/components/use-track-form-success";
 import { idleFormState } from "@/lib/forms";
 import {
   getReservationDefaultDate,
@@ -23,6 +24,24 @@ export function ReservationForm() {
     [reservationDate]
   );
   const [reservationTime, setReservationTime] = useState(getReservationDefaultTime(reservationDate));
+
+  useTrackFormSuccess(state, () => [
+    {
+      event: "generate_lead",
+      payload: {
+        lead_type: "reservation_request",
+        reservation_date: reservationDate,
+        reservation_time: reservationTime
+      }
+    },
+    {
+      event: "reservation_request_submitted",
+      payload: {
+        reservation_date: reservationDate,
+        reservation_time: reservationTime
+      }
+    }
+  ]);
 
   useEffect(() => {
     if (reservationTime && availableHours.includes(reservationTime)) {

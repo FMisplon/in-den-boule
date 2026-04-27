@@ -50,6 +50,16 @@ export const menuItemType = defineType({
       group: "content"
     }),
     defineField({
+      name: "image",
+      title: "Foto",
+      type: "image",
+      options: {
+        hotspot: true
+      },
+      description: "Optioneel. Wordt stijlvol getoond op de menukaart wanneer beschikbaar.",
+      group: "display"
+    }),
+    defineField({
       name: "displayLabel",
       title: "Klein label boven item",
       type: "string",

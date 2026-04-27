@@ -7,7 +7,10 @@ export const siteSettingsType = defineType({
   groups: [
     { name: "branding", title: "Branding", default: true },
     { name: "practical", title: "Praktisch" },
-    { name: "contact", title: "Contact" }
+    { name: "contact", title: "Contact" },
+    { name: "social", title: "Socials" },
+    { name: "analytics", title: "Analytics" },
+    { name: "pageHero", title: "Pagina hero's" }
   ],
   fields: [
     defineField({
@@ -51,6 +54,141 @@ export const siteSettingsType = defineType({
       title: "Telefoonnummer",
       type: "string",
       group: "contact"
+    }),
+    defineField({
+      name: "socialProfiles",
+      title: "Sociale profielen",
+      type: "array",
+      group: "social",
+      description: "Voeg alleen de profielen toe die je effectief wilt tonen in de footer.",
+      of: [
+        defineField({
+          name: "profile",
+          title: "Profiel",
+          type: "object",
+          fields: [
+            defineField({
+              name: "platform",
+              title: "Platform",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+              options: {
+                list: [
+                  { title: "Instagram", value: "instagram" },
+                  { title: "Facebook", value: "facebook" },
+                  { title: "TikTok", value: "tiktok" },
+                  { title: "LinkedIn", value: "linkedin" },
+                  { title: "YouTube", value: "youtube" }
+                ]
+              }
+            }),
+            defineField({
+              name: "url",
+              title: "Profiel-URL",
+              type: "url",
+              validation: (Rule) => Rule.required().uri({ scheme: ["http", "https"] })
+            }),
+            defineField({
+              name: "label",
+              title: "Aangepast label",
+              type: "string",
+              description: "Optioneel. Laat leeg om automatisch de platformnaam te gebruiken."
+            })
+          ],
+          preview: {
+            select: {
+              title: "label",
+              platform: "platform",
+              subtitle: "url"
+            },
+            prepare({ title, platform, subtitle }) {
+              return {
+                title: title || platform || "Sociaal profiel",
+                subtitle
+              };
+            }
+          }
+        })
+      ]
+    }),
+    defineField({
+      name: "gtmContainerId",
+      title: "Google Tag Manager container ID",
+      type: "string",
+      group: "analytics",
+      description:
+        "Voorbeeld: GTM-ABC1234. De cookiebanner en tracking worden alleen actief als hier een geldige container-ID is ingevuld.",
+      validation: (Rule) =>
+        Rule.regex(/^GTM-[A-Z0-9]+$/, {
+          name: "GTM container ID"
+        }).warning("Gebruik het formaat GTM-XXXXXXX.")
+    }),
+    defineField({
+      name: "pageHeroImages",
+      title: "Hero-afbeeldingen per pagina",
+      type: "array",
+      group: "pageHero",
+      description:
+        "Optioneel. Aanbevolen formaat: 2400 x 1200 px of groter (landscape, ongeveer 2:1). Hou het hoofdonderwerp centraal zodat de uitsnede ook op mobiel mooi blijft.",
+      of: [
+        defineField({
+          name: "pageHero",
+          title: "Pagina hero",
+          type: "object",
+          fields: [
+            defineField({
+              name: "pageKey",
+              title: "Pagina",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+              options: {
+                list: [
+                  { title: "Menu", value: "menu" },
+                  { title: "Events overzicht", value: "events" },
+                  { title: "Reservatie", value: "reservatie" },
+                  { title: "Shop", value: "shop" },
+                  { title: "Verhuur", value: "verhuur" },
+                  { title: "Contact", value: "contact" },
+                  { title: "Privacy", value: "privacy" },
+                  { title: "Cookiebeleid", value: "cookiebeleid" },
+                  { title: "Algemene voorwaarden", value: "algemene-voorwaarden" },
+                  { title: "Shop bedankt", value: "shop-bedankt" },
+                  { title: "Events bedankt", value: "events-bedankt" }
+                ]
+              }
+            }),
+            defineField({
+              name: "image",
+              title: "Afbeelding",
+              type: "image",
+              options: {
+                hotspot: true
+              },
+              validation: (Rule) => Rule.required()
+            }),
+            defineField({
+              name: "alt",
+              title: "Alt-tekst",
+              type: "string",
+              description: "Korte beschrijving van wat op de foto te zien is."
+            })
+          ],
+          preview: {
+            select: {
+              title: "pageKey",
+              subtitle: "alt",
+              media: "image"
+            },
+            prepare({ title, subtitle, media }) {
+              return {
+                title: title || "Pagina hero",
+                subtitle,
+                media
+              };
+            }
+          }
+        })
+      ]
     })
   ],
   preview: {

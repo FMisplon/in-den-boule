@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ConversionTracker } from "@/components/conversion-tracker";
+import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
+import { getPageHeroImage } from "@/lib/sanity/loaders";
 import { getMolliePayment } from "@/lib/mollie";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+export const revalidate = 60;
 
 export default async function EventThankYouPage({
   searchParams
@@ -49,18 +54,55 @@ export default async function EventThankYouPage({
     style: "currency",
     currency: "EUR"
   }).format(eventOrder.total_amount_cents / 100);
+  const heroImage = await getPageHeroImage("events-bedankt");
 
   return (
     <SiteShell ctaHref={`/events/${eventOrder.event_slug}`} ctaLabel="Terug naar event">
-      <section className="page-hero">
-        <p className="eyebrow">Event tickets</p>
-        <h1>{isPaid ? "Bedankt voor uw bestelling." : "Uw betaling is in verwerking."}</h1>
-        <p className="page-intro">
-          {isPaid
+      {isPaid ? (
+        <>
+          <ConversionTracker
+            event="purchase"
+            payload={{
+              transaction_id: eventOrder.id,
+              currency: "EUR",
+              value: eventOrder.total_amount_cents / 100,
+              item_category: "event_ticket",
+              items: [
+                {
+                  item_id: `${eventOrder.event_slug}:${eventOrder.ticket_type_title}`,
+                  item_name: eventOrder.event_title,
+                  item_category: "event_ticket",
+                  item_variant: eventOrder.ticket_type_title,
+                  price: eventOrder.total_amount_cents / eventOrder.quantity / 100,
+                  quantity: eventOrder.quantity
+                }
+              ]
+            }}
+          />
+          <ConversionTracker
+            event="event_ticket_purchase"
+            payload={{
+              transaction_id: eventOrder.id,
+              event_slug: eventOrder.event_slug,
+              event_title: eventOrder.event_title,
+              quantity: eventOrder.quantity,
+              value: eventOrder.total_amount_cents / 100,
+              currency: "EUR"
+            }}
+          />
+        </>
+      ) : null}
+      <PageHero
+        eyebrow="Event tickets"
+        title={isPaid ? "Bedankt voor uw bestelling." : "Uw betaling is in verwerking."}
+        intro={
+          isPaid
             ? `Uw betaling van ${totalLabel} voor ${eventOrder.quantity} ${eventOrder.ticket_type_title} ticket(s) voor ${eventOrder.event_title} werd goed ontvangen.`
-            : "We hebben uw ticketbestelling geregistreerd en controleren nu de betaalstatus."}
-        </p>
-      </section>
+            : "We hebben uw ticketbestelling geregistreerd en controleren nu de betaalstatus."
+        }
+        imageUrl={heroImage?.imageUrl}
+        imageAlt={heroImage?.alt}
+      />
 
       <section className="contact-band contact-band-page">
         <div>

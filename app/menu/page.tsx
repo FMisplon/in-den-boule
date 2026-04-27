@@ -1,19 +1,24 @@
 import { MenuBrowser } from "@/components/menu-browser";
+import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
-import { getMenuItems } from "@/lib/sanity/loaders";
+import { getMenuItems, getPageHeroImage } from "@/lib/sanity/loaders";
+
+export const revalidate = 60;
 
 export default async function MenuPage() {
   const menuItems = await getMenuItems();
+  const heroImage = await getPageHeroImage("menu");
 
   return (
     <SiteShell ctaHref="/reservatie" ctaLabel="Reserveer je tafel">
-      <section className="menu-banner" aria-hidden="true" />
-
+      <PageHero
+        eyebrow="Kaart"
+        title="De legendarische Boule-kaart."
+        intro="Van klassiekers tot veggie favorieten: de menukaart blijft overzichtelijk, warm en direct leesbaar."
+        imageUrl={heroImage?.imageUrl}
+        imageAlt={heroImage?.alt}
+      />
       <section className="section menu-section">
-        <div className="section-heading">
-          <p className="eyebrow">Kaart</p>
-          <h2>De legendarische Boule-kaart.</h2>
-        </div>
         <MenuBrowser items={menuItems} />
       </section>
     </SiteShell>

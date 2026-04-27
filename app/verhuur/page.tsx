@@ -1,17 +1,22 @@
+import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
 import { VenueInquiryForm } from "@/components/venue-inquiry-form";
+import { getPageHeroImage } from "@/lib/sanity/loaders";
 
-export default function VerhuurPage() {
+export const revalidate = 60;
+
+export default async function VerhuurPage() {
+  const heroImage = await getPageHeroImage("verhuur");
+
   return (
     <SiteShell ctaHref="/contact" ctaLabel="Vraag offerte aan">
-      <section className="page-hero">
-        <p className="eyebrow">Verhuur</p>
-        <h1>Huur In den Boule af voor private events, diners en feestavonden.</h1>
-        <p className="page-intro">
-          Het gaat hier niet om aparte zaaltjes, maar om het afhuren van het café als geheel.
-          Daarom krijgt verhuur zijn eigen duidelijke acquisitiepagina.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="Verhuur"
+        title="Huur In den Boule af voor private events, diners en feestavonden."
+        intro="Het gaat hier niet om aparte zaaltjes, maar om het afhuren van het café als geheel. Daarom krijgt verhuur zijn eigen duidelijke acquisitiepagina."
+        imageUrl={heroImage?.imageUrl}
+        imageAlt={heroImage?.alt}
+      />
 
       <section className="section venue-section">
         <div className="venue-layout">

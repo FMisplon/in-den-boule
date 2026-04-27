@@ -3,18 +3,42 @@ import {
   events as fallbackEvents,
   homePage as fallbackHomePage,
   type HomePageConfig,
+  type PageHeroKey,
   eventMap,
   menuItems as fallbackMenuItems,
+  shopProducts as fallbackShopProducts,
+  type ShopProductItem,
   site as fallbackSite
 } from "@/lib/site-data";
-import { sanityClient } from "@/lib/sanity/client";
+import { sanityClient, urlFor } from "@/lib/sanity/client";
 import {
   eventSlugsQuery,
   eventsQuery,
   homePageQuery,
   menuItemsQuery,
+  shopProductsQuery,
   siteSettingsQuery
 } from "@/lib/sanity/queries";
+
+const SANITY_REVALIDATE_SECONDS = 60;
+const SANITY_FETCH_OPTIONS = {
+  next: { revalidate: SANITY_REVALIDATE_SECONDS }
+};
+
+function getSocialLabel(platform: "instagram" | "facebook" | "tiktok" | "linkedin" | "youtube") {
+  switch (platform) {
+    case "instagram":
+      return "Instagram";
+    case "facebook":
+      return "Facebook";
+    case "tiktok":
+      return "TikTok";
+    case "linkedin":
+      return "LinkedIn";
+    case "youtube":
+      return "YouTube";
+  }
+}
 
 type SanitySiteSettings = {
   siteTitle?: string;
@@ -23,6 +47,17 @@ type SanitySiteSettings = {
   openingHours?: string;
   contactEmail?: string;
   contactPhone?: string;
+  gtmContainerId?: string;
+  pageHeroImages?: Array<{
+    pageKey?: PageHeroKey;
+    image?: unknown;
+    alt?: string;
+  }>;
+  socialProfiles?: Array<{
+    platform?: "instagram" | "facebook" | "tiktok" | "linkedin" | "youtube";
+    url?: string;
+    label?: string;
+  }>;
 };
 
 type SanityHomePageCard = {
@@ -60,6 +95,20 @@ type SanityMenuItem = {
   priceLabel: string;
   displayLabel?: string;
   category?: string;
+  image?: unknown;
+};
+
+type SanityShopProduct = {
+  _id: string;
+  title?: string;
+  slug?: { current?: string };
+  productType?: "gift-card-digital" | "physical";
+  excerpt?: string;
+  active?: boolean;
+  priceOptions?: Array<{
+    label?: string;
+    amount?: number;
+  }>;
 };
 
 type SanityEventTicketType = {
@@ -77,6 +126,7 @@ type SanityEvent = {
   slug?: { current?: string };
   startsAt: string;
   teaser: string;
+  heroImage?: unknown;
   venue?: string;
   listingVisibility?: "public" | "private";
   accessMode?: "open" | "password";
@@ -175,6 +225,9 @@ function toEventSummary(event: SanityEvent) {
     salesStatus: sales.status,
     salesBadge: sales.badge,
     canBuyTickets: sales.canBuyTickets,
+    heroImageUrl: event.heroImage
+      ? urlFor(event.heroImage).width(2400).height(1200).fit("crop").url()
+      : undefined,
     ticketingMode: event.ticketingMode || "native",
     ticketUrl: event.ticketUrl,
     ticketInfo: event.ticketInfo,
@@ -217,7 +270,11 @@ function mergeHomeCards(
 
 export const getHomePage = cache(async () => {
   try {
-    const data = await sanityClient.fetch<SanityHomePage | null>(homePageQuery);
+    const data = await sanityClient.fetch<SanityHomePage | null>(
+      homePageQuery,
+      {},
+      SANITY_FETCH_OPTIONS
+    );
 
     if (!data) {
       return fallbackHomePage;
@@ -250,7 +307,11 @@ export const getHomePage = cache(async () => {
 
 export const getSiteSettings = cache(async () => {
   try {
-    const data = await sanityClient.fetch<SanitySiteSettings | null>(siteSettingsQuery);
+    const data = await sanityClient.fetch<SanitySiteSettings | null>(
+      siteSettingsQuery,
+      {},
+      SANITY_FETCH_OPTIONS
+    );
 
     if (!data) {
       return fallbackSite;
@@ -264,7 +325,30 @@ export const getSiteSettings = cache(async () => {
       hours: data.openingHours || fallbackSite.hours,
       kitchen: fallbackSite.kitchen,
       contactEmail: data.contactEmail || fallbackSite.contactEmail,
-      contactPhone: data.contactPhone || fallbackSite.contactPhone
+      contactPhone: data.contactPhone || fallbackSite.contactPhone,
+      gtmContainerId: data.gtmContainerId?.trim() || fallbackSite.gtmContainerId,
+      pageHeroImages:
+        data.pageHeroImages
+          ?.filter(
+            (entry): entry is NonNullable<SanitySiteSettings["pageHeroImages"]>[number] =>
+              Boolean(entry?.pageKey && entry?.image)
+          )
+          .map((entry) => ({
+            pageKey: entry.pageKey!,
+            imageUrl: urlFor(entry.image).width(2400).height(1200).fit("crop").url(),
+            alt: entry.alt?.trim() || ""
+          })) || fallbackSite.pageHeroImages,
+      socialProfiles:
+        data.socialProfiles
+          ?.filter(
+            (profile): profile is NonNullable<SanitySiteSettings["socialProfiles"]>[number] =>
+              Boolean(profile?.platform && profile?.url)
+          )
+          .map((profile) => ({
+            platform: profile.platform!,
+            url: profile.url!,
+            label: profile.label?.trim() || getSocialLabel(profile.platform!)
+          })) || fallbackSite.socialProfiles
     };
   } catch {
     return fallbackSite;
@@ -273,7 +357,7 @@ export const getSiteSettings = cache(async () => {
 
 export const getMenuItems = cache(async () => {
   try {
-    const data = await sanityClient.fetch<SanityMenuItem[]>(menuItemsQuery);
+    const data = await sanityClient.fetch<SanityMenuItem[]>(menuItemsQuery, {}, SANITY_FETCH_OPTIONS);
 
     if (!data?.length) {
       return fallbackMenuItems;
@@ -284,16 +368,68 @@ export const getMenuItems = cache(async () => {
       label: item.displayLabel || item.category || "Menu",
       title: item.title,
       description: item.description || "",
-      price: item.priceLabel
+      price: item.priceLabel,
+      imageUrl: item.image ? urlFor(item.image).width(900).height(720).fit("crop").url() : undefined
     }));
   } catch {
     return fallbackMenuItems;
   }
 });
 
+export const getShopProducts = cache(async (): Promise<ShopProductItem[]> => {
+  try {
+    const data = await sanityClient.fetch<SanityShopProduct[]>(
+      shopProductsQuery,
+      {},
+      SANITY_FETCH_OPTIONS
+    );
+
+    const mapped = data
+      .map((product) => {
+        const slug = product.slug?.current?.trim();
+        const title = product.title?.trim();
+
+        if (!slug || !title || !product.productType) {
+          return null;
+        }
+
+        return {
+          id: product._id,
+          title,
+          slug,
+          productType: product.productType,
+          excerpt: product.excerpt?.trim() || "",
+          active: product.active !== false,
+          priceOptions: (product.priceOptions || [])
+            .filter(
+              (
+                option
+              ): option is {
+                label: string;
+                amount: number;
+              } => Boolean(option?.label && typeof option.amount === "number" && option.amount > 0)
+            )
+            .map((option) => ({
+              label: option.label.trim(),
+              amount: option.amount
+            }))
+        };
+      })
+      .filter((product): product is ShopProductItem => Boolean(product));
+
+    if (mapped.length) {
+      return mapped;
+    }
+
+    return fallbackShopProducts;
+  } catch {
+    return fallbackShopProducts;
+  }
+});
+
 export const getEvents = cache(async () => {
   try {
-    const data = await sanityClient.fetch<SanityEvent[]>(eventsQuery);
+    const data = await sanityClient.fetch<SanityEvent[]>(eventsQuery, {}, SANITY_FETCH_OPTIONS);
     const mapped = data.map(toEventSummary).filter(isEventSummary);
 
     if (!mapped.length) {
@@ -308,7 +444,11 @@ export const getEvents = cache(async () => {
 
 export const getAllEventSlugs = cache(async () => {
   try {
-    const data = await sanityClient.fetch<Array<{ slug?: string }>>(eventSlugsQuery);
+    const data = await sanityClient.fetch<Array<{ slug?: string }>>(
+      eventSlugsQuery,
+      {},
+      SANITY_FETCH_OPTIONS
+    );
     const slugs = data
       .map((item) => item.slug?.trim())
       .filter((value): value is string => Boolean(value));
@@ -332,6 +472,7 @@ export const getEventBySlug = cache(async (slug: string) => {
         slug,
         startsAt,
         teaser,
+        heroImage,
         venue,
         listingVisibility,
         accessMode,
@@ -344,7 +485,8 @@ export const getEventBySlug = cache(async (slug: string) => {
         ticketTypes,
         body
       }`,
-      { slug }
+      { slug },
+      SANITY_FETCH_OPTIONS
     );
 
     if (!data) {
@@ -355,4 +497,9 @@ export const getEventBySlug = cache(async (slug: string) => {
   } catch {
     return eventMap[slug] || null;
   }
+});
+
+export const getPageHeroImage = cache(async (pageKey: PageHeroKey) => {
+  const site = await getSiteSettings();
+  return site.pageHeroImages.find((entry) => entry.pageKey === pageKey) || null;
 });

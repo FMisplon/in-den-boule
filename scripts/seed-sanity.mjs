@@ -179,6 +179,25 @@ const events = [
   }
 ];
 
+const shopProducts = [
+  {
+    _id: "shop-product-digitale-cadeaubon",
+    _type: "shopProduct",
+    title: "Digitale cadeaubon",
+    slug: { _type: "slug", current: "digitale-cadeaubon" },
+    productType: "gift-card-digital",
+    excerpt:
+      "Digitale cadeaubon van In den Boule, klaar voor online betaling en verdere opvolging.",
+    active: true,
+    priceOptions: [
+      { _key: "25", label: "€25", amount: 2500 },
+      { _key: "50", label: "€50", amount: 5000 },
+      { _key: "75", label: "€75", amount: 7500 },
+      { _key: "100", label: "€100", amount: 10000 }
+    ]
+  }
+];
+
 const siteSettings = {
   _id: "siteSettings",
   _type: "siteSettings",
@@ -261,7 +280,7 @@ const homePage = {
   ]
 };
 
-const documents = [...categories, ...menuItems, ...events, siteSettings, homePage];
+const documents = [...categories, ...menuItems, ...events, ...shopProducts, siteSettings, homePage];
 
 const seededMenuCategoryIds = categories.map((document) => document._id);
 const seededMenuItemIds = menuItems.map((document) => document._id);

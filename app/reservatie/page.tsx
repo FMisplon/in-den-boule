@@ -1,17 +1,22 @@
+import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
 import { ReservationForm } from "@/components/reservation-form";
+import { getPageHeroImage } from "@/lib/sanity/loaders";
 
-export default function ReservatiePage() {
+export const revalidate = 60;
+
+export default async function ReservatiePage() {
+  const heroImage = await getPageHeroImage("reservatie");
+
   return (
     <SiteShell ctaHref="/contact" ctaLabel="Groepen & vragen">
-      <section className="page-hero">
-        <p className="eyebrow">Reservatie</p>
-        <h1>Boek je tafel zonder afleiding.</h1>
-        <p className="page-intro">
-          De eerste versie start bewust basic: aanvraagflow zonder tafelplan, maar wel meteen
-          voorbereid op echte opslag en notificaties.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="Reservatie"
+        title="Boek je tafel zonder afleiding."
+        intro="De eerste versie start bewust basic: aanvraagflow zonder tafelplan, maar wel meteen voorbereid op echte opslag en notificaties."
+        imageUrl={heroImage?.imageUrl}
+        imageAlt={heroImage?.alt}
+      />
 
       <section className="section reservatie-section">
         <div className="reservation-layout">

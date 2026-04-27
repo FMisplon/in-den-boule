@@ -10,7 +10,7 @@ import { readString, type FormStatus } from "@/lib/forms";
 import { env } from "@/lib/env";
 import { sendFormEmails } from "@/lib/mailer";
 import { isReservationDateAllowed, isReservationTimeAllowed } from "@/lib/reservations";
-import { getEventBySlug } from "@/lib/sanity/loaders";
+import { getEventBySlug, getShopProducts } from "@/lib/sanity/loaders";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function getSupabaseForAction() {
@@ -346,26 +346,50 @@ export async function createGiftCardPayment(
   _prevState: FormStatus,
   formData: FormData
 ): Promise<FormStatus> {
+  const productSlug = readString(formData, "product_slug");
   const purchaserName = readString(formData, "purchaser_name");
   const purchaserEmail = readString(formData, "purchaser_email");
   const recipientName = readString(formData, "recipient_name");
   const amountLabel = readString(formData, "amount");
   const personalMessage = readString(formData, "personal_message");
-
-  const amountMap: Record<string, { cents: number; value: string }> = {
-    "25": { cents: 2500, value: "25.00" },
-    "50": { cents: 5000, value: "50.00" },
-    "75": { cents: 7500, value: "75.00" },
-    "100": { cents: 10000, value: "100.00" }
-  };
-
-  const selectedAmount = amountMap[amountLabel];
+  const selectedAmountCents = Number.parseInt(amountLabel, 10);
   const newsletterOptIn = wantsNewsletter(formData);
 
-  if (!purchaserName || !purchaserEmail || !recipientName || !selectedAmount) {
+  if (
+    !productSlug ||
+    !purchaserName ||
+    !purchaserEmail ||
+    !recipientName ||
+    !Number.isFinite(selectedAmountCents) ||
+    selectedAmountCents < 1
+  ) {
     return {
       success: false,
-      message: "Vul naam, e-mail, ontvanger en bedrag in."
+      message: "Vul naam, e-mail, ontvanger en een geldig bedrag in."
+    };
+  }
+
+  const shopProduct = (await getShopProducts()).find(
+    (product) => product.slug === productSlug
+  );
+
+  if (!shopProduct || shopProduct.productType !== "gift-card-digital") {
+    return {
+      success: false,
+      message: "Dit cadeaubonproduct is momenteel niet beschikbaar."
+    };
+  }
+
+  const allowedAmounts = new Set(
+    shopProduct.priceOptions
+      .map((option) => option.amount)
+      .filter((amount): amount is number => typeof amount === "number" && amount > 0)
+  );
+
+  if (!allowedAmounts.has(selectedAmountCents)) {
+    return {
+      success: false,
+      message: "Dit bedrag is momenteel niet beschikbaar voor deze cadeaubon."
     };
   }
 
@@ -382,7 +406,7 @@ export async function createGiftCardPayment(
       purchaser_email: purchaserEmail,
       recipient_name: recipientName,
       personal_message: personalMessage || null,
-      amount_cents: selectedAmount.cents,
+      amount_cents: selectedAmountCents,
       currency: "EUR",
       status: "created"
     })
@@ -397,15 +421,19 @@ export async function createGiftCardPayment(
   }
 
   try {
+    const amountValue = (selectedAmountCents / 100).toFixed(2);
     const payment = await createMolliePayment({
       amount: {
         currency: "EUR",
-        value: selectedAmount.value
+        value: amountValue
       },
-      description: `In den Boule cadeaubon €${amountLabel}`,
+      description: `${shopProduct.title || "In den Boule cadeaubon"} · €${(
+        selectedAmountCents / 100
+      ).toFixed(0)}`,
       redirectUrl: `${env.appUrl}/shop/bedankt?order=${insertedOrder.id}`,
       metadata: {
-        orderId: insertedOrder.id
+        orderId: insertedOrder.id,
+        productSlug
       }
     });
 

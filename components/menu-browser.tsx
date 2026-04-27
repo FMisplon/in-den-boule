@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import type { MenuItem } from "@/lib/site-data";
 
@@ -39,11 +40,21 @@ export function MenuBrowser({ items }: MenuBrowserProps) {
 
       <div className="menu-grid">
         {visibleItems.map((item) => (
-          <article className="menu-card" key={`${item.category}-${item.title}`}>
-            <span>{item.label || item.category}</span>
-            <h3>{item.title}</h3>
-            <p>{item.description}</p>
-            <strong>{item.price}</strong>
+          <article
+            className={`menu-card ${item.imageUrl ? "menu-card-with-image" : "menu-card-no-image"}`}
+            key={`${item.category}-${item.title}`}
+          >
+            {item.imageUrl ? (
+              <div className="menu-card-media">
+                <Image src={item.imageUrl} alt={item.title} fill sizes="(max-width: 980px) 100vw, 33vw" />
+              </div>
+            ) : null}
+            <div className="menu-card-body">
+              <span>{item.label || item.category}</span>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+              <strong>{item.price}</strong>
+            </div>
           </article>
         ))}
       </div>

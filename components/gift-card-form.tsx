@@ -6,12 +6,18 @@ import { FormFeedback } from "@/components/form-feedback";
 import { NewsletterOptIn } from "@/components/newsletter-opt-in";
 import { SubmitButton } from "@/components/submit-button";
 import { idleFormState } from "@/lib/forms";
+import type { ShopProductItem } from "@/lib/site-data";
 
-export function GiftCardForm() {
+type GiftCardFormProps = {
+  product: ShopProductItem;
+};
+
+export function GiftCardForm({ product }: GiftCardFormProps) {
   const [state, formAction] = useActionState(createGiftCardPayment, idleFormState);
 
   return (
     <form className="contact-form" action={formAction}>
+      <input type="hidden" name="product_slug" value={product.slug} />
       <label>
         Jouw naam
         <input name="purchaser_name" type="text" placeholder="Wie koopt de bon?" />
@@ -26,11 +32,16 @@ export function GiftCardForm() {
       </label>
       <label>
         Bedrag
-        <select name="amount" defaultValue="50">
-          <option value="25">€25</option>
-          <option value="50">€50</option>
-          <option value="75">€75</option>
-          <option value="100">€100</option>
+        <select
+          name="amount"
+          defaultValue={String(product.priceOptions[0]?.amount || "")}
+          disabled={!product.priceOptions.length}
+        >
+          {product.priceOptions.map((option) => (
+            <option key={`${product.slug}-${option.amount}`} value={String(option.amount)}>
+              {option.label}
+            </option>
+          ))}
         </select>
       </label>
       <label>

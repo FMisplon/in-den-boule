@@ -1,20 +1,23 @@
 import Link from "next/link";
+import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
-import { getEvents } from "@/lib/sanity/loaders";
+import { getEvents, getPageHeroImage } from "@/lib/sanity/loaders";
+
+export const revalidate = 60;
 
 export default async function EventsPage() {
   const events = await getEvents();
+  const heroImage = await getPageHeroImage("events");
 
   return (
     <SiteShell ctaHref="/events" ctaLabel="Koop tickets">
-      <section className="page-hero">
-        <p className="eyebrow">Events</p>
-        <h1>Avonden met een eigen podium.</h1>
-        <p className="page-intro">
-          Hier mag alles draaien rond sfeer, programma en ticketverkoop. Elk event krijgt een
-          duidelijke standalone pagina voor promotie en conversie.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="Events"
+        title="Avonden met een eigen podium."
+        intro="Hier mag alles draaien rond sfeer, programma en ticketverkoop. Elk event krijgt een duidelijke standalone pagina voor promotie en conversie."
+        imageUrl={heroImage?.imageUrl}
+        imageAlt={heroImage?.alt}
+      />
 
       <section className="section events-section">
         <div className="event-grid">

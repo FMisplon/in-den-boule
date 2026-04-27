@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { EventAccessForm } from "@/components/event-access-form";
+import { PageHero } from "@/components/page-hero";
 import { EventTicketForm } from "@/components/event-ticket-form";
 import { EventWaitlistForm } from "@/components/event-waitlist-form";
 import { SiteShell } from "@/components/site-shell";
@@ -18,18 +19,23 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
 
   return (
     <SiteShell ctaHref="/events" ctaLabel="Bekijk alle events">
-      <section className="page-hero">
-        <p className="eyebrow">{event.listingVisibility === "private" ? "Prive event" : "Event"}</p>
-        <h1>{event.title}</h1>
-        <p className="page-intro">{event.description}</p>
-        {event.salesBadge ? <span className="event-status-badge event-status-badge-hero">{event.salesBadge}</span> : null}
+      <PageHero
+        eyebrow={event.listingVisibility === "private" ? "Prive event" : "Event"}
+        title={event.title}
+        intro={event.description}
+        imageUrl={event.heroImageUrl}
+        imageAlt={event.title}
+      >
+        {event.salesBadge ? (
+          <span className="event-status-badge event-status-badge-hero">{event.salesBadge}</span>
+        ) : null}
         {event.salesStatus === "presale" &&
         (event.listingVisibility === "private" || event.accessMode === "password") ? (
           <p className="page-intro" style={{ marginTop: "1rem" }}>
             Presale enkel op uitnodiging. Deel de rechtstreekse link alleen met de juiste gasten.
           </p>
         ) : null}
-      </section>
+      </PageHero>
 
       <section className="contact-band contact-band-page">
         <div>

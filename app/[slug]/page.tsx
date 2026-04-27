@@ -4,6 +4,8 @@ import { EventDetailView } from "@/components/event-detail-view";
 import { createEventAccessToken, getEventAccessCookieName } from "@/lib/event-access";
 import { getAllEventSlugs, getEventBySlug } from "@/lib/sanity/loaders";
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const slugs = await getAllEventSlugs();
   return slugs.map((slug) => ({ slug }));

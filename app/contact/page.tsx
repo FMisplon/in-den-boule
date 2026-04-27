@@ -1,20 +1,23 @@
 import { ContactForm } from "@/components/contact-form";
+import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
-import { getSiteSettings } from "@/lib/sanity/loaders";
+import { getPageHeroImage, getSiteSettings } from "@/lib/sanity/loaders";
+
+export const revalidate = 60;
 
 export default async function ContactPage() {
   const site = await getSiteSettings();
+  const heroImage = await getPageHeroImage("contact");
 
   return (
     <SiteShell>
-      <section className="page-hero">
-        <p className="eyebrow">Contact</p>
-        <h1>Voor vragen, groepen, cadeaubonnen of verhuur.</h1>
-        <p className="page-intro">
-          Alle praktische info en de belangrijkste contactpaden zitten hier samen op een
-          duidelijke plek, zonder extra ruis op de homepage.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="Contact"
+        title="Voor vragen, groepen, cadeaubonnen of verhuur."
+        intro="Alle praktische info en de belangrijkste contactpaden zitten hier samen op een duidelijke plek, zonder extra ruis op de homepage."
+        imageUrl={heroImage?.imageUrl}
+        imageAlt={heroImage?.alt}
+      />
 
       <section className="contact-band contact-band-page">
         <div>
@@ -53,7 +56,7 @@ export default async function ContactPage() {
                   Route plannen
                 </a>
                 <a
-                  className="contact-map-link"
+                  className="button button-secondary contact-map-link"
                   href="https://www.openstreetmap.org/?mlat=50.8810&mlon=4.7001#map=18/50.8810/4.7001"
                   target="_blank"
                   rel="noreferrer"

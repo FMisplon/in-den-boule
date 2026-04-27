@@ -9,6 +9,7 @@ export type MenuItem = {
   title: string;
   description: string;
   price: string;
+  imageUrl?: string;
 };
 
 export type EventItem = {
@@ -27,6 +28,7 @@ export type EventItem = {
   salesStatus?: "on_sale" | "presale" | "waitlist" | "sold_out";
   salesBadge?: string;
   canBuyTickets?: boolean;
+  heroImageUrl?: string;
   ticketingMode?: "native" | "external" | "info";
   ticketUrl?: string;
   ticketInfo?: string;
@@ -69,6 +71,32 @@ export type HomePageConfig = {
   highlightCards: HomePageCard[];
 };
 
+export type ShopProductItem = {
+  id: string;
+  title: string;
+  slug: string;
+  productType: "gift-card-digital" | "physical";
+  excerpt: string;
+  active: boolean;
+  priceOptions: Array<{
+    label: string;
+    amount: number;
+  }>;
+};
+
+export type PageHeroKey =
+  | "menu"
+  | "events"
+  | "reservatie"
+  | "shop"
+  | "verhuur"
+  | "contact"
+  | "privacy"
+  | "cookiebeleid"
+  | "algemene-voorwaarden"
+  | "shop-bedankt"
+  | "events-bedankt";
+
 export const site = {
   name: "In den Boule",
   tagline: "Join the legend",
@@ -77,8 +105,37 @@ export const site = {
   hours: "Zondag: 20u-03u · Maandag - Donderdag: 11u-03u · Vrijdag & Zaterdag: gesloten",
   kitchen: "Altijd doorlopend open",
   contactEmail: "hallo@indenboule.be",
-  contactPhone: "+32 494 86 98 46"
+  contactPhone: "+32 494 86 98 46",
+  gtmContainerId: "",
+  pageHeroImages: [] as Array<{
+    pageKey: PageHeroKey;
+    imageUrl: string;
+    alt: string;
+  }>,
+  socialProfiles: [] as Array<{
+    platform: "instagram" | "facebook" | "tiktok" | "linkedin" | "youtube";
+    url: string;
+    label: string;
+  }>
 };
+
+export const shopProducts: ShopProductItem[] = [
+  {
+    id: "fallback-gift-card-digital",
+    title: "Digitale cadeaubon",
+    slug: "digitale-cadeaubon",
+    productType: "gift-card-digital",
+    excerpt:
+      "Digitale voucher voor In den Boule met vaste bedragen, klaar voor online betaling en verdere opvolging.",
+    active: true,
+    priceOptions: [
+      { label: "€25", amount: 2500 },
+      { label: "€50", amount: 5000 },
+      { label: "€75", amount: 7500 },
+      { label: "€100", amount: 10000 }
+    ]
+  }
+];
 
 export const homePage: HomePageConfig = {
   heroEyebrow: "In den Boule",

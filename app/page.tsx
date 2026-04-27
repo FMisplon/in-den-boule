@@ -2,6 +2,8 @@ import Link from "next/link";
 import { SiteShell } from "@/components/site-shell";
 import { getEvents, getHomePage, getSiteSettings } from "@/lib/sanity/loaders";
 
+export const revalidate = 60;
+
 export default async function HomePage() {
   const [events, site, home] = await Promise.all([getEvents(), getSiteSettings(), getHomePage()]);
 

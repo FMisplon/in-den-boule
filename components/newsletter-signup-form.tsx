@@ -4,10 +4,26 @@ import { useActionState } from "react";
 import { submitNewsletterSignup } from "@/app/actions/inquiries";
 import { FormFeedback } from "@/components/form-feedback";
 import { SubmitButton } from "@/components/submit-button";
+import { useTrackFormSuccess } from "@/components/use-track-form-success";
 import { idleFormState } from "@/lib/forms";
 
 export function NewsletterSignupForm() {
   const [state, formAction] = useActionState(submitNewsletterSignup, idleFormState);
+
+  useTrackFormSuccess(state, () => [
+    {
+      event: "sign_up",
+      payload: {
+        method: "site_footer_newsletter"
+      }
+    },
+    {
+      event: "newsletter_signup",
+      payload: {
+        signup_location: "site_footer"
+      }
+    }
+  ]);
 
   return (
     <form className="newsletter-form" action={formAction}>

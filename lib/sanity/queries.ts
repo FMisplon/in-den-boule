@@ -24,7 +24,18 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   address,
   openingHours,
   contactEmail,
-  contactPhone
+  contactPhone,
+  gtmContainerId,
+  pageHeroImages[]{
+    pageKey,
+    image,
+    alt
+  },
+  socialProfiles[]{
+    platform,
+    url,
+    label
+  }
 }`;
 
 export const menuItemsQuery = `*[_type == "menuItem" && available == true] | order(sortOrder asc){
@@ -34,7 +45,21 @@ export const menuItemsQuery = `*[_type == "menuItem" && available == true] | ord
   priceLabel,
   featured,
   displayLabel,
+  image,
   "category": category->title
+}`;
+
+export const shopProductsQuery = `*[_type == "shopProduct" && active == true] | order(title asc){
+  _id,
+  title,
+  slug,
+  productType,
+  excerpt,
+  active,
+  priceOptions[]{
+    label,
+    amount
+  }
 }`;
 
 export const eventsQuery = `*[_type == "event" && published == true && listingVisibility != "private"] | order(startsAt asc){
@@ -43,6 +68,7 @@ export const eventsQuery = `*[_type == "event" && published == true && listingVi
   slug,
   startsAt,
   teaser,
+  heroImage,
   venue,
   listingVisibility,
   accessMode,
