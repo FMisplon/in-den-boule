@@ -1,33 +1,29 @@
 import Link from "next/link";
 import { SiteShell } from "@/components/site-shell";
-import { getEvents, getSiteSettings } from "@/lib/sanity/loaders";
+import { getEvents, getHomePage, getSiteSettings } from "@/lib/sanity/loaders";
 
 export default async function HomePage() {
-  const [events, site] = await Promise.all([getEvents(), getSiteSettings()]);
+  const [events, site, home] = await Promise.all([getEvents(), getSiteSettings(), getHomePage()]);
 
   return (
     <SiteShell>
       <section className="hero">
         <div className="hero-copy">
-          <p className="eyebrow">{site.name}</p>
-          <h1>{site.tagline}</h1>
-          <p className="hero-text">
-            Een Leuvense legende met karakter, geschiedenis en lange nachten. Van lunch tot
-            late service, van vaste stamgasten tot nieuwe verhalen aan tafel: In den Boule
-            voelt tegelijk iconisch en levendig.
-          </p>
+          <p className="eyebrow">{home.heroEyebrow || site.name}</p>
+          <h1>{home.heroTitle || site.tagline}</h1>
+          <p className="hero-text">{home.heroText}</p>
           <div className="hero-actions">
-            <Link className="button" href="/reservatie">
-              Reserveer je tafel
+            <Link className="button" href={home.primaryCtaHref}>
+              {home.primaryCtaLabel}
             </Link>
-            <Link className="button button-secondary" href="/events">
-              Bekijk events
+            <Link className="button button-secondary" href={home.secondaryCtaHref}>
+              {home.secondaryCtaLabel}
             </Link>
           </div>
           <ul className="hero-points">
-            <li>Keuken altijd doorlopend open</li>
-            <li>Events met ticketverkoop</li>
-            <li>Verhuur en cadeaubonnen als aparte flows</li>
+            {home.heroPoints.map((point) => (
+              <li key={point}>{point}</li>
+            ))}
           </ul>
         </div>
 
@@ -54,13 +50,9 @@ export default async function HomePage() {
           <img src="/assets/images/evy.jpg" alt="Evy in In den Boule" />
         </article>
         <article className="story-card story-card-copy">
-          <p className="eyebrow">Het verhaal</p>
-          <h2>Een plek waar traditie, gezelligheid en nieuwe energie samenkomen.</h2>
-          <p>
-            De homepage hoeft niet alles tegelijk te verkopen. Hier zetten we vooral het gevoel
-            neer, en van hieruit begeleiden we bezoekers gericht naar menu, reservaties, events,
-            shop of verhuur.
-          </p>
+          <p className="eyebrow">{home.storyEyebrow}</p>
+          <h2>{home.storyTitle}</h2>
+          <p>{home.storyText}</p>
         </article>
         <article className="story-card story-card-logo">
           <img src="/assets/images/logo-boule-transparent.png" alt="Boule logo in groen" />
@@ -69,55 +61,41 @@ export default async function HomePage() {
 
       <section className="section concept-section">
         <div className="section-heading">
-          <p className="eyebrow">De sfeer</p>
-          <h2>Een huis vol verhalen, karakterkoppen, volle glazen en avonden die blijven hangen.</h2>
+          <p className="eyebrow">{home.conceptEyebrow}</p>
+          <h2>{home.conceptTitle}</h2>
         </div>
         <div className="concept-grid">
-          <article>
-            <h3>Legendarisch</h3>
-            <p>In den Boule heeft een eigen plaats in Leuven. Die herkenbaarheid moet ook online voelbaar zijn.</p>
-          </article>
-          <article>
-            <h3>Levendig</h3>
-            <p>Lunch, diner, events en late service vragen om een site die energie geeft zonder chaotisch te worden.</p>
-          </article>
-          <article>
-            <h3>Gericht</h3>
-            <p>Elke hoofdvraag krijgt zijn eigen pagina, zodat bezoekers sneller vinden wat ze nodig hebben en sneller doorklikken.</p>
-          </article>
+          {home.conceptCards.map((card) => (
+            <article key={card.title}>
+              <h3>{card.title}</h3>
+              <p>{card.body}</p>
+            </article>
+          ))}
         </div>
       </section>
 
       <section className="section social-section">
         <div className="section-heading">
-          <p className="eyebrow">Highlights</p>
-          <h2>De homepage blijft landing page, terwijl de aparte pagina&apos;s de echte acties opvangen.</h2>
+          <p className="eyebrow">{home.highlightsEyebrow}</p>
+          <h2>{home.highlightsTitle}</h2>
         </div>
         <div className="discover-grid">
-          <article className="discover-card">
-            <span>Menu</span>
-            <h3>Eten & drinken</h3>
-            <p>Spaghetti en kaart in een eigen flow, zonder afleiding.</p>
-            <Link className="button" href="/menu">
-              Naar menu
-            </Link>
-          </article>
-          <article className="discover-card">
-            <span>Events</span>
-            <h3>Programma & tickets</h3>
-            <p>{events.length} events klaar als aparte detailpagina&apos;s voor promotie en tickets.</p>
-            <Link className="button" href="/events">
-              Bekijk events
-            </Link>
-          </article>
-          <article className="discover-card">
-            <span>Shop</span>
-            <h3>Cadeaubonnen</h3>
-            <p>De MVP focust bewust op gift cards als eerste echte checkoutflow.</p>
-            <Link className="button" href="/shop">
-              Naar shop
-            </Link>
-          </article>
+          {home.highlightCards.map((card) => (
+            <article className="discover-card" key={card.title}>
+              {card.eyebrow ? <span>{card.eyebrow}</span> : null}
+              <h3>{card.title}</h3>
+              <p>
+                {card.ctaHref === "/events" && card.body.includes("{eventCount}")
+                  ? card.body.replace("{eventCount}", String(events.length))
+                  : card.body}
+              </p>
+              {card.ctaLabel && card.ctaHref ? (
+                <Link className="button" href={card.ctaHref}>
+                  {card.ctaLabel}
+                </Link>
+              ) : null}
+            </article>
+          ))}
         </div>
       </section>
     </SiteShell>

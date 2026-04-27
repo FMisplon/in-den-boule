@@ -1,3 +1,23 @@
+export const homePageQuery = `*[_type == "homePage"][0]{
+  heroEyebrow,
+  heroTitle,
+  heroText,
+  primaryCtaLabel,
+  primaryCtaHref,
+  secondaryCtaLabel,
+  secondaryCtaHref,
+  heroPoints,
+  storyEyebrow,
+  storyTitle,
+  storyText,
+  conceptEyebrow,
+  conceptTitle,
+  conceptCards,
+  highlightsEyebrow,
+  highlightsTitle,
+  highlightCards
+}`;
+
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   siteTitle,
   heroTagline,

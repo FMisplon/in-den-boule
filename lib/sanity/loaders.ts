@@ -1,6 +1,8 @@
 import { cache } from "react";
 import {
   events as fallbackEvents,
+  homePage as fallbackHomePage,
+  type HomePageConfig,
   eventMap,
   menuItems as fallbackMenuItems,
   site as fallbackSite
@@ -9,6 +11,7 @@ import { sanityClient } from "@/lib/sanity/client";
 import {
   eventSlugsQuery,
   eventsQuery,
+  homePageQuery,
   menuItemsQuery,
   siteSettingsQuery
 } from "@/lib/sanity/queries";
@@ -20,6 +23,34 @@ type SanitySiteSettings = {
   openingHours?: string;
   contactEmail?: string;
   contactPhone?: string;
+};
+
+type SanityHomePageCard = {
+  eyebrow?: string;
+  title?: string;
+  body?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+};
+
+type SanityHomePage = {
+  heroEyebrow?: string;
+  heroTitle?: string;
+  heroText?: string;
+  primaryCtaLabel?: string;
+  primaryCtaHref?: string;
+  secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
+  heroPoints?: string[];
+  storyEyebrow?: string;
+  storyTitle?: string;
+  storyText?: string;
+  conceptEyebrow?: string;
+  conceptTitle?: string;
+  conceptCards?: SanityHomePageCard[];
+  highlightsEyebrow?: string;
+  highlightsTitle?: string;
+  highlightCards?: SanityHomePageCard[];
 };
 
 type SanityMenuItem = {
@@ -161,6 +192,58 @@ function isEventSummary(
 ): value is NonNullable<ReturnType<typeof toEventSummary>> {
   return value !== null;
 }
+
+function mergeHomeCards(
+  cards: SanityHomePageCard[] | undefined,
+  fallbackCards: HomePageConfig["conceptCards"]
+) {
+  if (!cards?.length) {
+    return fallbackCards;
+  }
+
+  return cards
+    .map((card, index) => ({
+      eyebrow: card.eyebrow || fallbackCards[index]?.eyebrow,
+      title: card.title || fallbackCards[index]?.title,
+      body: card.body || fallbackCards[index]?.body,
+      ctaLabel: card.ctaLabel || fallbackCards[index]?.ctaLabel,
+      ctaHref: card.ctaHref || fallbackCards[index]?.ctaHref
+    }))
+    .filter((card) => card.title && card.body) as HomePageConfig["conceptCards"];
+}
+
+export const getHomePage = cache(async () => {
+  try {
+    const data = await sanityClient.fetch<SanityHomePage | null>(homePageQuery);
+
+    if (!data) {
+      return fallbackHomePage;
+    }
+
+    return {
+      heroEyebrow: data.heroEyebrow || fallbackHomePage.heroEyebrow,
+      heroTitle: data.heroTitle || fallbackHomePage.heroTitle,
+      heroText: data.heroText || fallbackHomePage.heroText,
+      primaryCtaLabel: data.primaryCtaLabel || fallbackHomePage.primaryCtaLabel,
+      primaryCtaHref: data.primaryCtaHref || fallbackHomePage.primaryCtaHref,
+      secondaryCtaLabel: data.secondaryCtaLabel || fallbackHomePage.secondaryCtaLabel,
+      secondaryCtaHref: data.secondaryCtaHref || fallbackHomePage.secondaryCtaHref,
+      heroPoints:
+        data.heroPoints?.filter(Boolean).length ? data.heroPoints.filter(Boolean) : fallbackHomePage.heroPoints,
+      storyEyebrow: data.storyEyebrow || fallbackHomePage.storyEyebrow,
+      storyTitle: data.storyTitle || fallbackHomePage.storyTitle,
+      storyText: data.storyText || fallbackHomePage.storyText,
+      conceptEyebrow: data.conceptEyebrow || fallbackHomePage.conceptEyebrow,
+      conceptTitle: data.conceptTitle || fallbackHomePage.conceptTitle,
+      conceptCards: mergeHomeCards(data.conceptCards, fallbackHomePage.conceptCards),
+      highlightsEyebrow: data.highlightsEyebrow || fallbackHomePage.highlightsEyebrow,
+      highlightsTitle: data.highlightsTitle || fallbackHomePage.highlightsTitle,
+      highlightCards: mergeHomeCards(data.highlightCards, fallbackHomePage.highlightCards)
+    };
+  } catch {
+    return fallbackHomePage;
+  }
+});
 
 export const getSiteSettings = cache(async () => {
   try {

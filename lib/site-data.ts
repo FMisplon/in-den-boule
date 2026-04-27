@@ -41,6 +41,34 @@ export type EventItem = {
   }>;
 };
 
+export type HomePageCard = {
+  eyebrow?: string;
+  title: string;
+  body: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+};
+
+export type HomePageConfig = {
+  heroEyebrow: string;
+  heroTitle: string;
+  heroText: string;
+  primaryCtaLabel: string;
+  primaryCtaHref: string;
+  secondaryCtaLabel: string;
+  secondaryCtaHref: string;
+  heroPoints: string[];
+  storyEyebrow: string;
+  storyTitle: string;
+  storyText: string;
+  conceptEyebrow: string;
+  conceptTitle: string;
+  conceptCards: HomePageCard[];
+  highlightsEyebrow: string;
+  highlightsTitle: string;
+  highlightCards: HomePageCard[];
+};
+
 export const site = {
   name: "In den Boule",
   tagline: "Join the legend",
@@ -50,6 +78,69 @@ export const site = {
   kitchen: "Altijd doorlopend open",
   contactEmail: "hallo@indenboule.be",
   contactPhone: "+32 494 86 98 46"
+};
+
+export const homePage: HomePageConfig = {
+  heroEyebrow: "In den Boule",
+  heroTitle: "Join the legend",
+  heroText:
+    "Een Leuvense legende met karakter, geschiedenis en lange nachten. Van lunch tot late service, van vaste stamgasten tot nieuwe verhalen aan tafel: In den Boule voelt tegelijk iconisch en levendig.",
+  primaryCtaLabel: "Reserveer je tafel",
+  primaryCtaHref: "/reservatie",
+  secondaryCtaLabel: "Bekijk events",
+  secondaryCtaHref: "/events",
+  heroPoints: [
+    "Keuken altijd doorlopend open",
+    "Events met ticketverkoop",
+    "Verhuur en cadeaubonnen als aparte flows"
+  ],
+  storyEyebrow: "Het verhaal",
+  storyTitle: "Een plek waar traditie, gezelligheid en nieuwe energie samenkomen.",
+  storyText:
+    "De homepage hoeft niet alles tegelijk te verkopen. Hier zetten we vooral het gevoel neer, en van hieruit begeleiden we bezoekers gericht naar menu, reservaties, events, shop of verhuur.",
+  conceptEyebrow: "De sfeer",
+  conceptTitle:
+    "Een huis vol verhalen, karakterkoppen, volle glazen en avonden die blijven hangen.",
+  conceptCards: [
+    {
+      title: "Legendarisch",
+      body: "In den Boule heeft een eigen plaats in Leuven. Die herkenbaarheid moet ook online voelbaar zijn."
+    },
+    {
+      title: "Levendig",
+      body: "Lunch, diner, events en late service vragen om een site die energie geeft zonder chaotisch te worden."
+    },
+    {
+      title: "Gericht",
+      body: "Elke hoofdvraag krijgt zijn eigen pagina, zodat bezoekers sneller vinden wat ze nodig hebben en sneller doorklikken."
+    }
+  ],
+  highlightsEyebrow: "Highlights",
+  highlightsTitle:
+    "De homepage blijft landing page, terwijl de aparte pagina's de echte acties opvangen.",
+  highlightCards: [
+    {
+      eyebrow: "Menu",
+      title: "Eten & drinken",
+      body: "Spaghetti en kaart in een eigen flow, zonder afleiding.",
+      ctaLabel: "Naar menu",
+      ctaHref: "/menu"
+    },
+    {
+      eyebrow: "Events",
+      title: "Programma & tickets",
+      body: "{eventCount} events klaar als aparte detailpagina's voor promotie en tickets.",
+      ctaLabel: "Bekijk events",
+      ctaHref: "/events"
+    },
+    {
+      eyebrow: "Shop",
+      title: "Cadeaubonnen",
+      body: "De MVP focust bewust op gift cards als eerste echte checkoutflow.",
+      ctaLabel: "Naar shop",
+      ctaHref: "/shop"
+    }
+  ]
 };
 
 export const mainNav: NavItem[] = [
