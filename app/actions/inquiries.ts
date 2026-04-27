@@ -6,6 +6,7 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { createMolliePayment } from "@/lib/mollie";
 import { readString, type FormStatus } from "@/lib/forms";
 import { env } from "@/lib/env";
+import { sendFormEmails } from "@/lib/mailer";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function getSupabaseForAction() {
@@ -50,8 +51,23 @@ export async function submitReservation(
     return { success: false, message: "Reservatie kon niet verzonden worden. Probeer opnieuw." };
   }
 
+  const mailResult = await sendFormEmails({
+    kind: "reservation",
+    name,
+    email,
+    reservationDate,
+    reservationTime,
+    partySize,
+    note: note || null
+  });
+
   revalidatePath("/reservatie");
-  return { success: true, message: "Je reservatieaanvraag is goed ontvangen." };
+  return {
+    success: true,
+    message: mailResult.warning
+      ? `Je reservatieaanvraag is goed ontvangen. ${mailResult.warning}`
+      : "Je reservatieaanvraag is goed ontvangen. We stuurden ook een bevestiging per e-mail."
+  };
 }
 
 export async function submitContact(
@@ -84,8 +100,21 @@ export async function submitContact(
     return { success: false, message: "Je bericht kon niet verzonden worden. Probeer opnieuw." };
   }
 
+  const mailResult = await sendFormEmails({
+    kind: "contact",
+    name,
+    email,
+    subject,
+    message
+  });
+
   revalidatePath("/contact");
-  return { success: true, message: "Je bericht is goed ontvangen." };
+  return {
+    success: true,
+    message: mailResult.warning
+      ? `Je bericht is goed ontvangen. ${mailResult.warning}`
+      : "Je bericht is goed ontvangen. We stuurden ook een bevestiging per e-mail."
+  };
 }
 
 export async function submitVenueInquiry(
@@ -125,8 +154,23 @@ export async function submitVenueInquiry(
     return { success: false, message: "De offerteaanvraag kon niet verzonden worden." };
   }
 
+  const mailResult = await sendFormEmails({
+    kind: "venue",
+    name,
+    email,
+    eventType,
+    preferredDate,
+    guestCount,
+    message: message || null
+  });
+
   revalidatePath("/verhuur");
-  return { success: true, message: "Je offerteaanvraag is goed ontvangen." };
+  return {
+    success: true,
+    message: mailResult.warning
+      ? `Je offerteaanvraag is goed ontvangen. ${mailResult.warning}`
+      : "Je offerteaanvraag is goed ontvangen. We stuurden ook een bevestiging per e-mail."
+  };
 }
 
 export async function createGiftCardPayment(

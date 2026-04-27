@@ -19,5 +19,13 @@ export const env = {
   ),
   supabaseSecretKey: process.env.SUPABASE_SECRET_KEY,
   mollieApiKey: process.env.MOLLIE_API_KEY,
-  appUrl: readEnv("NEXT_PUBLIC_APP_URL", "http://localhost:3000")
+  appUrl: readEnv("NEXT_PUBLIC_APP_URL", "http://localhost:3000"),
+  smtpHost: process.env.SMTP_HOST,
+  smtpPort: process.env.SMTP_PORT,
+  smtpSecure: process.env.SMTP_SECURE,
+  smtpUser: process.env.SMTP_USER,
+  smtpPassword: process.env.SMTP_PASSWORD,
+  mailFrom: process.env.MAIL_FROM,
+  formNotificationTo: process.env.FORM_NOTIFICATION_TO,
+  formReplyTo: process.env.FORM_REPLY_TO
 };
