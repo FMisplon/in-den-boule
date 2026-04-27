@@ -7,6 +7,14 @@ import { idleFormState, readString, type FormStatus } from "@/lib/forms";
 import { env } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
+function getSupabaseForAction() {
+  try {
+    return createSupabaseServerClient();
+  } catch {
+    return null;
+  }
+}
+
 export async function submitReservation(
   _prevState: FormStatus,
   formData: FormData
@@ -22,7 +30,12 @@ export async function submitReservation(
     return { success: false, message: "Vul datum, uur, aantal personen, naam en e-mail in." };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = getSupabaseForAction();
+
+  if (!supabase) {
+    return { success: false, message: "Serverconfiguratie ontbreekt voor reservaties." };
+  }
+
   const { error } = await supabase.from("reservation_requests").insert({
     reservation_date: reservationDate,
     reservation_time: reservationTime,
@@ -53,7 +66,12 @@ export async function submitContact(
     return { success: false, message: "Vul naam, e-mail, onderwerp en bericht in." };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = getSupabaseForAction();
+
+  if (!supabase) {
+    return { success: false, message: "Serverconfiguratie ontbreekt voor contactaanvragen." };
+  }
+
   const { error } = await supabase.from("contact_requests").insert({
     name,
     email,
@@ -87,7 +105,12 @@ export async function submitVenueInquiry(
     };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = getSupabaseForAction();
+
+  if (!supabase) {
+    return { success: false, message: "Serverconfiguratie ontbreekt voor offerteaanvragen." };
+  }
+
   const { error } = await supabase.from("venue_requests").insert({
     name,
     email,
@@ -131,7 +154,12 @@ export async function createGiftCardPayment(
     };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = getSupabaseForAction();
+
+  if (!supabase) {
+    return { success: false, message: "Serverconfiguratie ontbreekt voor cadeaubonnen." };
+  }
+
   const { data: insertedOrder, error: insertError } = await supabase
     .from("gift_card_orders")
     .insert({
