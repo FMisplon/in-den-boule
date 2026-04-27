@@ -5,6 +5,7 @@ export type NavItem = {
 
 export type MenuItem = {
   category: string;
+  label?: string;
   title: string;
   description: string;
   price: string;
@@ -41,15 +42,38 @@ export const mainNav: NavItem[] = [
 ];
 
 export const menuItems: MenuItem[] = [
-  { category: "Pasta's", title: "Spaghetti Boule", description: "De legendarische huisfavoriet.", price: "13 euro" },
-  { category: "Pasta's", title: "Spaghetti Boule Jumbo", description: "Voor wie honger meebrengt.", price: "19 euro" },
-  { category: "Pasta's", title: "Vegetarische spaghetti", description: "De veggie variant op de klassieker.", price: "13 euro" },
-  { category: "Pasta's", title: "Spaghetti kaassaus ham", description: "Comfort food met romige kaassaus.", price: "15 euro" },
-  { category: "Oven", title: "Lasagne", description: "Klassieke lasagne uit de oven.", price: "15 euro" },
-  { category: "Croques", title: "Croque Boule", description: "Met huisgemaakte bolognaisesaus, inclusief slaatje.", price: "13,5 euro" },
-  { category: "Bagels", title: "Parmaham", description: "Pesto, mozzarella, tomaat en rucola.", price: "14 euro" },
-  { category: "Snacks", title: "Nacho's", description: "Met guacamole, cheddar en tomatensalsa.", price: "7 / 9 euro" },
-  { category: "Desserts", title: "Chocoladamousse met caramel", description: "Zoete afsluiter met zachte carameltoets.", price: "10 euro" }
+  { category: "Pasta's", label: "Soep", title: "Dagsoep met brood", description: "Een eenvoudige starter voor wie licht wil beginnen.", price: "6 euro" },
+  { category: "Pasta's", label: "Pasta's", title: "Spaghetti Boule", description: "De legendarische huisfavoriet.", price: "13 euro" },
+  { category: "Pasta's", label: "Pasta's", title: "Spaghetti Boule Jumbo", description: "Voor wie honger meebrengt.", price: "19 euro" },
+  { category: "Pasta's", label: "Pasta's", title: "Vegetarische spaghetti", description: "De veggie variant op de klassieker.", price: "13 euro" },
+  { category: "Pasta's", label: "Pasta's", title: "Spaghetti kaassaus ham", description: "Comfort food met romige kaassaus.", price: "15 euro" },
+  { category: "Pasta's", label: "Pasta's", title: "Spaghetti kip tomaat mascarpone", description: "Een zachte saus met kip en mascarpone.", price: "15 euro" },
+  { category: "Pasta's", label: "Oven", title: "Lasagne", description: "Klassieke lasagne uit de oven.", price: "15 euro" },
+  { category: "Pasta's", label: "Oven", title: "Vegetarische lasagne", description: "De veggie versie van de huislasagne.", price: "15 euro" },
+  { category: "Croques", label: "Croques", title: "Uitsmijter", description: "Boerenbrood, 2 spiegeleieren, hesp, kaas en guacamole.", price: "15 euro" },
+  { category: "Croques", label: "Croques", title: "Croque uit 't vuistje", description: "Kleine snelle croque voor tussendoor.", price: "6,5 euro" },
+  { category: "Croques", label: "Croques", title: "Croque Monsieur", description: "Ham en kaas, inclusief slaatje.", price: "10,5 euro" },
+  { category: "Croques", label: "Croques", title: "Croque Madame", description: "Enkel kaas, inclusief slaatje.", price: "10,5 euro" },
+  { category: "Croques", label: "Croques", title: "Croque Cheval", description: "Met spiegelei, inclusief slaatje.", price: "12,5 euro" },
+  { category: "Croques", label: "Croques", title: "Croque Boule", description: "Met huisgemaakte bolognaisesaus, inclusief slaatje.", price: "13,5 euro" },
+  { category: "Bagels", label: "Bagels", title: "Gehaktbal", description: "Met joppiesaus en bickyajuin, inclusief slaatje.", price: "12 euro" },
+  { category: "Bagels", label: "Bagels", title: "Parmaham", description: "Pesto, mozzarella, tomaat en rucola.", price: "14 euro" },
+  { category: "Bagels", label: "Bagels", title: "Rosbief", description: "Truffelmayonaise, rucola en parmezaan.", price: "14 euro" },
+  { category: "Bagels", label: "Bagels", title: "Kip", description: "Guacamole, parmezaan, rucola en zongedroogde tomaat.", price: "14 euro" },
+  { category: "Bagels", label: "Bagels", title: "Boule", description: "Spek, spiegelei, cheddar, guacamole en tomaat.", price: "12 euro" },
+  { category: "Snacks", label: "Kroketjes", title: "Kaaskroketten", description: "2 of 3 stuks, inclusief slaatje en brood.", price: "15 / 18 euro" },
+  { category: "Snacks", label: "Kroketjes", title: "Garnaalkroketten", description: "2 of 3 stuks, inclusief slaatje en brood.", price: "18 / 22 euro" },
+  { category: "Snacks", label: "Kroketjes", title: "Stoofvleeskroketten", description: "2 of 3 stuks, inclusief slaatje en brood.", price: "18 / 22 euro" },
+  { category: "Snacks", label: "Snacks", title: "Chips", description: "Een kleine snack bij het glas.", price: "3 euro" },
+  { category: "Snacks", label: "Snacks", title: "Nacho's", description: "Met guacamole, cheddar en tomatensalsa.", price: "7 / 9 euro" },
+  { category: "Snacks", label: "Snacks", title: "Portie kaas", description: "Klassieke borrelplank-basis.", price: "8 euro" },
+  { category: "Snacks", label: "Snacks", title: "Portie salami", description: "Voor bij de apero.", price: "9 euro" },
+  { category: "Snacks", label: "Snacks", title: "Portie gemengd", description: "Kaas en salami samen.", price: "10 euro" },
+  { category: "Snacks", label: "Snacks", title: "Portie kaasballetjes", description: "8 stuks.", price: "10 euro" },
+  { category: "Snacks", label: "Snacks", title: "Portie garnaalballetjes", description: "8 stuks.", price: "12 euro" },
+  { category: "Snacks", label: "Snacks", title: "Boulet met tartaar", description: "Een snelle klassieker voor tussendoor.", price: "6,5 euro" },
+  { category: "Desserts", label: "Desserts", title: "Chocoladamousse met caramel", description: "Zoete afsluiter met zachte carameltoets.", price: "10 euro" },
+  { category: "Desserts", label: "Desserts", title: "Verwenkoffie", description: "Koffie met 4 kleine dessertjes.", price: "9 euro" }
 ];
 
 export const events: EventItem[] = [

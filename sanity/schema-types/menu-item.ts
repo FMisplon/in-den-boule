@@ -25,6 +25,12 @@ export const menuItemType = defineType({
       rows: 3
     }),
     defineField({
+      name: "displayLabel",
+      title: "Klein label boven item",
+      type: "string",
+      description: "Bijvoorbeeld Soep, Oven, Kroketjes of Croques."
+    }),
+    defineField({
       name: "priceLabel",
       title: "Prijslabel",
       type: "string",
