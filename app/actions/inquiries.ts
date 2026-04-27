@@ -9,6 +9,7 @@ import { createEventAccessToken, getEventAccessCookieName } from "@/lib/event-ac
 import { readString, type FormStatus } from "@/lib/forms";
 import { env } from "@/lib/env";
 import { sendFormEmails } from "@/lib/mailer";
+import { isReservationDateAllowed, isReservationTimeAllowed } from "@/lib/reservations";
 import { getEventBySlug } from "@/lib/sanity/loaders";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -33,6 +34,20 @@ export async function submitReservation(
 
   if (!reservationDate || !reservationTime || !partySize || !name || !email) {
     return { success: false, message: "Vul datum, uur, aantal personen, naam en e-mail in." };
+  }
+
+  if (!isReservationDateAllowed(reservationDate)) {
+    return {
+      success: false,
+      message: "Op die dag nemen we geen reservaties aan. Kies een open dag."
+    };
+  }
+
+  if (!isReservationTimeAllowed(reservationDate, reservationTime)) {
+    return {
+      success: false,
+      message: "Dat uur ligt buiten de openingsuren. Kies een geldig tijdslot."
+    };
   }
 
   const supabase = getSupabaseForAction();

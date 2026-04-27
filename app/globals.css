@@ -553,6 +553,13 @@ img {
   color: #8e3417;
 }
 
+.field-hint {
+  margin: -0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
 .button[disabled] {
   opacity: 0.72;
   cursor: wait;
@@ -593,6 +600,26 @@ textarea {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
+}
+
+.reservation-availability {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.availability-pill {
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(37, 112, 56, 0.12);
+  color: var(--olive);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.availability-pill.is-closed {
+  background: rgba(142, 52, 23, 0.12);
+  color: #8e3417;
 }
 
 .table-pill {
