@@ -72,6 +72,8 @@ export const eventType = defineType({
       title: "Hero-afbeelding",
       type: "image",
       options: { hotspot: true },
+      description:
+        "Aanbevolen formaat: 2400 x 1350 px of groter (16:9). Hou belangrijke gezichten of tekst centraal, zodat de uitsnede ook op mobiel goed blijft.",
       group: "content"
     }),
     defineField({
