@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { submitVenueInquiry } from "@/app/actions/inquiries";
 import { FormFeedback } from "@/components/form-feedback";
+import { NewsletterOptIn } from "@/components/newsletter-opt-in";
 import { SubmitButton } from "@/components/submit-button";
 import { idleFormState } from "@/lib/forms";
 
@@ -42,6 +43,7 @@ export function VenueInquiryForm() {
         Extra info
         <textarea name="message" rows={5} placeholder="Timing, catering, techniek, sfeer, ..." />
       </label>
+      <NewsletterOptIn id="venue-newsletter-opt-in" />
       <SubmitButton>Vraag offerte aan</SubmitButton>
       <FormFeedback state={state} />
     </form>

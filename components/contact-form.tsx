@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { submitContact } from "@/app/actions/inquiries";
 import { FormFeedback } from "@/components/form-feedback";
+import { NewsletterOptIn } from "@/components/newsletter-opt-in";
 import { SubmitButton } from "@/components/submit-button";
 import { idleFormState } from "@/lib/forms";
 
@@ -33,6 +34,7 @@ export function ContactForm() {
         Bericht
         <textarea name="message" rows={5} placeholder="Waarmee kunnen we helpen?" />
       </label>
+      <NewsletterOptIn id="contact-newsletter-opt-in" />
       <SubmitButton>Verzend aanvraag</SubmitButton>
       <FormFeedback state={state} />
     </form>

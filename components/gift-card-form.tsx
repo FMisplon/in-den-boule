@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { createGiftCardPayment } from "@/app/actions/inquiries";
 import { FormFeedback } from "@/components/form-feedback";
+import { NewsletterOptIn } from "@/components/newsletter-opt-in";
 import { SubmitButton } from "@/components/submit-button";
 import { idleFormState } from "@/lib/forms";
 
@@ -40,6 +41,7 @@ export function GiftCardForm() {
           placeholder="Kort berichtje voor op de cadeaubon"
         />
       </label>
+      <NewsletterOptIn id="gift-card-newsletter-opt-in" />
       <SubmitButton>Verder naar betaling</SubmitButton>
       <FormFeedback state={state} />
     </form>

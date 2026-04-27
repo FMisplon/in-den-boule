@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { createEventTicketPayment } from "@/app/actions/inquiries";
 import { FormFeedback } from "@/components/form-feedback";
+import { NewsletterOptIn } from "@/components/newsletter-opt-in";
 import { SubmitButton } from "@/components/submit-button";
 import { idleFormState } from "@/lib/forms";
 
@@ -60,6 +61,7 @@ export function EventTicketForm({ eventSlug, eventTitle, ticketTypes }: EventTic
         <input name="customer_email" type="email" placeholder="naam@email.be" />
       </label>
 
+      <NewsletterOptIn id={`event-ticket-newsletter-opt-in-${eventSlug}`} />
       <SubmitButton>Verder naar betaling</SubmitButton>
       <FormFeedback state={state} />
     </form>

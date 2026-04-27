@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useMemo, useState } from "react";
 import { submitReservation } from "@/app/actions/inquiries";
 import { FormFeedback } from "@/components/form-feedback";
+import { NewsletterOptIn } from "@/components/newsletter-opt-in";
 import { SubmitButton } from "@/components/submit-button";
 import { idleFormState } from "@/lib/forms";
 import {
@@ -109,6 +110,7 @@ export function ReservationForm() {
         Opmerking
         <textarea name="note" rows={4} placeholder="Verjaardag, allergie, grotere groep, ..." />
       </label>
+      <NewsletterOptIn id="reservation-newsletter-opt-in" />
       <SubmitButton>Verstuur aanvraag</SubmitButton>
       <FormFeedback state={state} />
     </form>

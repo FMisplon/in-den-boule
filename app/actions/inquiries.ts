@@ -21,6 +21,28 @@ function getSupabaseForAction() {
   }
 }
 
+function wantsNewsletter(formData: FormData) {
+  return formData.get("newsletter_opt_in") === "yes";
+}
+
+async function addToNewsletterList(email: string, source: string) {
+  const supabase = getSupabaseForAction();
+
+  if (!supabase || !email) {
+    return;
+  }
+
+  const { error } = await supabase.from("newsletter_signups").insert({
+    email,
+    source,
+    status: "subscribed"
+  });
+
+  if (error && error.code !== "23505") {
+    console.error("[Newsletter] Failed to store opt-in", error);
+  }
+}
+
 export async function submitReservation(
   _prevState: FormStatus,
   formData: FormData
@@ -79,6 +101,10 @@ export async function submitReservation(
     note: note || null
   });
 
+  if (wantsNewsletter(formData)) {
+    await addToNewsletterList(email, "reservation-form");
+  }
+
   revalidatePath("/reservatie");
   return {
     success: true,
@@ -125,6 +151,10 @@ export async function submitContact(
     subject,
     message
   });
+
+  if (wantsNewsletter(formData)) {
+    await addToNewsletterList(email, "contact-form");
+  }
 
   revalidatePath("/contact");
   return {
@@ -181,6 +211,10 @@ export async function submitVenueInquiry(
     guestCount,
     message: message || null
   });
+
+  if (wantsNewsletter(formData)) {
+    await addToNewsletterList(email, "venue-form");
+  }
 
   revalidatePath("/verhuur");
   return {
@@ -264,6 +298,7 @@ export async function createGiftCardPayment(
   };
 
   const selectedAmount = amountMap[amountLabel];
+  const newsletterOptIn = wantsNewsletter(formData);
 
   if (!purchaserName || !purchaserEmail || !recipientName || !selectedAmount) {
     return {
@@ -329,6 +364,10 @@ export async function createGiftCardPayment(
       };
     }
 
+    if (newsletterOptIn) {
+      await addToNewsletterList(purchaserEmail, "gift-card-checkout");
+    }
+
     redirect(payment._links.checkout.href);
   } catch (error) {
     if (isRedirectError(error)) {
@@ -354,6 +393,7 @@ export async function createEventTicketPayment(
   const quantityLabel = readString(formData, "quantity");
   const customerName = readString(formData, "customer_name");
   const customerEmail = readString(formData, "customer_email");
+  const newsletterOptIn = wantsNewsletter(formData);
 
   const quantity = Number.parseInt(quantityLabel, 10);
 
@@ -455,6 +495,10 @@ export async function createEventTicketPayment(
           updateError?.message ? `: ${updateError.message}` : "."
         }`
       };
+    }
+
+    if (newsletterOptIn) {
+      await addToNewsletterList(customerEmail, "event-ticket-checkout");
     }
 
     redirect(payment._links.checkout.href);
