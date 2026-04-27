@@ -22,8 +22,11 @@ type SanityMenuItem = {
 };
 
 type SanityEventTicketType = {
+  _key?: string;
   title: string;
   priceLabel: string;
+  priceCents?: number;
+  description?: string;
   availableQuantity?: number;
 };
 
@@ -33,7 +36,11 @@ type SanityEvent = {
   slug?: { current?: string };
   startsAt: string;
   teaser: string;
+  venue?: string;
   primaryCtaLabel?: string;
+  ticketingMode?: "native" | "external" | "info";
+  ticketUrl?: string;
+  ticketInfo?: string;
   ticketTypes?: SanityEventTicketType[];
   body?: unknown[];
 };
@@ -71,7 +78,19 @@ function toEventSummary(event: SanityEvent) {
     dateLabel: formatEventDate(event.startsAt),
     priceLabel: firstTicket?.priceLabel || "Prijs volgt",
     availabilityLabel:
-      totalAvailability > 0 ? `${totalAvailability} tickets beschikbaar` : "Beperkte plaatsen"
+      totalAvailability > 0 ? `${totalAvailability} tickets beschikbaar` : "Beperkte plaatsen",
+    venue: event.venue || "In den Boule, Leuven",
+    ticketingMode: event.ticketingMode || "native",
+    ticketUrl: event.ticketUrl,
+    ticketInfo: event.ticketInfo,
+    ticketTypes: (event.ticketTypes || []).map((ticket, index) => ({
+      key: ticket._key || `${slug}-${index}`,
+      title: ticket.title,
+      description: ticket.description,
+      priceLabel: ticket.priceLabel,
+      priceCents: ticket.priceCents,
+      availableQuantity: ticket.availableQuantity
+    }))
   };
 }
 
@@ -148,7 +167,11 @@ export const getEventBySlug = cache(async (slug: string) => {
         slug,
         startsAt,
         teaser,
+        venue,
         primaryCtaLabel,
+        ticketingMode,
+        ticketUrl,
+        ticketInfo,
         ticketTypes,
         body
       }`,

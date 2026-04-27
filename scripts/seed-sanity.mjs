@@ -108,10 +108,20 @@ const events = [
     slug: { _type: "slug", current: "jazz-and-bites" },
     startsAt: "2026-05-22T20:00:00+02:00",
     teaser: "Live trio, deelgerechten en een intieme zaalopstelling voor 60 gasten.",
+    venue: "In den Boule, Leuven",
     primaryCtaLabel: "Koop ticket",
+    ticketingMode: "native",
+    ticketInfo: "Na betaling ontvang je een bevestiging per e-mail. De uiteindelijke e-ticket mailflow koppelen we in de volgende stap.",
     published: true,
     ticketTypes: [
-      { _key: "regular", title: "Regular", priceLabel: "27 euro", availableQuantity: 62 }
+      {
+        _key: "regular",
+        title: "Regular",
+        description: "Toegang tot concertavond en bitesformule.",
+        priceLabel: "27 euro",
+        priceCents: 2700,
+        availableQuantity: 62
+      }
     ]
   },
   {
@@ -121,10 +131,19 @@ const events = [
     slug: { _type: "slug", current: "chefs-table-noordzee" },
     startsAt: "2026-06-04T19:30:00+02:00",
     teaser: "Een exclusieve avond met 5 gangen, pairing en storytelling aan lange tafel.",
+    venue: "In den Boule, Leuven",
     primaryCtaLabel: "Reserveer je stoel",
+    ticketingMode: "native",
     published: true,
     ticketTypes: [
-      { _key: "dinner", title: "Chef's Table", priceLabel: "79 euro", availableQuantity: 18 }
+      {
+        _key: "dinner",
+        title: "Chef's Table",
+        description: "5 gangen aan de lange tafel met pairing.",
+        priceLabel: "79 euro",
+        priceCents: 7900,
+        availableQuantity: 18
+      }
     ]
   },
   {
@@ -134,10 +153,19 @@ const events = [
     slug: { _type: "slug", current: "mothers-day-brunch" },
     startsAt: "2026-05-10T11:00:00+02:00",
     teaser: "Familietafels, brunchbuffet en kinderformule met tijdssloten.",
+    venue: "In den Boule, Leuven",
     primaryCtaLabel: "Boek brunchslot",
+    ticketingMode: "native",
     published: true,
     ticketTypes: [
-      { _key: "brunch", title: "Brunch", priceLabel: "42 euro", availableQuantity: 36 }
+      {
+        _key: "brunch",
+        title: "Brunch",
+        description: "Brunchtoegang per persoon.",
+        priceLabel: "42 euro",
+        priceCents: 4200,
+        availableQuantity: 36
+      }
     ]
   }
 ];

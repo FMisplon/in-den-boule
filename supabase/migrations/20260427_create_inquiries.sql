@@ -42,10 +42,28 @@ create table if not exists public.gift_card_orders (
   mollie_payment_id text
 );
 
+create table if not exists public.event_ticket_orders (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  event_slug text not null,
+  event_title text not null,
+  ticket_type_key text not null,
+  ticket_type_title text not null,
+  quantity integer not null,
+  customer_name text not null,
+  customer_email text not null,
+  unit_price_cents integer not null,
+  total_amount_cents integer not null,
+  currency text not null default 'EUR',
+  status text not null default 'created',
+  mollie_payment_id text
+);
+
 alter table public.reservation_requests enable row level security;
 alter table public.contact_requests enable row level security;
 alter table public.venue_requests enable row level security;
 alter table public.gift_card_orders enable row level security;
+alter table public.event_ticket_orders enable row level security;
 
 grant usage on schema public to service_role;
 
@@ -53,3 +71,4 @@ grant select, insert on public.reservation_requests to service_role;
 grant select, insert on public.contact_requests to service_role;
 grant select, insert on public.venue_requests to service_role;
 grant select, insert, update on public.gift_card_orders to service_role;
+grant select, insert, update on public.event_ticket_orders to service_role;

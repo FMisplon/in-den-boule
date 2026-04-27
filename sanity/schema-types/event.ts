@@ -32,6 +32,12 @@ export const eventType = defineType({
       validation: (rule) => rule.required()
     }),
     defineField({
+      name: "venue",
+      title: "Locatie / venue",
+      type: "string",
+      initialValue: "In den Boule, Leuven"
+    }),
+    defineField({
       name: "body",
       title: "Beschrijving",
       type: "array",
@@ -42,6 +48,33 @@ export const eventType = defineType({
       title: "Hero-afbeelding",
       type: "image",
       options: { hotspot: true }
+    }),
+    defineField({
+      name: "ticketingMode",
+      title: "Ticketverkoop",
+      type: "string",
+      initialValue: "native",
+      options: {
+        list: [
+          { title: "Interne checkout", value: "native" },
+          { title: "Externe ticketlink", value: "external" },
+          { title: "Alleen info / contact", value: "info" }
+        ],
+        layout: "radio"
+      }
+    }),
+    defineField({
+      name: "ticketUrl",
+      title: "Externe ticket-URL",
+      type: "url",
+      hidden: ({ document }) => document?.ticketingMode !== "external"
+    }),
+    defineField({
+      name: "ticketInfo",
+      title: "Ticketinfo",
+      type: "text",
+      rows: 3,
+      description: "Korte praktische tekst onder het bestelblok."
     }),
     defineField({
       name: "ticketTypes",
@@ -62,6 +95,18 @@ export const eventType = defineType({
               title: "Prijslabel",
               type: "string",
               validation: (rule) => rule.required()
+            }),
+            defineField({
+              name: "priceCents",
+              title: "Prijs in cent",
+              type: "number",
+              validation: (rule) => rule.required().min(1)
+            }),
+            defineField({
+              name: "description",
+              title: "Beschrijving",
+              type: "text",
+              rows: 2
             }),
             defineField({
               name: "availableQuantity",

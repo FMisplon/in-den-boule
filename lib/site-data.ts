@@ -20,6 +20,18 @@ export type EventItem = {
   availabilityLabel: string;
   description: string;
   ctaLabel: string;
+  venue?: string;
+  ticketingMode?: "native" | "external" | "info";
+  ticketUrl?: string;
+  ticketInfo?: string;
+  ticketTypes?: Array<{
+    key: string;
+    title: string;
+    description?: string;
+    priceLabel: string;
+    priceCents?: number;
+    availableQuantity?: number;
+  }>;
 };
 
 export const site = {
@@ -85,7 +97,20 @@ export const events: EventItem[] = [
     priceLabel: "27 euro",
     availabilityLabel: "62 tickets beschikbaar",
     description: "Een avond die eten, muziek en cafékarakter samenbrengt. Voor de demo tonen we al hoe een standalone eventpagina kan werken voor promotie en ticketverkoop.",
-    ctaLabel: "Koop ticket"
+    ctaLabel: "Koop ticket",
+    venue: "In den Boule, Leuven",
+    ticketingMode: "native",
+    ticketInfo: "Na betaling ontvang je een bevestiging per e-mail. De uiteindelijke e-ticket mailflow koppelen we in de volgende stap.",
+    ticketTypes: [
+      {
+        key: "regular",
+        title: "Regular",
+        description: "Toegang tot concertavond en bitesformule.",
+        priceLabel: "27 euro",
+        priceCents: 2700,
+        availableQuantity: 62
+      }
+    ]
   },
   {
     slug: "chefs-table-noordzee",
@@ -95,7 +120,19 @@ export const events: EventItem[] = [
     priceLabel: "79 euro",
     availabilityLabel: "18 plaatsen",
     description: "Dit is het type event dat baat heeft bij een eigen verhaal, timing, tickettypes en beperkte capaciteit. In de echte build komt dit uit Sanity met voorraadkoppeling via Supabase.",
-    ctaLabel: "Reserveer je stoel"
+    ctaLabel: "Reserveer je stoel",
+    venue: "In den Boule, Leuven",
+    ticketingMode: "native",
+    ticketTypes: [
+      {
+        key: "chefs-table",
+        title: "Chef's Table",
+        description: "5 gangen aan de lange tafel met pairing.",
+        priceLabel: "79 euro",
+        priceCents: 7900,
+        availableQuantity: 18
+      }
+    ]
   },
   {
     slug: "mothers-day-brunch",
@@ -105,7 +142,19 @@ export const events: EventItem[] = [
     priceLabel: "42 euro",
     availabilityLabel: "3 slots",
     description: "Deze flow toont hoe events ook met varianten of tijdssloten gepresenteerd kunnen worden, zonder dat de homepage overvol raakt.",
-    ctaLabel: "Boek brunchslot"
+    ctaLabel: "Boek brunchslot",
+    venue: "In den Boule, Leuven",
+    ticketingMode: "native",
+    ticketTypes: [
+      {
+        key: "brunch",
+        title: "Brunch",
+        description: "Brunchtoegang per persoon.",
+        priceLabel: "42 euro",
+        priceCents: 4200,
+        availableQuantity: 36
+      }
+    ]
   }
 ];
 

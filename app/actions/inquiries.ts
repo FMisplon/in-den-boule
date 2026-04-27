@@ -7,6 +7,7 @@ import { createMolliePayment } from "@/lib/mollie";
 import { readString, type FormStatus } from "@/lib/forms";
 import { env } from "@/lib/env";
 import { sendFormEmails } from "@/lib/mailer";
+import { getEventBySlug } from "@/lib/sanity/loaders";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function getSupabaseForAction() {
@@ -241,6 +242,134 @@ export async function createGiftCardPayment(
 
     const { error: updateError } = await supabase
       .from("gift_card_orders")
+      .update({
+        mollie_payment_id: payment.id,
+        status: "pending"
+      })
+      .eq("id", insertedOrder.id);
+
+    if (updateError || !payment._links?.checkout?.href) {
+      return {
+        success: false,
+        message: `Betaling kon niet correct voorbereid worden${
+          updateError?.message ? `: ${updateError.message}` : "."
+        }`
+      };
+    }
+
+    redirect(payment._links.checkout.href);
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
+    const detail =
+      error instanceof Error && error.message ? ` (${error.message.slice(0, 160)})` : "";
+    return {
+      success: false,
+      message: `De betaling kon niet gestart worden${detail}.`
+    };
+  }
+}
+
+export async function createEventTicketPayment(
+  _prevState: FormStatus,
+  formData: FormData
+): Promise<FormStatus> {
+  const eventSlug = readString(formData, "event_slug");
+  const eventTitle = readString(formData, "event_title");
+  const ticketTypeKey = readString(formData, "ticket_type_key");
+  const quantityLabel = readString(formData, "quantity");
+  const customerName = readString(formData, "customer_name");
+  const customerEmail = readString(formData, "customer_email");
+
+  const quantity = Number.parseInt(quantityLabel, 10);
+
+  if (
+    !eventSlug ||
+    !eventTitle ||
+    !ticketTypeKey ||
+    !Number.isFinite(quantity) ||
+    quantity < 1 ||
+    !customerName ||
+    !customerEmail
+  ) {
+    return {
+      success: false,
+      message: "Vul tickettype, aantal, naam en e-mail in."
+    };
+  }
+
+  const event = await getEventBySlug(eventSlug);
+
+  if (!event || !event.ticketTypes?.length) {
+    return {
+      success: false,
+      message: "Dit event heeft momenteel geen tickettypes beschikbaar."
+    };
+  }
+
+  const ticketType = event.ticketTypes.find((ticket) => ticket.key === ticketTypeKey);
+
+  if (!ticketType?.priceCents) {
+    return {
+      success: false,
+      message: "Dit tickettype is nog niet correct geconfigureerd."
+    };
+  }
+
+  const supabase = getSupabaseForAction();
+
+  if (!supabase) {
+    return { success: false, message: "Serverconfiguratie ontbreekt voor eventtickets." };
+  }
+
+  const totalAmountCents = ticketType.priceCents * quantity;
+
+  const { data: insertedOrder, error: insertError } = await supabase
+    .from("event_ticket_orders")
+    .insert({
+      event_slug: eventSlug,
+      event_title: eventTitle,
+      ticket_type_key: ticketType.key,
+      ticket_type_title: ticketType.title,
+      quantity,
+      customer_name: customerName,
+      customer_email: customerEmail,
+      unit_price_cents: ticketType.priceCents,
+      total_amount_cents: totalAmountCents,
+      currency: "EUR",
+      status: "created"
+    })
+    .select("id")
+    .single();
+
+  if (insertError || !insertedOrder) {
+    return {
+      success: false,
+      message: `Ticketbestelling kon niet opgeslagen worden${
+        insertError?.message ? `: ${insertError.message}` : "."
+      }`
+    };
+  }
+
+  try {
+    const amountValue = (totalAmountCents / 100).toFixed(2);
+    const payment = await createMolliePayment({
+      amount: {
+        currency: "EUR",
+        value: amountValue
+      },
+      description: `${eventTitle} · ${ticketType.title} x${quantity}`,
+      redirectUrl: `${env.appUrl}/events/bedankt?order=${insertedOrder.id}`,
+      metadata: {
+        orderId: insertedOrder.id,
+        eventSlug
+      }
+    });
+
+    const { error: updateError } = await supabase
+      .from("event_ticket_orders")
       .update({
         mollie_payment_id: payment.id,
         status: "pending"

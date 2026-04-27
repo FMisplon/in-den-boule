@@ -23,6 +23,10 @@ export const eventsQuery = `*[_type == "event" && published == true] | order(sta
   slug,
   startsAt,
   teaser,
+  venue,
   primaryCtaLabel,
+  ticketingMode,
+  ticketUrl,
+  ticketInfo,
   ticketTypes
 }`;
