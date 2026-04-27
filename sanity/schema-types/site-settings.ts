@@ -39,5 +39,13 @@ export const siteSettingsType = defineType({
       title: "Telefoonnummer",
       type: "string"
     })
-  ]
+  ],
+  preview: {
+    prepare() {
+      return {
+        title: "Site settings",
+        subtitle: "Globale gegevens voor In den Boule"
+      };
+    }
+  }
 });

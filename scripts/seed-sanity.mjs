@@ -155,6 +155,23 @@ const siteSettings = {
 
 const documents = [...categories, ...menuItems, ...events, siteSettings];
 
+const seededMenuCategoryIds = categories.map((document) => document._id);
+const seededMenuItemIds = menuItems.map((document) => document._id);
+
+const staleMenuCategoryIds = await client.fetch(
+  `*[_type == "menuCategory" && !(_id in $ids)]._id`,
+  { ids: seededMenuCategoryIds }
+);
+
+const staleMenuItemIds = await client.fetch(`*[_type == "menuItem" && !(_id in $ids)]._id`, {
+  ids: seededMenuItemIds
+});
+
+for (const staleId of [...staleMenuItemIds, ...staleMenuCategoryIds]) {
+  await client.delete(staleId);
+  console.log(`Deleted stale ${staleId}`);
+}
+
 for (const document of documents) {
   await client.createOrReplace(document);
   console.log(`Seeded ${document._id}`);
