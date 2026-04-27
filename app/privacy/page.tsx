@@ -37,7 +37,8 @@ export default async function PrivacyPage() {
             <p>{lastUpdated}</p>
             <p className="legal-meta">
               Deze tekst is afgestemd op de huidige websitearchitectuur met Hostinger, Sanity,
-              Supabase, Mollie, mailverwerking en optionele GTM/GA4-metingen na toestemming.
+              Supabase, Mollie, mailverwerking en een consentlaag voor Google Tag Manager,
+              Google Analytics 4, Google Ads en Meta Pixel.
               {hasLegalDetails
                 ? " De juridische identificatie wordt hieronder automatisch ingelezen uit Site settings."
                 : " De officiële juridische naam van de uitbater, maatschappelijke zetel, KBO en btw-gegevens moeten nog definitief worden toegevoegd."}
@@ -114,6 +115,11 @@ export default async function PrivacyPage() {
                 Technische gegevens die nodig zijn om de website veilig en correct te laten werken,
                 zoals functionele sessiegegevens of beveiligingsinformatie.
               </li>
+              <li>
+                Metings- en advertentiegegevens, zoals pageviews, interacties, basisconversies en
+                remarketing- of doelgroepinformatie, voor zover dergelijke tags via Google Tag
+                Manager worden geactiveerd nadat je daarvoor toestemming hebt gegeven.
+              </li>
             </ul>
           </article>
 
@@ -131,6 +137,11 @@ export default async function PrivacyPage() {
                 toegangsgegevens heeft.
               </li>
               <li>Om de website te beveiligen, verbeteren en technisch beschikbaar te houden.</li>
+              <li>
+                Om websitegebruik, campagnes en conversies te meten en om advertentiecampagnes of
+                remarketing te ondersteunen, maar alleen wanneer de bezoeker daarvoor toestemming
+                heeft gegeven.
+              </li>
             </ul>
           </article>
 
@@ -143,7 +154,8 @@ export default async function PrivacyPage() {
               </li>
               <li>
                 Toestemming, bijvoorbeeld wanneer je je inschrijft voor een nieuwsbrief of
-                uitdrukkelijk kiest voor bijkomende communicatie.
+                uitdrukkelijk kiest voor bijkomende communicatie of niet-noodzakelijke analytics-
+                en marketingtags aanvaardt.
               </li>
               <li>
                 Gerechtvaardigd belang, bijvoorbeeld voor redelijke interne opvolging, beveiliging,
@@ -182,9 +194,11 @@ export default async function PrivacyPage() {
                 bevestigingsmails en autoreplies.
               </li>
               <li>
-                <strong>Google Tag Manager en Google Analytics 4</strong> voor webmeting en
-                conversieregistratie, maar uitsluitend nadat de bezoeker daarvoor toestemming heeft
-                gegeven via de cookiebanner.
+                <strong>Google Tag Manager</strong> als technische container om tags centraal te
+                beheren. Via die container kunnen, na toestemming, onder meer{" "}
+                <strong>Google Analytics 4</strong>, <strong>Google Ads</strong> en{" "}
+                <strong>Meta Pixel</strong> worden geladen voor webmeting, conversieregistratie,
+                remarketing en campagnemeting.
               </li>
             </ul>
             <p>
@@ -199,7 +213,9 @@ export default async function PrivacyPage() {
               Sommige van de gebruikte technologiepartners kunnen persoonsgegevens verwerken buiten
               België of buiten de Europese Economische Ruimte. In dat geval gebeurt dit, voor zover
               vereist, op basis van passende waarborgen zoals contractuele
-              beschermingsmechanismen van de betrokken leverancier.
+              beschermingsmechanismen van de betrokken leverancier. Dat kan in het bijzonder
+              relevant zijn voor leveranciers uit de Google- en Meta-groep, afhankelijk van hoe de
+              uiteindelijke tags en advertentieflows worden ingericht.
             </p>
           </article>
 
@@ -278,7 +294,8 @@ export default async function PrivacyPage() {
             <h2>10. Cookies en tracking</h2>
             <p>
               Meer informatie over cookies, functionele toegangscookies, externe diensten en het
-              gebruik van Google Tag Manager en Google Analytics 4 na toestemming vind je in ons{" "}
+              gebruik van Google Tag Manager als container en van tags zoals Google Analytics 4,
+              Google Ads en Meta Pixel na toestemming vind je in ons{" "}
               <a href="/cookiebeleid">cookiebeleid</a>.
             </p>
           </article>

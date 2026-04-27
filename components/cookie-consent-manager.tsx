@@ -138,8 +138,9 @@ export function CookieConsentManager({ gtmContainerId }: CookieConsentManagerPro
         <h2>We gebruiken alleen analytics en marketingtags als je daarvoor kiest.</h2>
         <p>
           Functionele cookies blijven actief voor beveiliging en werking van de site. Google Tag
-          Manager en GA4 worden pas geladen na toestemming. Je keuze kun je later altijd aanpassen
-          via de cookie-instellingen.
+          Manager fungeert als container, en tags zoals Google Analytics 4, Google Ads en Meta
+          Pixel worden pas geladen na toestemming. Je keuze kun je later altijd aanpassen via de
+          cookie-instellingen.
         </p>
       </div>
 
@@ -178,8 +179,9 @@ export function CookieConsentManager({ gtmContainerId }: CookieConsentManagerPro
             <div>
               <strong>Analytics</strong>
               <p>
-                Laat GTM en GA4 toe om pageviews en basisconversies zoals reservaties,
-                nieuwsbriefinschrijvingen, tickets en cadeaubonnen te meten.
+                Laat via Google Tag Manager onder meer Google Analytics 4 toe om pageviews en
+                basisconversies zoals reservaties, nieuwsbriefinschrijvingen, tickets en
+                cadeaubonnen te meten.
               </p>
             </div>
             <input
@@ -198,7 +200,8 @@ export function CookieConsentManager({ gtmContainerId }: CookieConsentManagerPro
             <div>
               <strong>Marketing</strong>
               <p>
-                Voor later gebruik met Google Ads, Meta of andere advertentieplatformen via GTM.
+                Laat via Google Tag Manager marketing- en advertentietags toe, zoals Google Ads,
+                Meta Pixel en vergelijkbare remarketing- of campagneplatformen.
               </p>
             </div>
             <input

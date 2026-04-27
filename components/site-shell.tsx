@@ -107,13 +107,9 @@ export async function SiteShell({
         <div className="footer-block footer-newsletter">
           <NewsletterSignupForm />
         </div>
-        <div className="footer-block">
-          <p>{site.name}</p>
-          <p>{site.address}</p>
-        </div>
         {socialProfiles.length ? (
           <div className="footer-block footer-socials">
-            <p className="footer-socials-title">Volg ons op</p>
+            <p className="footer-heading">Volg ons op</p>
             <div className="footer-socials-row">
               {socialProfiles.map((profile) => (
                 <a
@@ -132,18 +128,20 @@ export async function SiteShell({
             </div>
           </div>
         ) : null}
-        <div className="footer-block">
+        <div className="footer-block footer-legal">
+          <p className="footer-heading">Wettelijk</p>
           <Link href="/privacy">Privacybeleid</Link>
           <Link href="/cookiebeleid">Cookiebeleid</Link>
           <CookiePreferencesButton className="footer-link-button" />
           <Link href="/algemene-voorwaarden">Algemene voorwaarden</Link>
         </div>
         <div className="footer-block footer-credit">
+          <p className="footer-heading">Design &amp; development</p>
           <a
             href="https://glowth.be"
             target="_blank"
             rel="noreferrer"
-            aria-label="Website ontwerp en realisatie door Glowth"
+            aria-label="Glowth"
           >
             <Image
               src="/assets/images/glowth-logo-white.png"
@@ -151,7 +149,6 @@ export async function SiteShell({
               width={160}
               height={94}
             />
-            <span>Website ontwerp en realisatie door Glowth</span>
           </a>
         </div>
       </footer>

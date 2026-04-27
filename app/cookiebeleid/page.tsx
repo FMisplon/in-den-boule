@@ -1,6 +1,6 @@
 import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
-import { getPageHeroImage } from "@/lib/sanity/loaders";
+import { getPageHeroImage, getSiteSettings } from "@/lib/sanity/loaders";
 import { site } from "@/lib/site-data";
 
 const lastUpdated = "27 april 2026";
@@ -8,7 +8,17 @@ const lastUpdated = "27 april 2026";
 export const revalidate = 60;
 
 export default async function CookiePolicyPage() {
-  const heroImage = await getPageHeroImage("cookiebeleid");
+  const [heroImage, siteSettings] = await Promise.all([
+    getPageHeroImage("cookiebeleid"),
+    getSiteSettings()
+  ]);
+  const legalIdentity = siteSettings.legalEntityName || site.name;
+  const hasLegalDetails = Boolean(
+    siteSettings.legalEntityName ||
+      siteSettings.registeredOffice ||
+      siteSettings.companyNumber ||
+      siteSettings.vatNumber
+  );
 
   return (
     <SiteShell>
@@ -26,23 +36,48 @@ export default async function CookiePolicyPage() {
             <p className="legal-kicker">Laatste update</p>
             <p>{lastUpdated}</p>
             <p className="legal-meta">
-              Belangrijk: Google Tag Manager en Google Analytics 4 worden op deze website alleen
-              geladen nadat een bezoeker daarvoor toestemming geeft. Marketingtags kunnen later via
-              dezelfde consentlaag worden toegevoegd, maar blijven uitgeschakeld zolang daarvoor
-              geen toestemming is gegeven.
+              Belangrijk: Google Tag Manager fungeert hier als container. Niet-noodzakelijke tags
+              zoals Google Analytics 4, Google Ads en Meta Pixel worden alleen geladen nadat een
+              bezoeker daarvoor toestemming geeft via de cookiebanner.
             </p>
           </article>
 
           <article className="legal-card">
             <h2>1. Wie is verantwoordelijk?</h2>
             <p>
-              Deze website wordt uitgebaat onder de naam <strong>{site.name}</strong>, bereikbaar
-              via {site.address} en <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
+              Deze website wordt uitgebaat onder de naam <strong>{legalIdentity}</strong>,
+              bereikbaar via {site.address} en{" "}
+              <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
             </p>
-            <p>
-              Juridische identificatie van de uitbater, maatschappelijke zetel, KBO-nummer en
-              btw-nummer moeten nog definitief worden aangevuld in deze tekst.
-            </p>
+            {hasLegalDetails ? (
+              <ul>
+                {siteSettings.legalEntityName ? (
+                  <li>
+                    <strong>Juridische uitbater:</strong> {siteSettings.legalEntityName}
+                  </li>
+                ) : null}
+                {siteSettings.registeredOffice ? (
+                  <li>
+                    <strong>Maatschappelijke zetel:</strong> {siteSettings.registeredOffice}
+                  </li>
+                ) : null}
+                {siteSettings.companyNumber ? (
+                  <li>
+                    <strong>KBO / ondernemingsnummer:</strong> {siteSettings.companyNumber}
+                  </li>
+                ) : null}
+                {siteSettings.vatNumber ? (
+                  <li>
+                    <strong>Btw-nummer:</strong> {siteSettings.vatNumber}
+                  </li>
+                ) : null}
+              </ul>
+            ) : (
+              <p>
+                Juridische identificatie van de uitbater, maatschappelijke zetel, KBO-nummer en
+                btw-nummer moeten nog definitief worden aangevuld in deze tekst.
+              </p>
+            )}
           </article>
 
           <article className="legal-card">
@@ -90,10 +125,15 @@ export default async function CookiePolicyPage() {
           <article className="legal-card">
             <h2>4. Google Tag Manager en analytics</h2>
             <p>
-              Google Tag Manager is het systeem waarmee tags centraal kunnen worden beheerd. Google
-              Analytics 4 kan via die container worden geladen om pageviews en basisconversies te
-              meten, zoals reservatieaanvragen, nieuwsbriefinschrijvingen en succesvolle
-              ticket- of cadeaubonaankopen.
+              Google Tag Manager is het systeem waarmee tags centraal kunnen worden beheerd. Via
+              die container kunnen, afhankelijk van de ingestelde toestemming, onder meer Google
+              Analytics 4, Google Ads en Meta Pixel worden geladen.
+            </p>
+            <p>
+              Google Analytics 4 kan worden gebruikt om pageviews en basisconversies te meten,
+              zoals reservatieaanvragen, nieuwsbriefinschrijvingen en succesvolle ticket- of
+              cadeaubonaankopen. Google Ads en Meta Pixel kunnen worden gebruikt voor
+              advertentiemeting, remarketing, doelgroepopbouw en campagne-attributie.
             </p>
             <p>
               Deze tags worden alleen geactiveerd nadat de bezoeker daarvoor toestemming heeft
@@ -121,8 +161,10 @@ export default async function CookiePolicyPage() {
               huidige implementatie maximaal 8 uur bijgehouden.
             </p>
             <p>
-              Als later een toestemmingsvoorkeur of analytische cookies worden toegevoegd, zullen de
-              concrete bewaartermijnen ook in dit beleid of in de cookiebanner worden vermeld.
+              Voor analytics- en marketingcookies of gelijkaardige trackingtechnieken via Google of
+              Meta kunnen de concrete bewaartermijnen verschillen naargelang de ingestelde tags,
+              advertentieproducten en browserinstellingen. Waar relevant worden die termijnen via
+              dit beleid, de banner of de documentatie van de betrokken leverancier verduidelijkt.
             </p>
           </article>
 
@@ -135,8 +177,8 @@ export default async function CookiePolicyPage() {
                 werken, vooral functies rond formulieren, beveiligde toegang en checkoutflows.
               </li>
               <li>
-                Zodra we een expliciete cookiebanner voor niet-noodzakelijke cookies activeren, zal
-                je je keuze ook daar kunnen aanpassen.
+                Via de cookiebanner en de knop cookie-instellingen op de website kan je je keuze
+                voor analytics- en marketingcookies later opnieuw aanpassen.
               </li>
             </ul>
           </article>

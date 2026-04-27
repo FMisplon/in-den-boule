@@ -168,6 +168,7 @@ export async function submitReservation(
   }
 
   revalidatePath("/reservatie");
+  revalidatePath("/reservaties/admin");
   return {
     success: true,
     message: mailResult.warning
@@ -412,6 +413,8 @@ export async function createGiftCardPayment(
   const { data: insertedOrder, error: insertError } = await supabase
     .from("gift_card_orders")
     .insert({
+      product_slug: shopProduct.slug,
+      product_title: shopProduct.title,
       purchaser_name: purchaserName,
       purchaser_email: purchaserEmail,
       recipient_name: recipientName,
@@ -471,6 +474,7 @@ export async function createGiftCardPayment(
       await addToNewsletterList(purchaserEmail, "gift-card-checkout");
     }
 
+    revalidatePath("/shop/admin");
     redirect(payment._links.checkout.href);
   } catch (error) {
     if (isRedirectError(error)) {
