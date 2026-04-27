@@ -42,7 +42,7 @@ export function NewsletterSignupForm() {
         <SubmitButton>Schrijf in</SubmitButton>
       </div>
       <p className="newsletter-copy">
-        Schrijf je in voor nieuws over events, specials en nieuwe formules in In den Boule.
+        Nieuws over events en specials.
       </p>
       <FormFeedback state={state} />
     </form>

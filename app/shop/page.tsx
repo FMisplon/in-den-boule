@@ -23,7 +23,10 @@ export default async function ShopPage() {
   const giftCardProduct = products.find(
     (product) => product.productType === "gift-card-digital" && product.priceOptions.length > 0
   );
-  const hasProducts = products.length > 0;
+  const nonGiftCardProducts = products.filter(
+    (product) => !(giftCardProduct && product.slug === giftCardProduct.slug)
+  );
+  const showProductGrid = nonGiftCardProducts.length > 0;
 
   return (
     <SiteShell ctaHref="/shop" ctaLabel="Bestel cadeaubon">
@@ -36,9 +39,9 @@ export default async function ShopPage() {
       />
 
       <section className="section shop-section">
-        {hasProducts ? (
+        {showProductGrid ? (
           <div className="shop-grid">
-            {products.map((product) => (
+            {nonGiftCardProducts.map((product) => (
               <article className="shop-card" key={product.slug}>
                 <span>
                   {product.productType === "gift-card-digital"
