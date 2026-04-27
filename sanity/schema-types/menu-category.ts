@@ -34,8 +34,7 @@ export const menuCategoryType = defineType({
     defineField({
       name: "description",
       title: "Beschrijving",
-      type: "text",
-      rows: 3,
+      type: "richText",
       description: "Optioneel. Handig voor interne context of latere CMS-weergaves."
     }),
     defineField({

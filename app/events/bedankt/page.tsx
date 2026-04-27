@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { ConversionTracker } from "@/components/conversion-tracker";
 import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
+import { ensureEventTicketsIssued } from "@/lib/event-tickets";
+import type { EventTicketRecord } from "@/lib/event-tickets";
+import { sendEventTicketConfirmationEmails } from "@/lib/mailer";
 import { getPageHeroImage } from "@/lib/sanity/loaders";
 import { getMolliePayment } from "@/lib/mollie";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -24,7 +27,7 @@ export default async function EventThankYouPage({
   const { data: eventOrder } = await supabase
     .from("event_ticket_orders")
     .select(
-      "id,status,mollie_payment_id,event_slug,event_title,ticket_type_title,customer_email,quantity,total_amount_cents"
+      "id,status,mollie_payment_id,event_slug,event_title,ticket_type_key,ticket_type_title,customer_name,customer_email,quantity,unit_price_cents,total_amount_cents,currency,tickets_issued_at,confirmation_sent_at"
     )
     .eq("id", order)
     .maybeSingle();
@@ -55,6 +58,39 @@ export default async function EventThankYouPage({
     currency: "EUR"
   }).format(eventOrder.total_amount_cents / 100);
   const heroImage = await getPageHeroImage("events-bedankt");
+  let tickets: EventTicketRecord[] = [];
+  let mailWarning = "";
+
+  if (isPaid) {
+    try {
+      tickets = await ensureEventTicketsIssued(supabase, eventOrder);
+
+      if (!eventOrder.confirmation_sent_at && tickets.length > 0) {
+        const mailResult = await sendEventTicketConfirmationEmails({
+          orderId: eventOrder.id,
+          customerName: eventOrder.customer_name,
+          customerEmail: eventOrder.customer_email,
+          eventTitle: eventOrder.event_title,
+          ticketTypeTitle: eventOrder.ticket_type_title,
+          quantity: eventOrder.quantity,
+          totalAmountCents: eventOrder.total_amount_cents,
+          tickets
+        });
+
+        if (mailResult.delivered) {
+          await supabase
+            .from("event_ticket_orders")
+            .update({ confirmation_sent_at: new Date().toISOString() })
+            .eq("id", eventOrder.id);
+        } else if (mailResult.warning) {
+          mailWarning = mailResult.warning;
+        }
+      }
+    } catch {
+      mailWarning =
+        "De betaling is bevestigd, maar het klaarzetten van de tickets liep nog niet volledig goed. Neem even contact op met het team.";
+    }
+  }
 
   return (
     <SiteShell ctaHref={`/events/${eventOrder.event_slug}`} ctaLabel="Terug naar event">
@@ -112,11 +148,36 @@ export default async function EventThankYouPage({
               ? `De bevestiging belandt op ${eventOrder.customer_email}.`
               : `Huidige betaalstatus: ${paymentStatus}.`}
           </h2>
+          {mailWarning ? <p style={{ marginTop: "0.75rem" }}>{mailWarning}</p> : null}
         </div>
         <Link className="button" href="/contact">
           Contacteer ons
         </Link>
       </section>
+
+      {isPaid && tickets.length > 0 ? (
+        <section className="section venue-section">
+          <div className="section-heading">
+            <p className="eyebrow">Jouw tickets</p>
+            <h2>Klaar voor de deur.</h2>
+          </div>
+          <div className="shop-grid">
+            {tickets.map((ticket, index) => (
+              <article className="venue-panel" key={ticket.id}>
+                <span>Ticket {index + 1}</span>
+                <h3>{ticket.ticket_type_title}</h3>
+                <p>
+                  Code: <code>{ticket.ticket_code}</code>
+                </p>
+                <p>Open de ticketpagina voor de QR-code en check-in aan de ingang.</p>
+                <Link className="button" href={`/tickets/${ticket.ticket_code}`}>
+                  Open ticket
+                </Link>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
     </SiteShell>
   );
 }

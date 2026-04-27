@@ -1,6 +1,6 @@
 import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
-import { getPageHeroImage } from "@/lib/sanity/loaders";
+import { getPageHeroImage, getSiteSettings } from "@/lib/sanity/loaders";
 import { site } from "@/lib/site-data";
 
 const lastUpdated = "27 april 2026";
@@ -8,7 +8,17 @@ const lastUpdated = "27 april 2026";
 export const revalidate = 60;
 
 export default async function TermsPage() {
-  const heroImage = await getPageHeroImage("algemene-voorwaarden");
+  const [heroImage, siteSettings] = await Promise.all([
+    getPageHeroImage("algemene-voorwaarden"),
+    getSiteSettings()
+  ]);
+  const legalIdentity = siteSettings.legalEntityName || site.name;
+  const hasLegalDetails = Boolean(
+    siteSettings.legalEntityName ||
+      siteSettings.registeredOffice ||
+      siteSettings.companyNumber ||
+      siteSettings.vatNumber
+  );
 
   return (
     <SiteShell>
@@ -26,23 +36,50 @@ export default async function TermsPage() {
             <p className="legal-kicker">Laatste update</p>
             <p>{lastUpdated}</p>
             <p className="legal-meta">
-              Praktische noot: deze tekst is afgestemd op de huidige websiteflow, maar de officiële
-              juridische identificatie van de uitbater moet nog definitief worden aangevuld.
+              Praktische noot: deze tekst is afgestemd op de huidige websiteflow.
+              {hasLegalDetails
+                ? " De juridische identificatie hieronder wordt automatisch ingelezen uit Site settings."
+                : " De officiële juridische identificatie van de uitbater moet nog definitief worden aangevuld."}
             </p>
           </article>
 
           <article className="legal-card">
             <h2>1. Identiteit van de uitbater</h2>
             <p>
-              De website wordt gebruikt voor de activiteiten van <strong>{site.name}</strong>,
+              De website wordt gebruikt voor de activiteiten van <strong>{legalIdentity}</strong>,
               gevestigd te {site.address}, bereikbaar via{" "}
               <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> en{" "}
               <a href={`tel:${site.contactPhone.replace(/\s+/g, "")}`}>{site.contactPhone}</a>.
             </p>
-            <p>
-              Nog aan te vullen voor finale publicatie: officiële vennootschapsnaam of naam van de
-              uitbater, maatschappelijke zetel, ondernemingsnummer/KBO en btw-nummer.
-            </p>
+            {hasLegalDetails ? (
+              <ul>
+                {siteSettings.legalEntityName ? (
+                  <li>
+                    <strong>Juridische uitbater:</strong> {siteSettings.legalEntityName}
+                  </li>
+                ) : null}
+                {siteSettings.registeredOffice ? (
+                  <li>
+                    <strong>Maatschappelijke zetel:</strong> {siteSettings.registeredOffice}
+                  </li>
+                ) : null}
+                {siteSettings.companyNumber ? (
+                  <li>
+                    <strong>KBO / ondernemingsnummer:</strong> {siteSettings.companyNumber}
+                  </li>
+                ) : null}
+                {siteSettings.vatNumber ? (
+                  <li>
+                    <strong>Btw-nummer:</strong> {siteSettings.vatNumber}
+                  </li>
+                ) : null}
+              </ul>
+            ) : (
+              <p>
+                Nog aan te vullen voor finale publicatie: officiële vennootschapsnaam of naam van de
+                uitbater, maatschappelijke zetel, ondernemingsnummer/KBO en btw-nummer.
+              </p>
+            )}
           </article>
 
           <article className="legal-card">

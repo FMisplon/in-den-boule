@@ -19,6 +19,7 @@ import {
   shopProductsQuery,
   siteSettingsQuery
 } from "@/lib/sanity/queries";
+import { richTextToPlainText, type RichTextValue } from "@/lib/sanity/rich-text";
 
 const SANITY_REVALIDATE_SECONDS = 60;
 const SANITY_FETCH_OPTIONS = {
@@ -47,6 +48,10 @@ type SanitySiteSettings = {
   openingHours?: string;
   contactEmail?: string;
   contactPhone?: string;
+  legalEntityName?: string;
+  registeredOffice?: string;
+  companyNumber?: string;
+  vatNumber?: string;
   gtmContainerId?: string;
   pageHeroImages?: Array<{
     pageKey?: PageHeroKey;
@@ -63,7 +68,7 @@ type SanitySiteSettings = {
 type SanityHomePageCard = {
   eyebrow?: string;
   title?: string;
-  body?: string;
+  body?: string | RichTextValue;
   ctaLabel?: string;
   ctaHref?: string;
 };
@@ -71,7 +76,7 @@ type SanityHomePageCard = {
 type SanityHomePage = {
   heroEyebrow?: string;
   heroTitle?: string;
-  heroText?: string;
+  heroText?: string | RichTextValue;
   primaryCtaLabel?: string;
   primaryCtaHref?: string;
   secondaryCtaLabel?: string;
@@ -79,7 +84,7 @@ type SanityHomePage = {
   heroPoints?: string[];
   storyEyebrow?: string;
   storyTitle?: string;
-  storyText?: string;
+  storyText?: string | RichTextValue;
   conceptEyebrow?: string;
   conceptTitle?: string;
   conceptCards?: SanityHomePageCard[];
@@ -91,7 +96,7 @@ type SanityHomePage = {
 type SanityMenuItem = {
   _id: string;
   title: string;
-  description?: string;
+  description?: string | RichTextValue;
   priceLabel: string;
   displayLabel?: string;
   category?: string;
@@ -103,7 +108,7 @@ type SanityShopProduct = {
   title?: string;
   slug?: { current?: string };
   productType?: "gift-card-digital" | "physical";
-  excerpt?: string;
+  excerpt?: string | RichTextValue;
   active?: boolean;
   priceOptions?: Array<{
     label?: string;
@@ -116,7 +121,7 @@ type SanityEventTicketType = {
   title: string;
   priceLabel: string;
   priceCents?: number;
-  description?: string;
+  description?: string | RichTextValue;
   availableQuantity?: number;
 };
 
@@ -125,7 +130,7 @@ type SanityEvent = {
   title: string;
   slug?: { current?: string };
   startsAt: string;
-  teaser: string;
+  teaser: string | RichTextValue;
   heroImage?: unknown;
   venue?: string;
   listingVisibility?: "public" | "private";
@@ -135,9 +140,9 @@ type SanityEvent = {
   primaryCtaLabel?: string;
   ticketingMode?: "native" | "external" | "info";
   ticketUrl?: string;
-  ticketInfo?: string;
+  ticketInfo?: string | RichTextValue;
   ticketTypes?: SanityEventTicketType[];
-  body?: unknown[];
+  body?: RichTextValue;
 };
 
 function resolveEventSalesStatus(event: SanityEvent) {
@@ -211,8 +216,9 @@ function toEventSummary(event: SanityEvent) {
   return {
     slug,
     title: event.title,
-    intro: event.teaser,
-    description: event.teaser,
+    intro: richTextToPlainText(event.teaser),
+    description: richTextToPlainText(event.teaser),
+    descriptionRich: Array.isArray(event.teaser) ? event.teaser : undefined,
     ctaLabel: event.primaryCtaLabel || "Koop ticket",
     dateLabel: formatEventDate(event.startsAt),
     priceLabel: firstTicket?.priceLabel || "Prijs volgt",
@@ -228,13 +234,16 @@ function toEventSummary(event: SanityEvent) {
     heroImageUrl: event.heroImage
       ? urlFor(event.heroImage).width(2400).height(1200).fit("crop").url()
       : undefined,
+    body: event.body,
     ticketingMode: event.ticketingMode || "native",
     ticketUrl: event.ticketUrl,
-    ticketInfo: event.ticketInfo,
+    ticketInfo: richTextToPlainText(event.ticketInfo),
+    ticketInfoRich: Array.isArray(event.ticketInfo) ? event.ticketInfo : undefined,
     ticketTypes: (event.ticketTypes || []).map((ticket, index) => ({
       key: ticket._key || `${slug}-${index}`,
       title: ticket.title,
-      description: ticket.description,
+      description: richTextToPlainText(ticket.description),
+      descriptionRich: Array.isArray(ticket.description) ? ticket.description : undefined,
       priceLabel: ticket.priceLabel,
       priceCents: ticket.priceCents,
       availableQuantity: ticket.availableQuantity,
@@ -261,7 +270,8 @@ function mergeHomeCards(
     .map((card, index) => ({
       eyebrow: card.eyebrow || fallbackCards[index]?.eyebrow,
       title: card.title || fallbackCards[index]?.title,
-      body: card.body || fallbackCards[index]?.body,
+      body: richTextToPlainText(card.body) || fallbackCards[index]?.body,
+      bodyRich: Array.isArray(card.body) ? card.body : fallbackCards[index]?.bodyRich,
       ctaLabel: card.ctaLabel || fallbackCards[index]?.ctaLabel,
       ctaHref: card.ctaHref || fallbackCards[index]?.ctaHref
     }))
@@ -283,7 +293,8 @@ export const getHomePage = cache(async () => {
     return {
       heroEyebrow: data.heroEyebrow || fallbackHomePage.heroEyebrow,
       heroTitle: data.heroTitle || fallbackHomePage.heroTitle,
-      heroText: data.heroText || fallbackHomePage.heroText,
+      heroText: richTextToPlainText(data.heroText) || fallbackHomePage.heroText,
+      heroTextRich: Array.isArray(data.heroText) ? data.heroText : fallbackHomePage.heroTextRich,
       primaryCtaLabel: data.primaryCtaLabel || fallbackHomePage.primaryCtaLabel,
       primaryCtaHref: data.primaryCtaHref || fallbackHomePage.primaryCtaHref,
       secondaryCtaLabel: data.secondaryCtaLabel || fallbackHomePage.secondaryCtaLabel,
@@ -292,7 +303,8 @@ export const getHomePage = cache(async () => {
         data.heroPoints?.filter(Boolean).length ? data.heroPoints.filter(Boolean) : fallbackHomePage.heroPoints,
       storyEyebrow: data.storyEyebrow || fallbackHomePage.storyEyebrow,
       storyTitle: data.storyTitle || fallbackHomePage.storyTitle,
-      storyText: data.storyText || fallbackHomePage.storyText,
+      storyText: richTextToPlainText(data.storyText) || fallbackHomePage.storyText,
+      storyTextRich: Array.isArray(data.storyText) ? data.storyText : fallbackHomePage.storyTextRich,
       conceptEyebrow: data.conceptEyebrow || fallbackHomePage.conceptEyebrow,
       conceptTitle: data.conceptTitle || fallbackHomePage.conceptTitle,
       conceptCards: mergeHomeCards(data.conceptCards, fallbackHomePage.conceptCards),
@@ -326,6 +338,10 @@ export const getSiteSettings = cache(async () => {
       kitchen: fallbackSite.kitchen,
       contactEmail: data.contactEmail || fallbackSite.contactEmail,
       contactPhone: data.contactPhone || fallbackSite.contactPhone,
+      legalEntityName: data.legalEntityName?.trim() || fallbackSite.legalEntityName,
+      registeredOffice: data.registeredOffice?.trim() || fallbackSite.registeredOffice,
+      companyNumber: data.companyNumber?.trim() || fallbackSite.companyNumber,
+      vatNumber: data.vatNumber?.trim() || fallbackSite.vatNumber,
       gtmContainerId: data.gtmContainerId?.trim() || fallbackSite.gtmContainerId,
       pageHeroImages:
         data.pageHeroImages
@@ -367,7 +383,7 @@ export const getMenuItems = cache(async () => {
       category: item.category || "Menu",
       label: item.displayLabel || item.category || "Menu",
       title: item.title,
-      description: item.description || "",
+      description: richTextToPlainText(item.description),
       price: item.priceLabel,
       imageUrl: item.image ? urlFor(item.image).width(900).height(720).fit("crop").url() : undefined
     }));
@@ -384,7 +400,7 @@ export const getShopProducts = cache(async (): Promise<ShopProductItem[]> => {
       SANITY_FETCH_OPTIONS
     );
 
-    const mapped = data
+    const mapped: ShopProductItem[] = data
       .map((product) => {
         const slug = product.slug?.current?.trim();
         const title = product.title?.trim();
@@ -398,7 +414,8 @@ export const getShopProducts = cache(async (): Promise<ShopProductItem[]> => {
           title,
           slug,
           productType: product.productType,
-          excerpt: product.excerpt?.trim() || "",
+          excerpt: richTextToPlainText(product.excerpt),
+          excerptRich: Array.isArray(product.excerpt) ? product.excerpt : undefined,
           active: product.active !== false,
           priceOptions: (product.priceOptions || [])
             .filter(
@@ -415,7 +432,7 @@ export const getShopProducts = cache(async (): Promise<ShopProductItem[]> => {
             }))
         };
       })
-      .filter((product): product is ShopProductItem => Boolean(product));
+      .filter((product): product is NonNullable<typeof product> => Boolean(product));
 
     if (mapped.length) {
       return mapped;

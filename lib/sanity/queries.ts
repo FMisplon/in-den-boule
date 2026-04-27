@@ -25,6 +25,10 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   openingHours,
   contactEmail,
   contactPhone,
+  legalEntityName,
+  registeredOffice,
+  companyNumber,
+  vatNumber,
   gtmContainerId,
   pageHeroImages[]{
     pageKey,

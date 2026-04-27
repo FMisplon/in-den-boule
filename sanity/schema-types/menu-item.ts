@@ -45,8 +45,7 @@ export const menuItemType = defineType({
     defineField({
       name: "description",
       title: "Beschrijving",
-      type: "text",
-      rows: 3,
+      type: "richText",
       group: "content"
     }),
     defineField({

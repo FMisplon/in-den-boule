@@ -41,8 +41,7 @@ export const shopProductType = defineType({
     defineField({
       name: "excerpt",
       title: "Korte intro",
-      type: "text",
-      rows: 3,
+      type: "richText",
       group: "content"
     }),
     defineField({

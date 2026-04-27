@@ -1,3 +1,5 @@
+import type { RichTextValue } from "@/lib/sanity/rich-text";
+
 export type NavItem = {
   href: string;
   label: string;
@@ -29,13 +31,17 @@ export type EventItem = {
   salesBadge?: string;
   canBuyTickets?: boolean;
   heroImageUrl?: string;
+  descriptionRich?: RichTextValue;
+  body?: RichTextValue;
   ticketingMode?: "native" | "external" | "info";
   ticketUrl?: string;
   ticketInfo?: string;
+  ticketInfoRich?: RichTextValue;
   ticketTypes?: Array<{
     key: string;
     title: string;
     description?: string;
+    descriptionRich?: RichTextValue;
     priceLabel: string;
     priceCents?: number;
     availableQuantity?: number;
@@ -47,6 +53,7 @@ export type HomePageCard = {
   eyebrow?: string;
   title: string;
   body: string;
+  bodyRich?: RichTextValue;
   ctaLabel?: string;
   ctaHref?: string;
 };
@@ -55,6 +62,7 @@ export type HomePageConfig = {
   heroEyebrow: string;
   heroTitle: string;
   heroText: string;
+  heroTextRich?: RichTextValue;
   primaryCtaLabel: string;
   primaryCtaHref: string;
   secondaryCtaLabel: string;
@@ -63,6 +71,7 @@ export type HomePageConfig = {
   storyEyebrow: string;
   storyTitle: string;
   storyText: string;
+  storyTextRich?: RichTextValue;
   conceptEyebrow: string;
   conceptTitle: string;
   conceptCards: HomePageCard[];
@@ -77,6 +86,7 @@ export type ShopProductItem = {
   slug: string;
   productType: "gift-card-digital" | "physical";
   excerpt: string;
+  excerptRich?: RichTextValue;
   active: boolean;
   priceOptions: Array<{
     label: string;
@@ -106,6 +116,10 @@ export const site = {
   kitchen: "Altijd doorlopend open",
   contactEmail: "hallo@indenboule.be",
   contactPhone: "+32 494 86 98 46",
+  legalEntityName: "",
+  registeredOffice: "",
+  companyNumber: "",
+  vatNumber: "",
   gtmContainerId: "",
   pageHeroImages: [] as Array<{
     pageKey: PageHeroKey;

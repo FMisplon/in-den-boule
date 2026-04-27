@@ -29,8 +29,7 @@ export const homePageType = defineType({
     defineField({
       name: "heroText",
       title: "Hero intro",
-      type: "text",
-      rows: 4,
+      type: "richText",
       validation: (rule) => rule.required(),
       group: "hero"
     }),
@@ -89,8 +88,7 @@ export const homePageType = defineType({
     defineField({
       name: "storyText",
       title: "Verhaal tekst",
-      type: "text",
-      rows: 5,
+      type: "richText",
       validation: (rule) => rule.required(),
       group: "story"
     }),
@@ -125,8 +123,7 @@ export const homePageType = defineType({
             defineField({
               name: "body",
               title: "Tekst",
-              type: "text",
-              rows: 3,
+              type: "richText",
               validation: (rule) => rule.required()
             })
           ],
@@ -174,8 +171,7 @@ export const homePageType = defineType({
             defineField({
               name: "body",
               title: "Tekst",
-              type: "text",
-              rows: 3,
+              type: "richText",
               validation: (rule) => rule.required()
             }),
             defineField({

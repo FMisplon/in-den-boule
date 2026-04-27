@@ -8,6 +8,7 @@ export const siteSettingsType = defineType({
     { name: "branding", title: "Branding", default: true },
     { name: "practical", title: "Praktisch" },
     { name: "contact", title: "Contact" },
+    { name: "legal", title: "Juridisch" },
     { name: "social", title: "Socials" },
     { name: "analytics", title: "Analytics" },
     { name: "pageHero", title: "Pagina hero's" }
@@ -54,6 +55,34 @@ export const siteSettingsType = defineType({
       title: "Telefoonnummer",
       type: "string",
       group: "contact"
+    }),
+    defineField({
+      name: "legalEntityName",
+      title: "Juridische uitbater / vennootschap",
+      type: "string",
+      description: "Officiële naam van de uitbater of vennootschap.",
+      group: "legal"
+    }),
+    defineField({
+      name: "registeredOffice",
+      title: "Maatschappelijke zetel",
+      type: "string",
+      description: "Officieel adres van de vennootschap of uitbater.",
+      group: "legal"
+    }),
+    defineField({
+      name: "companyNumber",
+      title: "KBO / ondernemingsnummer",
+      type: "string",
+      description: "Bijvoorbeeld 0123.456.789.",
+      group: "legal"
+    }),
+    defineField({
+      name: "vatNumber",
+      title: "Btw-nummer",
+      type: "string",
+      description: "Bijvoorbeeld BE0123.456.789.",
+      group: "legal"
     }),
     defineField({
       name: "socialProfiles",

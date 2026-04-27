@@ -1,6 +1,6 @@
 import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
-import { getPageHeroImage } from "@/lib/sanity/loaders";
+import { getPageHeroImage, getSiteSettings } from "@/lib/sanity/loaders";
 import { site } from "@/lib/site-data";
 
 const lastUpdated = "27 april 2026";
@@ -8,7 +8,17 @@ const lastUpdated = "27 april 2026";
 export const revalidate = 60;
 
 export default async function PrivacyPage() {
-  const heroImage = await getPageHeroImage("privacy");
+  const [heroImage, siteSettings] = await Promise.all([
+    getPageHeroImage("privacy"),
+    getSiteSettings()
+  ]);
+  const legalIdentity = siteSettings.legalEntityName || site.name;
+  const hasLegalDetails = Boolean(
+    siteSettings.legalEntityName ||
+      siteSettings.registeredOffice ||
+      siteSettings.companyNumber ||
+      siteSettings.vatNumber
+  );
 
   return (
     <SiteShell>
@@ -27,23 +37,50 @@ export default async function PrivacyPage() {
             <p>{lastUpdated}</p>
             <p className="legal-meta">
               Deze tekst is afgestemd op de huidige websitearchitectuur met Hostinger, Sanity,
-              Supabase, Mollie, mailverwerking en optionele GTM/GA4-metingen na toestemming. De
-              officiële juridische naam van de uitbater, maatschappelijke zetel, KBO en
-              btw-gegevens moeten nog definitief worden toegevoegd.
+              Supabase, Mollie, mailverwerking en optionele GTM/GA4-metingen na toestemming.
+              {hasLegalDetails
+                ? " De juridische identificatie wordt hieronder automatisch ingelezen uit Site settings."
+                : " De officiële juridische naam van de uitbater, maatschappelijke zetel, KBO en btw-gegevens moeten nog definitief worden toegevoegd."}
             </p>
           </article>
 
           <article className="legal-card">
             <h2>1. Wie is verantwoordelijk voor de verwerking?</h2>
             <p>
-              Deze website wordt uitgebaat onder de naam <strong>{site.name}</strong>, bereikbaar
-              via {site.address}, <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>{" "}
-              en <a href={`tel:${site.contactPhone.replace(/\s+/g, "")}`}>{site.contactPhone}</a>.
+              Deze website wordt uitgebaat onder de naam <strong>{legalIdentity}</strong>,
+              bereikbaar via {site.address},{" "}
+              <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> en{" "}
+              <a href={`tel:${site.contactPhone.replace(/\s+/g, "")}`}>{site.contactPhone}</a>.
             </p>
-            <p>
-              Nog aan te vullen voor finale publicatie: officiële naam van de uitbater of
-              vennootschap, maatschappelijke zetel, ondernemingsnummer/KBO en btw-nummer.
-            </p>
+            {hasLegalDetails ? (
+              <ul>
+                {siteSettings.legalEntityName ? (
+                  <li>
+                    <strong>Juridische uitbater:</strong> {siteSettings.legalEntityName}
+                  </li>
+                ) : null}
+                {siteSettings.registeredOffice ? (
+                  <li>
+                    <strong>Maatschappelijke zetel:</strong> {siteSettings.registeredOffice}
+                  </li>
+                ) : null}
+                {siteSettings.companyNumber ? (
+                  <li>
+                    <strong>KBO / ondernemingsnummer:</strong> {siteSettings.companyNumber}
+                  </li>
+                ) : null}
+                {siteSettings.vatNumber ? (
+                  <li>
+                    <strong>Btw-nummer:</strong> {siteSettings.vatNumber}
+                  </li>
+                ) : null}
+              </ul>
+            ) : (
+              <p>
+                Nog aan te vullen voor finale publicatie: officiële naam van de uitbater of
+                vennootschap, maatschappelijke zetel, ondernemingsnummer/KBO en btw-nummer.
+              </p>
+            )}
           </article>
 
           <article className="legal-card">

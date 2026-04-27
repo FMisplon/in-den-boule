@@ -139,12 +139,17 @@ export async function SiteShell({
           <Link href="/algemene-voorwaarden">Algemene voorwaarden</Link>
         </div>
         <div className="footer-block footer-credit">
-          <a href="mailto:frederik@glowth.be" aria-label="Website ontwerp en realisatie door Glowth">
+          <a
+            href="https://glowth.be"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Website ontwerp en realisatie door Glowth"
+          >
             <Image
-              src="/assets/images/glowth-logo-v2.png"
+              src="/assets/images/glowth-logo-white.png"
               alt="Glowth logo"
-              width={140}
-              height={56}
+              width={160}
+              height={94}
             />
             <span>Website ontwerp en realisatie door Glowth</span>
           </a>

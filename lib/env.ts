@@ -27,5 +27,7 @@ export const env = {
   smtpPassword: process.env.SMTP_PASSWORD,
   mailFrom: process.env.MAIL_FROM,
   formNotificationTo: process.env.FORM_NOTIFICATION_TO,
-  formReplyTo: process.env.FORM_REPLY_TO
+  formReplyTo: process.env.FORM_REPLY_TO,
+  checkInAccessCode: process.env.CHECK_IN_ACCESS_CODE,
+  giftCardAdminAccessCode: process.env.GIFT_CARD_ADMIN_ACCESS_CODE
 };

@@ -1,9 +1,10 @@
 "use client";
 
-import type { FormStatus } from "@/lib/forms";
-
 type FormFeedbackProps = {
-  state: FormStatus;
+  state: {
+    success: boolean;
+    message: string;
+  };
 };
 
 export function FormFeedback({ state }: FormFeedbackProps) {

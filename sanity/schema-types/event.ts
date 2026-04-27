@@ -49,8 +49,8 @@ export const eventType = defineType({
     defineField({
       name: "teaser",
       title: "Korte intro",
-      type: "text",
-      rows: 3,
+      type: "richText",
+      description: "Korte intro met eenvoudige opmaak zoals vet, cursief, links of meerdere alinea's.",
       group: "content",
       validation: (rule) => rule.required()
     }),
@@ -64,8 +64,7 @@ export const eventType = defineType({
     defineField({
       name: "body",
       title: "Beschrijving",
-      type: "array",
-      of: [defineArrayMember({ type: "block" })],
+      type: "richText",
       group: "content"
     }),
     defineField({
@@ -168,10 +167,8 @@ export const eventType = defineType({
     defineField({
       name: "ticketInfo",
       title: "Ticketinfo",
-      type: "text",
-      rows: 3,
-      description: "Korte praktische tekst onder het bestelblok."
-      ,
+      type: "richText",
+      description: "Praktische tekst onder het bestelblok, met eenvoudige opmaak indien nodig.",
       group: "tickets"
     }),
     defineField({
@@ -204,8 +201,7 @@ export const eventType = defineType({
             defineField({
               name: "description",
               title: "Beschrijving",
-              type: "text",
-              rows: 2
+              type: "richText"
             }),
             defineField({
               name: "availableQuantity",

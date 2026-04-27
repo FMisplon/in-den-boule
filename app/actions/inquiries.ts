@@ -349,9 +349,12 @@ export async function createGiftCardPayment(
   const productSlug = readString(formData, "product_slug");
   const purchaserName = readString(formData, "purchaser_name");
   const purchaserEmail = readString(formData, "purchaser_email");
+  const giftFor = readString(formData, "gift_for") === "send" ? "send" : "self";
   const recipientName = readString(formData, "recipient_name");
+  const recipientEmail = readString(formData, "recipient_email");
   const amountLabel = readString(formData, "amount");
   const personalMessage = readString(formData, "personal_message");
+  const pickupInStore = formData.get("pickup_in_store") === "yes";
   const selectedAmountCents = Number.parseInt(amountLabel, 10);
   const newsletterOptIn = wantsNewsletter(formData);
 
@@ -366,6 +369,13 @@ export async function createGiftCardPayment(
     return {
       success: false,
       message: "Vul naam, e-mail, ontvanger en een geldig bedrag in."
+    };
+  }
+
+  if (giftFor === "send" && !recipientEmail) {
+    return {
+      success: false,
+      message: "Vul ook het e-mailadres van de ontvanger in."
     };
   }
 
@@ -405,10 +415,13 @@ export async function createGiftCardPayment(
       purchaser_name: purchaserName,
       purchaser_email: purchaserEmail,
       recipient_name: recipientName,
+      recipient_email: giftFor === "send" ? recipientEmail : purchaserEmail,
       personal_message: personalMessage || null,
       amount_cents: selectedAmountCents,
       currency: "EUR",
-      status: "created"
+      status: "created",
+      fulfillment_mode: giftFor,
+      pickup_in_store: pickupInStore
     })
     .select("id")
     .single();

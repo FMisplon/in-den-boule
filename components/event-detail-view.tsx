@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { EventAccessForm } from "@/components/event-access-form";
 import { PageHero } from "@/components/page-hero";
+import { RichTextContent } from "@/components/rich-text-content";
 import { EventTicketForm } from "@/components/event-ticket-form";
 import { EventWaitlistForm } from "@/components/event-waitlist-form";
 import { SiteShell } from "@/components/site-shell";
@@ -76,7 +77,14 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
         <div className="venue-layout">
           <article className="venue-panel">
             <h3>Over dit event</h3>
-            <p>{event.description}</p>
+            {event.descriptionRich?.length ? (
+              <RichTextContent value={event.descriptionRich} className="rich-text-content" />
+            ) : (
+              <p>{event.description}</p>
+            )}
+            {event.body?.length ? (
+              <RichTextContent value={event.body} className="rich-text-content" />
+            ) : null}
             {event.listingVisibility === "private" ? (
               <p style={{ marginTop: "1rem" }}>
                 Dit event verschijnt niet op de openbare evenementenpagina en is alleen
@@ -119,7 +127,11 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
                     <strong style={{ display: "block", marginBottom: "0.35rem" }}>
                       {ticket.title} · {ticket.priceLabel}
                     </strong>
-                    {ticket.description ? <p style={{ margin: 0 }}>{ticket.description}</p> : null}
+                    {ticket.descriptionRich?.length ? (
+                      <RichTextContent value={ticket.descriptionRich} className="rich-text-content" />
+                    ) : ticket.description ? (
+                      <p style={{ margin: 0 }}>{ticket.description}</p>
+                    ) : null}
                     {typeof ticket.availableQuantity === "number" ? (
                       <p style={{ margin: "0.35rem 0 0", fontSize: "0.95rem" }}>
                         {ticket.isSoldOut ? "Uitverkocht" : `${ticket.availableQuantity} beschikbaar`}
@@ -133,7 +145,11 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
                 eventTitle={event.title}
                 ticketTypes={event.ticketTypes}
               />
-              {event.ticketInfo ? <p style={{ marginTop: "1rem" }}>{event.ticketInfo}</p> : null}
+              {event.ticketInfoRich?.length ? (
+                <RichTextContent value={event.ticketInfoRich} className="rich-text-content" />
+              ) : event.ticketInfo ? (
+                <p style={{ marginTop: "1rem" }}>{event.ticketInfo}</p>
+              ) : null}
             </article>
           ) : (
             <article className="venue-panel venue-panel-accent" id={salesStatus === "waitlist" ? "waitlist" : undefined}>
