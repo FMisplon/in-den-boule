@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Events | In den Boule</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="./index.html" aria-label="In den Boule home">
+          <span class="brand-mark"><img src="./assets/images/logo-boule-transparent.png" alt="Boule logo" /></span>
+          <span class="brand-copy"><strong>In den Boule</strong><small>café · feest · keuken · events</small></span>
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span></button>
+        <nav class="site-nav" id="site-nav">
+          <a href="./menu.html">Menu</a>
+          <a href="./reservatie.html">Reservatie</a>
+          <a href="./shop.html">Shop</a>
+          <a href="./verhuur.html">Verhuur</a>
+          <a href="./contact.html">Contact</a>
+          <a class="button button-nav" href="#tickets">Koop tickets</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="page-hero">
+          <p class="eyebrow">Events</p>
+          <h1>Avonden met een eigen podium.</h1>
+          <p class="page-intro">
+            Hier mag alles draaien rond sfeer, programma en ticketverkoop. Op deze pagina
+            krijgt elk event zijn eigen duidelijke CTA.
+          </p>
+        </section>
+
+        <section class="section events-section">
+          <div class="event-grid">
+            <article class="event-card">
+              <p class="event-date">Vrijdag 19 april · 20:00</p>
+              <h3>Jazz & Bites</h3>
+              <p>Live trio, deelgerechten en een intieme zaalopstelling voor 60 gasten.</p>
+              <div class="event-meta"><span>27 euro</span><span>62 tickets beschikbaar</span></div>
+              <a class="button" href="#tickets">Koop ticket</a>
+            </article>
+            <article class="event-card featured-event">
+              <p class="event-date">Donderdag 2 mei · 19:30</p>
+              <h3>Chef's Table: Noordzee Editie</h3>
+              <p>Een exclusieve avond met 5 gangen, pairing en storytelling aan lange tafel.</p>
+              <div class="event-meta"><span>79 euro</span><span>18 plaatsen</span></div>
+              <a class="button" href="#tickets">Reserveer je stoel</a>
+            </article>
+            <article class="event-card">
+              <p class="event-date">Zondag 12 mei · 11:00</p>
+              <h3>Mother's Day Brunch</h3>
+              <p>Familietafels, brunchbuffet en kinderformule met tijdssloten.</p>
+              <div class="event-meta"><span>42 euro</span><span>3 slots</span></div>
+              <a class="button" href="#tickets">Boek brunchslot</a>
+            </article>
+          </div>
+
+          <div class="ticket-panel" id="tickets">
+            <div>
+              <p class="eyebrow">Tickets</p>
+              <h3>Voorzien voor Stripe, Mollie of een ticketingplatform.</h3>
+              <p>De flow staat klaar: event kiezen, tickets selecteren en doorsturen naar betaling.</p>
+            </div>
+            <form class="ticket-form">
+              <label>Event<select><option>Jazz & Bites</option><option>Chef's Table: Noordzee Editie</option><option>Mother's Day Brunch</option></select></label>
+              <label>Tickets<select><option>1 ticket</option><option>2 tickets</option><option>4 tickets</option></select></label>
+              <label>E-mail<input type="email" placeholder="jij@email.be" /></label>
+              <button class="button" type="submit">Verder naar betaling</button>
+            </form>
+          </div>
+        </section>
+      </main>
+
+    </div>
+    <footer class="site-footer site-footer-home">
+      <div class="footer-block">
+        <p>In den Boule</p>
+        <p>Augustijnenstraat 2 · 3000 Leuven</p>
+      </div>
+      <div class="footer-block">
+        <a href="./privacy.html">Privacybeleid</a>
+      </div>
+      <div class="footer-block footer-credit">
+        <a href="mailto:frederik@glowth.be" aria-label="Website ontwerp en realisatie door Glowth">
+          <img src="./assets/images/glowth-logo-v2.png" alt="Glowth logo" />
+          <span>Website ontwerp en realisatie door Glowth</span>
+        </a>
+      </div>
+    </footer>
+    <script src="./script.js"></script>
+  </body>
+</html>

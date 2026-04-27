@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reservatie | In den Boule</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="./index.html" aria-label="In den Boule home">
+          <span class="brand-mark"><img src="./assets/images/logo-boule-transparent.png" alt="Boule logo" /></span>
+          <span class="brand-copy"><strong>In den Boule</strong><small>café · feest · keuken · events</small></span>
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span></button>
+        <nav class="site-nav" id="site-nav">
+          <a href="./menu.html">Menu</a>
+          <a href="./events.html">Events</a>
+          <a href="./reservatie.html">Reservatie</a>
+          <a href="./shop.html">Shop</a>
+          <a href="./verhuur.html">Verhuur</a>
+          <a href="./contact.html">Contact</a>
+          <a class="button button-nav" href="./contact.html">Groepen</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="page-hero">
+          <p class="eyebrow">Reservatie</p>
+          <h1>Boek je tafel zonder afleiding.</h1>
+          <p class="page-intro">
+            Deze pagina focust volledig op beschikbaarheid, tafelzones en reserveren.
+          </p>
+        </section>
+
+        <section class="section reservatie-section">
+          <div class="reservation-layout">
+            <div class="floor-plan">
+              <div class="plan-header">
+                <h3>Tafelplan</h3>
+                <span>Visual concept voor reservatiesysteem</span>
+              </div>
+              <div class="plan-grid">
+                <button type="button" class="table-pill available">T1 · 2p</button>
+                <button type="button" class="table-pill reserved">T2 · 4p</button>
+                <button type="button" class="table-pill available">T3 · 2p</button>
+                <button type="button" class="table-pill terrace">Terras · 4p</button>
+                <button type="button" class="table-pill lounge">Lounge · 6p</button>
+                <button type="button" class="table-pill available">T6 · 8p</button>
+              </div>
+            </div>
+            <form class="reservation-form">
+              <label>Datum<input type="date" /></label>
+              <label>Uur<select><option>18:00</option><option>19:00</option><option>20:00</option></select></label>
+              <label>Aantal gasten<select><option>2 personen</option><option>4 personen</option><option>6 personen</option><option>8+ personen</option></select></label>
+              <label>Voorkeurszone<select><option>Binnenzaal</option><option>Terras</option><option>Lounge</option></select></label>
+              <label>Opmerking<textarea rows="4" placeholder="Verjaardag, kinderstoel, allergie, ..."></textarea></label>
+              <button class="button" type="submit">Controleer beschikbaarheid</button>
+            </form>
+          </div>
+        </section>
+      </main>
+
+    </div>
+    <footer class="site-footer site-footer-home">
+      <div class="footer-block">
+        <p>In den Boule</p>
+        <p>Augustijnenstraat 2 · 3000 Leuven</p>
+      </div>
+      <div class="footer-block">
+        <a href="./privacy.html">Privacybeleid</a>
+      </div>
+      <div class="footer-block footer-credit">
+        <a href="mailto:frederik@glowth.be" aria-label="Website ontwerp en realisatie door Glowth">
+          <img src="./assets/images/glowth-logo-v2.png" alt="Glowth logo" />
+          <span>Website ontwerp en realisatie door Glowth</span>
+        </a>
+      </div>
+    </footer>
+    <script src="./script.js"></script>
+  </body>
+</html>

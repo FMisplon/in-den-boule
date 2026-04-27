@@ -1,0 +1,28 @@
+{
+  "name": "in-den-boule",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "sanity:seed": "node --env-file=.env.local scripts/seed-sanity.mjs"
+  },
+  "dependencies": {
+    "@sanity/client": "^7.22.0",
+    "@sanity/image-url": "^2.1.1",
+    "@supabase/supabase-js": "^2.104.1",
+    "next": "15.3.1",
+    "react": "^19.2.2",
+    "react-dom": "^19.2.2",
+    "sanity": "^5.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.17",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
+    "typescript": "5.8.3"
+  }
+}

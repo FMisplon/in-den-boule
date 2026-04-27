@@ -1,0 +1,727 @@
+:root {
+  --bg: #dfc89b;
+  --bg-soft: #f3e5bf;
+  --card: rgba(248, 242, 229, 0.8);
+  --card-strong: #f6e8c4;
+  --ink: #19130f;
+  --muted: #5e3820;
+  --line: rgba(37, 112, 56, 0.18);
+  --accent: #e17606;
+  --accent-deep: #bf7a43;
+  --olive: #257038;
+  --olive-deep: #1f5a2d;
+  --gold: #dfc89b;
+  --shadow: 0 24px 80px rgba(25, 19, 15, 0.16);
+  --radius-lg: 32px;
+  --radius-md: 22px;
+  --max-width: 1200px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  font-family: "Avenir Next", "Trebuchet MS", sans-serif;
+  background:
+    linear-gradient(rgba(25, 19, 15, 0.34), rgba(25, 19, 15, 0.14)),
+    url("/assets/images/achtergrond.jpg") center top / cover fixed,
+    linear-gradient(180deg, #ead5a5 0%, #d8c08c 100%);
+  color: var(--ink);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image:
+    linear-gradient(rgba(255, 245, 224, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 245, 224, 0.14) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mix-blend-mode: soft-light;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+.page-shell {
+  width: min(calc(100% - 2rem), var(--max-width));
+  margin: 0 auto;
+  padding-bottom: 3rem;
+  flex: 1 0 auto;
+}
+
+.site-header {
+  position: sticky;
+  top: 1rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(248, 232, 196, 0.55);
+  border-radius: 999px;
+  background: rgba(25, 19, 15, 0.72);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 5.2rem;
+  height: 3.2rem;
+}
+
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.brand-copy {
+  display: grid;
+}
+
+.brand-copy strong,
+.hero h1,
+.section-heading h2,
+.event-card h3,
+.venue-panel h3,
+.story-card-copy h2,
+.page-hero h1,
+.contact-band h2 {
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+}
+
+.brand-copy strong {
+  color: #f5e4bc;
+  font-family: "Snell Roundhand", "Brush Script MT", cursive;
+  font-size: 1.45rem;
+  font-weight: 400;
+}
+
+.brand-copy small {
+  color: rgba(245, 228, 188, 0.72);
+  font-size: 0.75rem;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.site-nav a {
+  color: rgba(255, 244, 226, 0.82);
+  font-size: 0.95rem;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  color: #fff8ef;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 2rem;
+  padding: 5.5rem 0 3rem;
+  align-items: center;
+}
+
+.hero-copy {
+  padding: 1.8rem;
+  border: 1px solid rgba(248, 232, 196, 0.18);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(25, 19, 15, 0.82), rgba(25, 19, 15, 0.64));
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(8px);
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: #dbe8cd;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.hero h1,
+.page-hero h1 {
+  margin: 0;
+  color: #fff7e7;
+  line-height: 0.92;
+  text-shadow: 0 10px 30px rgba(25, 19, 15, 0.25);
+}
+
+.hero h1 {
+  max-width: 10.5ch;
+  font-size: clamp(3.2rem, 7vw, 6.2rem);
+}
+
+.page-hero h1 {
+  font-size: clamp(2.8rem, 6vw, 5rem);
+}
+
+.hero-text,
+.page-intro {
+  max-width: 56ch;
+  margin: 1.2rem 0 0;
+  color: rgba(255, 244, 226, 0.88);
+  line-height: 1.8;
+}
+
+.hero-actions,
+.event-meta,
+.venue-capacity {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.hero-actions {
+  margin-top: 1.8rem;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.75rem 1.3rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  color: #fff8f2;
+  font-weight: 700;
+  box-shadow: 0 14px 34px rgba(139, 62, 36, 0.22);
+}
+
+.button-secondary {
+  border: 1px solid rgba(255, 248, 240, 0.26);
+  background: rgba(255, 248, 240, 0.12);
+  color: #fff8f0;
+  box-shadow: none;
+}
+
+.button-nav {
+  min-height: 2.6rem;
+  padding-inline: 1rem;
+}
+
+.hero-points {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0;
+  margin: 1.6rem 0 0;
+  list-style: none;
+  color: rgba(255, 244, 226, 0.82);
+}
+
+.hero-points li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.hero-points li::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 4px rgba(223, 200, 155, 0.18);
+}
+
+.hero-visual {
+  min-height: 36rem;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(25, 19, 15, 0.02), rgba(25, 19, 15, 0.18)),
+    url("/assets/images/exterieur.jpg") center/cover;
+  box-shadow: var(--shadow);
+}
+
+.info-strip,
+.contact-band {
+  display: grid;
+  gap: 1rem;
+  padding: 1.2rem;
+  border: 1px solid rgba(25, 19, 15, 0.1);
+  border-radius: var(--radius-lg);
+  background: rgba(245, 234, 208, 0.88);
+  box-shadow: var(--shadow);
+}
+
+.info-strip {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.info-strip span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.story-ribbon {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 0.7fr;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.story-card,
+.discover-card,
+.menu-card,
+.event-card,
+.shop-card,
+.venue-panel,
+.floor-plan,
+.reservation-form,
+.contact-form,
+.contact-side article {
+  overflow: hidden;
+  padding: 1.4rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+.story-card {
+  min-height: 16rem;
+}
+
+.story-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.story-card-copy {
+  padding: 1.5rem;
+}
+
+.story-card-copy h2 {
+  margin: 0 0 0.8rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 0.95;
+}
+
+.story-card-copy p:last-child,
+.discover-card p,
+.menu-card p,
+.event-card p,
+.venue-panel p,
+.contact-side p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.story-card-logo {
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at top, rgba(37, 112, 56, 0.14), transparent 48%),
+    linear-gradient(180deg, rgba(255, 248, 240, 0.95), rgba(223, 200, 155, 0.7));
+}
+
+.story-card-logo img {
+  width: min(100%, 16rem);
+  height: auto;
+  object-fit: contain;
+}
+
+.page-hero {
+  padding: 5rem 0 1rem;
+  max-width: 48rem;
+}
+
+.section {
+  padding: 5.5rem 0 0;
+}
+
+.section-heading {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 48rem;
+  margin-bottom: 2rem;
+}
+
+.section-heading h2 {
+  margin: 0;
+  color: #fff8ec;
+  font-size: clamp(2.4rem, 4vw, 4rem);
+  line-height: 0.98;
+  text-shadow: 0 8px 24px rgba(25, 19, 15, 0.38);
+}
+
+.concept-grid,
+.menu-grid,
+.event-grid,
+.shop-grid,
+.venue-layout,
+.contact-layout,
+.reservation-layout,
+.discover-grid {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.concept-grid,
+.discover-grid,
+.menu-grid,
+.event-grid,
+.shop-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.concept-grid article {
+  padding: 1.4rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.concept-grid p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.discover-card span,
+.menu-card span,
+.shop-card span {
+  color: var(--accent-deep);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.discover-card .button,
+.menu-card strong {
+  margin-top: 1rem;
+}
+
+.menu-banner {
+  min-height: 24rem;
+  margin-top: 1.5rem;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(25, 19, 15, 0.16), rgba(25, 19, 15, 0.68)),
+    url("/assets/images/menu-spaghetti.jpg") center/cover;
+  box-shadow: var(--shadow);
+}
+
+.menu-banner + .menu-section {
+  padding-top: 1.6rem;
+}
+
+.featured-event,
+.venue-panel-accent {
+  background:
+    linear-gradient(135deg, rgba(37, 112, 56, 0.14), rgba(223, 200, 155, 0.34)),
+    var(--card-strong);
+}
+
+.event-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.event-date {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.event-meta span,
+.venue-capacity span {
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(37, 112, 56, 0.1);
+  color: var(--olive);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.reservation-layout,
+.venue-layout,
+.contact-layout,
+.contact-band {
+  grid-template-columns: 1fr 1fr;
+}
+
+.ticket-form,
+.reservation-form,
+.contact-form {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.form-feedback {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.form-feedback.is-success {
+  color: var(--olive-deep);
+}
+
+.form-feedback.is-error {
+  color: #8e3417;
+}
+
+.button[disabled] {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+label {
+  display: grid;
+  gap: 0.45rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(37, 112, 56, 0.18);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--ink);
+}
+
+textarea {
+  resize: vertical;
+}
+
+.plan-header {
+  margin-bottom: 1.25rem;
+}
+
+.plan-header span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.table-pill {
+  min-height: 5.2rem;
+  padding: 1rem;
+  border-radius: 1.2rem;
+  font-weight: 800;
+}
+
+.available {
+  background: rgba(37, 112, 56, 0.14);
+  color: var(--olive);
+}
+
+.terrace {
+  background: rgba(223, 200, 155, 0.36);
+}
+
+.lounge {
+  background: rgba(91, 105, 116, 0.12);
+}
+
+.contact-band {
+  align-items: center;
+  margin-top: 5.5rem;
+}
+
+.venue-panel ul {
+  margin: 1rem 0 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.venue-form-layout {
+  margin-top: 1.2rem;
+}
+
+.contact-side {
+  display: grid;
+  gap: 1rem;
+}
+
+.site-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 3rem 0 1rem;
+  color: #f5e4bc;
+}
+
+.site-footer-home {
+  align-items: center;
+  width: 100%;
+  margin-top: auto;
+  padding: 1.5rem max(1rem, calc((100vw - var(--max-width)) / 2 + 1rem));
+  border-top: 1px solid rgba(248, 232, 196, 0.16);
+  background: linear-gradient(180deg, rgba(54, 33, 21, 0.94), rgba(25, 19, 15, 0.96));
+  box-shadow: var(--shadow);
+}
+
+.footer-block {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.footer-block p,
+.footer-block a,
+.footer-credit span {
+  margin: 0;
+  color: #f5e4bc;
+}
+
+.footer-credit a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.footer-credit img {
+  width: 140px;
+  height: 56px;
+  object-fit: contain;
+}
+
+@media (max-width: 980px) {
+  .site-header,
+  .site-nav,
+  .hero,
+  .story-ribbon,
+  .reservation-layout,
+  .venue-layout,
+  .contact-layout,
+  .contact-band,
+  .concept-grid,
+  .discover-grid,
+  .menu-grid,
+  .event-grid,
+  .shop-grid,
+  .info-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .site-header {
+    position: static;
+    border-radius: 1.4rem;
+  }
+
+  .site-nav {
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .hero {
+    padding-top: 2.5rem;
+  }
+
+  .page-hero {
+    padding-top: 2.8rem;
+  }
+
+  .hero-visual {
+    min-height: 28rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-shell {
+    width: min(calc(100% - 1rem), var(--max-width));
+  }
+
+  body {
+    background:
+      linear-gradient(rgba(25, 19, 15, 0.3), rgba(25, 19, 15, 0.18)),
+      url("/assets/images/achtergrond.jpg") center top / cover,
+      linear-gradient(180deg, #ead5a5 0%, #d8c08c 100%);
+  }
+
+  .site-header {
+    padding: 0.8rem;
+  }
+
+  .brand-mark {
+    width: 4.2rem;
+    height: 2.7rem;
+  }
+
+  .brand-copy small {
+    display: none;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.8rem, 14vw, 4.4rem);
+  }
+
+  .hero-visual {
+    min-height: 24rem;
+  }
+
+  .plan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .site-footer {
+    flex-direction: column;
+  }
+
+  .site-footer-home {
+    align-items: flex-start;
+    padding-inline: 1rem;
+  }
+}

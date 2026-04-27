@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menu | In den Boule</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="./index.html" aria-label="In den Boule home">
+          <span class="brand-mark"><img src="./assets/images/logo-boule-transparent.png" alt="Boule logo" /></span>
+          <span class="brand-copy"><strong>In den Boule</strong><small>café · feest · keuken · events</small></span>
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+          <span></span><span></span><span></span>
+        </button>
+        <nav class="site-nav" id="site-nav">
+          <a href="./menu.html">Menu</a>
+          <a href="./events.html">Events</a>
+          <a href="./shop.html">Shop</a>
+          <a href="./verhuur.html">Verhuur</a>
+          <a href="./contact.html">Contact</a>
+          <a class="button button-nav" href="./reservatie.html">Reserveer je tafel</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="menu-banner" aria-hidden="true"></section>
+
+        <section class="section menu-section">
+          <div class="section-heading">
+            <p class="eyebrow">Kaart</p>
+            <h2>De legendarische Boule-kaart.</h2>
+          </div>
+          <div class="menu-filter" role="tablist" aria-label="Menucategorieen">
+            <button class="filter-chip is-active" data-filter="all" type="button">Alles</button>
+            <button class="filter-chip" data-filter="pasta" type="button">Pasta's</button>
+            <button class="filter-chip" data-filter="croques" type="button">Croques</button>
+            <button class="filter-chip" data-filter="bagels" type="button">Bagels</button>
+            <button class="filter-chip" data-filter="snacks" type="button">Snacks</button>
+            <button class="filter-chip" data-filter="desserts" type="button">Desserts</button>
+          </div>
+          <div class="menu-grid">
+            <article class="menu-card" data-category="pasta"><span>Soep</span><h3>Dagsoep met brood</h3><p>Een eenvoudige starter voor wie licht wil beginnen.</p><strong>6 euro</strong></article>
+            <article class="menu-card" data-category="pasta"><span>Pasta's</span><h3>Spaghetti Boule</h3><p>De legendarische huisfavoriet.</p><strong>13 euro</strong></article>
+            <article class="menu-card" data-category="pasta"><span>Pasta's</span><h3>Spaghetti Boule Jumbo</h3><p>Voor wie honger meebrengt.</p><strong>19 euro</strong></article>
+            <article class="menu-card" data-category="pasta"><span>Pasta's</span><h3>Vegetarische spaghetti</h3><p>De veggie variant op de klassieker.</p><strong>13 euro</strong></article>
+            <article class="menu-card" data-category="pasta"><span>Pasta's</span><h3>Spaghetti kaassaus ham</h3><p>Comfort food met romige kaassaus.</p><strong>15 euro</strong></article>
+            <article class="menu-card" data-category="pasta"><span>Pasta's</span><h3>Spaghetti kip tomaat mascarpone</h3><p>Een zachte saus met kip en mascarpone.</p><strong>15 euro</strong></article>
+            <article class="menu-card" data-category="pasta"><span>Oven</span><h3>Lasagne</h3><p>Klassieke lasagne uit de oven.</p><strong>15 euro</strong></article>
+            <article class="menu-card" data-category="pasta"><span>Oven</span><h3>Vegetarische lasagne</h3><p>De veggie versie van de huislasagne.</p><strong>15 euro</strong></article>
+
+            <article class="menu-card" data-category="croques"><span>Croques</span><h3>Uitsmijter</h3><p>Boerenbrood, 2 spiegeleieren, hesp, kaas en guacamole.</p><strong>15 euro</strong></article>
+            <article class="menu-card" data-category="croques"><span>Croques</span><h3>Croque uit 't vuistje</h3><p>Kleine snelle croque voor tussendoor.</p><strong>6,5 euro</strong></article>
+            <article class="menu-card" data-category="croques"><span>Croques</span><h3>Croque Monsieur</h3><p>Ham en kaas, inclusief slaatje.</p><strong>10,5 euro</strong></article>
+            <article class="menu-card" data-category="croques"><span>Croques</span><h3>Croque Madame</h3><p>Enkel kaas, inclusief slaatje.</p><strong>10,5 euro</strong></article>
+            <article class="menu-card" data-category="croques"><span>Croques</span><h3>Croque Cheval</h3><p>Met spiegelei, inclusief slaatje.</p><strong>12,5 euro</strong></article>
+            <article class="menu-card" data-category="croques"><span>Croques</span><h3>Croque Boule</h3><p>Met huisgemaakte bolognaisesaus, inclusief slaatje.</p><strong>13,5 euro</strong></article>
+
+            <article class="menu-card" data-category="bagels"><span>Bagels</span><h3>Gehaktbal</h3><p>Met joppiesaus en bickyajuin, inclusief slaatje.</p><strong>12 euro</strong></article>
+            <article class="menu-card" data-category="bagels"><span>Bagels</span><h3>Parmaham</h3><p>Pesto, mozzarella, tomaat en rucola.</p><strong>14 euro</strong></article>
+            <article class="menu-card" data-category="bagels"><span>Bagels</span><h3>Rosbief</h3><p>Truffelmayonaise, rucola en parmezaan.</p><strong>14 euro</strong></article>
+            <article class="menu-card" data-category="bagels"><span>Bagels</span><h3>Kip</h3><p>Guacamole, parmezaan, rucola en zongedroogde tomaat.</p><strong>14 euro</strong></article>
+            <article class="menu-card" data-category="bagels"><span>Bagels</span><h3>Boule</h3><p>Spek, spiegelei, cheddar, guacamole en tomaat.</p><strong>12 euro</strong></article>
+
+            <article class="menu-card" data-category="snacks"><span>Kroketjes</span><h3>Kaaskroketten</h3><p>2 of 3 stuks, inclusief slaatje en brood.</p><strong>15 / 18 euro</strong></article>
+            <article class="menu-card" data-category="snacks"><span>Kroketjes</span><h3>Garnaalkroketten</h3><p>2 of 3 stuks, inclusief slaatje en brood.</p><strong>18 / 22 euro</strong></article>
+            <article class="menu-card" data-category="snacks"><span>Kroketjes</span><h3>Stoofvleeskroketten</h3><p>2 of 3 stuks, inclusief slaatje en brood.</p><strong>18 / 22 euro</strong></article>
+            <article class="menu-card" data-category="snacks"><span>Snacks</span><h3>Chips</h3><p>Een kleine snack bij het glas.</p><strong>3 euro</strong></article>
+            <article class="menu-card" data-category="snacks"><span>Snacks</span><h3>Nacho's</h3><p>Met guacamole, cheddar en tomatensalsa.</p><strong>7 / 9 euro</strong></article>
+            <article class="menu-card" data-category="snacks"><span>Snacks</span><h3>Portie kaas</h3><p>Klassieke borrelplank-basis.</p><strong>8 euro</strong></article>
+            <article class="menu-card" data-category="snacks"><span>Snacks</span><h3>Portie salami</h3><p>Voor bij de apero.</p><strong>9 euro</strong></article>
+            <article class="menu-card" data-category="snacks"><span>Snacks</span><h3>Portie gemengd</h3><p>Kaas en salami samen.</p><strong>10 euro</strong></article>
+            <article class="menu-card" data-category="snacks"><span>Snacks</span><h3>Portie kaasballetjes</h3><p>8 stuks.</p><strong>10 euro</strong></article>
+            <article class="menu-card" data-category="snacks"><span>Snacks</span><h3>Portie garnaalballetjes</h3><p>8 stuks.</p><strong>12 euro</strong></article>
+            <article class="menu-card" data-category="snacks"><span>Snacks</span><h3>Boulet met tartaar</h3><p>Een snelle klassieker voor tussendoor.</p><strong>6,5 euro</strong></article>
+
+            <article class="menu-card" data-category="desserts"><span>Desserts</span><h3>Chocoladamousse met caramel</h3><p>Zoete afsluiter met zachte carameltoets.</p><strong>10 euro</strong></article>
+            <article class="menu-card" data-category="desserts"><span>Desserts</span><h3>Verwenkoffie</h3><p>Koffie met 4 kleine dessertjes.</p><strong>9 euro</strong></article>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+    <footer class="site-footer site-footer-home">
+      <div class="footer-block">
+        <p>In den Boule</p>
+        <p>Augustijnenstraat 2 · 3000 Leuven</p>
+      </div>
+      <div class="footer-block">
+        <a href="./privacy.html">Privacybeleid</a>
+      </div>
+      <div class="footer-block footer-credit">
+        <a href="mailto:frederik@glowth.be" aria-label="Website ontwerp en realisatie door Glowth">
+          <img src="./assets/images/glowth-logo-v2.png" alt="Glowth logo" />
+          <span>Website ontwerp en realisatie door Glowth</span>
+        </a>
+      </div>
+    </footer>
+    <script src="./script.js"></script>
+  </body>
+</html>
