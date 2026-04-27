@@ -157,6 +157,7 @@ export async function createGiftCardPayment(
   const supabase = getSupabaseForAction();
 
   if (!supabase) {
+    console.error("[GiftCard] Missing Supabase server configuration");
     return { success: false, message: "Serverconfiguratie ontbreekt voor cadeaubonnen." };
   }
 
@@ -175,6 +176,7 @@ export async function createGiftCardPayment(
     .single();
 
   if (insertError || !insertedOrder) {
+    console.error("[GiftCard] Order insert failed", insertError);
     return {
       success: false,
       message: "De cadeaubon kon niet gestart worden. Probeer opnieuw."
@@ -203,6 +205,7 @@ export async function createGiftCardPayment(
       .eq("id", insertedOrder.id);
 
     if (updateError || !payment._links?.checkout?.href) {
+      console.error("[GiftCard] Payment update or checkout link failed", updateError);
       return {
         success: false,
         message: "De betaling kon niet correct voorbereid worden."
@@ -210,7 +213,8 @@ export async function createGiftCardPayment(
     }
 
     redirect(payment._links.checkout.href);
-  } catch {
+  } catch (error) {
+    console.error("[GiftCard] Payment creation failed", error);
     return {
       success: false,
       message: "De betaling kon niet gestart worden. Probeer opnieuw."

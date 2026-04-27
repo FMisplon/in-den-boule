@@ -21,6 +21,26 @@ function requireMollieApiKey() {
   return env.mollieApiKey;
 }
 
+async function fetchWithTimeout(input: string, init: RequestInit, timeoutMs = 8000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(input, {
+      ...init,
+      signal: controller.signal
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`[Mollie] Request failed: ${error.message}`);
+    }
+
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export async function createMolliePayment(input: {
   amount: MollieAmount;
   description: string;
@@ -28,7 +48,7 @@ export async function createMolliePayment(input: {
   metadata: Record<string, string>;
 }) {
   const apiKey = requireMollieApiKey();
-  const response = await fetch("https://api.mollie.com/v2/payments", {
+  const response = await fetchWithTimeout("https://api.mollie.com/v2/payments", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -39,6 +59,8 @@ export async function createMolliePayment(input: {
   });
 
   if (!response.ok) {
+    const body = await response.text();
+    console.error(`[Mollie] Payment creation failed (${response.status}): ${body}`);
     throw new Error(`Mollie payment creation failed with status ${response.status}`);
   }
 
@@ -47,7 +69,7 @@ export async function createMolliePayment(input: {
 
 export async function getMolliePayment(paymentId: string) {
   const apiKey = requireMollieApiKey();
-  const response = await fetch(`https://api.mollie.com/v2/payments/${paymentId}`, {
+  const response = await fetchWithTimeout(`https://api.mollie.com/v2/payments/${paymentId}`, {
     headers: {
       Authorization: `Bearer ${apiKey}`
     },
@@ -55,6 +77,8 @@ export async function getMolliePayment(paymentId: string) {
   });
 
   if (!response.ok) {
+    const body = await response.text();
+    console.error(`[Mollie] Payment fetch failed (${response.status}): ${body}`);
     throw new Error(`Mollie payment fetch failed with status ${response.status}`);
   }
 
