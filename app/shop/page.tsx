@@ -28,8 +28,8 @@ export default async function ShopPage() {
     <SiteShell ctaHref="/shop" ctaLabel="Bestel cadeaubon">
       <PageHero
         eyebrow="Shop"
-        title="Producten uit Sanity, klaar voor uitbreiding."
-        intro="De shop leest nu actieve producten rechtstreeks uit Sanity. Digitale cadeaubonnen kunnen meteen afrekenen via Mollie, terwijl de structuur ook klaarstaat voor latere fysieke producten."
+        title="Cadeaubonnen voor gebruik in Café In den Boule."
+        intro="Je bestelt en betaalt de cadeaubon online, maar de bon zelf wordt later gebruikt in het café. De structuur blijft tegelijk klaarstaan voor latere fysieke producten."
         imageUrl={heroImage?.imageUrl}
         imageAlt={heroImage?.alt}
       />
@@ -61,7 +61,11 @@ export default async function ShopPage() {
               <h3>{giftCardProduct.title}</h3>
               <p>
                 {giftCardProduct.excerpt ||
-                  "Na betaling slaan we de bestelling op als basis voor verdere opvolging en levering."}
+                  "Na betaling maken we een cadeaubon aan die later in Café In den Boule kan worden ingewisseld."}
+              </p>
+              <p style={{ marginTop: "1rem" }}>
+                Deze cadeaubon is dus geen online betaalmiddel op de site zelf, maar een voucher
+                voor later gebruik in het café.
               </p>
               <p style={{ marginTop: "1rem" }}>
                 Beschikbare bedragen:{" "}

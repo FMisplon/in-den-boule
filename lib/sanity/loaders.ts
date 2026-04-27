@@ -98,7 +98,6 @@ type SanityMenuItem = {
   title: string;
   description?: string | RichTextValue;
   priceLabel: string;
-  displayLabel?: string;
   category?: string;
   image?: unknown;
 };
@@ -381,7 +380,6 @@ export const getMenuItems = cache(async () => {
 
     return data.map((item) => ({
       category: item.category || "Menu",
-      label: item.displayLabel || item.category || "Menu",
       title: item.title,
       description: richTextToPlainText(item.description),
       price: item.priceLabel,

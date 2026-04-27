@@ -19,8 +19,12 @@ export function GiftCardForm({ product }: GiftCardFormProps) {
   const [pickupInStore, setPickupInStore] = useState(false);
 
   return (
-    <form className="contact-form" action={formAction}>
+    <form className="contact-form gift-card-form" action={formAction}>
       <input type="hidden" name="product_slug" value={product.slug} />
+      <p className="form-hint gift-card-form-intro">
+        Je betaalt deze cadeaubon nu online, maar de bon zelf is bedoeld om later te gebruiken in
+        Café In den Boule.
+      </p>
       <label>
         Jouw naam
         <input name="purchaser_name" type="text" placeholder="Wie koopt de bon?" />
@@ -30,8 +34,8 @@ export function GiftCardForm({ product }: GiftCardFormProps) {
         <input name="purchaser_email" type="email" placeholder="naam@email.be" />
       </label>
       <fieldset className="inline-choice-group">
-        <legend>Deze cadeaubon is</legend>
-        <label className="inline-choice">
+        <legend>De cadeaubon is bestemd voor</legend>
+        <label className={`inline-choice inline-choice-option ${giftFor === "self" ? "is-active" : ""}`}>
           <input
             checked={giftFor === "self"}
             name="gift_for"
@@ -39,9 +43,12 @@ export function GiftCardForm({ product }: GiftCardFormProps) {
             value="self"
             onChange={() => setGiftFor("self")}
           />
-          Voor mezelf
+          <span>
+            <strong>Voor mezelf</strong>
+            <small>Ik ontvang de cadeaubon zelf.</small>
+          </span>
         </label>
-        <label className="inline-choice">
+        <label className={`inline-choice inline-choice-option ${giftFor === "send" ? "is-active" : ""}`}>
           <input
             checked={giftFor === "send"}
             name="gift_for"
@@ -49,7 +56,10 @@ export function GiftCardForm({ product }: GiftCardFormProps) {
             value="send"
             onChange={() => setGiftFor("send")}
           />
-          Meteen verzenden naar iemand anders
+          <span>
+            <strong>Voor iemand anders</strong>
+            <small>We sturen de cadeaubon meteen door naar de ontvanger.</small>
+          </span>
         </label>
       </fieldset>
       <label>
@@ -108,7 +118,7 @@ export function GiftCardForm({ product }: GiftCardFormProps) {
         </p>
       ) : null}
       <NewsletterOptIn id="gift-card-newsletter-opt-in" />
-      <SubmitButton>Verder naar betaling</SubmitButton>
+      <SubmitButton>Betaal cadeaubon</SubmitButton>
       <FormFeedback state={state} />
     </form>
   );

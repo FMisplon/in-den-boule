@@ -730,7 +730,8 @@ img {
 }
 
 .inline-choice-group legend {
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.4rem;
+  color: var(--ink);
   font-weight: 700;
 }
 
@@ -743,6 +744,32 @@ img {
   line-height: 1.6;
 }
 
+.inline-choice-option {
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(86, 60, 28, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 248, 240, 0.72);
+}
+
+.inline-choice-option.is-active {
+  border-color: rgba(37, 112, 56, 0.28);
+  background: rgba(230, 242, 232, 0.92);
+}
+
+.inline-choice span {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.inline-choice strong {
+  color: var(--ink);
+}
+
+.inline-choice small {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
 .inline-choice input,
 .checkbox-line input {
   margin-top: 0.2rem;
@@ -753,6 +780,10 @@ img {
   color: var(--muted);
   font-size: 0.95rem;
   line-height: 1.6;
+}
+
+.gift-card-form-intro {
+  margin: 0 0 0.35rem;
 }
 
 .form-feedback {

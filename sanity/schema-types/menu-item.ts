@@ -59,13 +59,6 @@ export const menuItemType = defineType({
       group: "display"
     }),
     defineField({
-      name: "displayLabel",
-      title: "Klein label boven item",
-      type: "string",
-      description: "Bijvoorbeeld Soep, Oven, Kroketjes of Croques.",
-      group: "display"
-    }),
-    defineField({
       name: "priceLabel",
       title: "Prijslabel",
       type: "string",
@@ -110,11 +103,10 @@ export const menuItemType = defineType({
       title: "title",
       subtitle: "priceLabel",
       category: "category.title",
-      displayLabel: "displayLabel",
       available: "available",
       featured: "featured"
     },
-    prepare({ title, subtitle, category, displayLabel, available, featured }) {
+    prepare({ title, subtitle, category, available, featured }) {
       const prefix = [
         available === false ? "Verborgen" : null,
         featured ? "Uitgelicht" : null
@@ -127,7 +119,6 @@ export const menuItemType = defineType({
         subtitle: [
           prefix || null,
           category || null,
-          displayLabel || null,
           subtitle || null
         ]
           .filter(Boolean)

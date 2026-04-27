@@ -50,7 +50,7 @@ export function MenuBrowser({ items }: MenuBrowserProps) {
               </div>
             ) : null}
             <div className="menu-card-body">
-              <span>{item.label || item.category}</span>
+              <span>{item.category}</span>
               <h3>{item.title}</h3>
               <p>{item.description}</p>
               <strong>{item.price}</strong>
