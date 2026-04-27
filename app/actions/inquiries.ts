@@ -1,9 +1,11 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { createMolliePayment } from "@/lib/mollie";
+import { createEventAccessToken, getEventAccessCookieName } from "@/lib/event-access";
 import { readString, type FormStatus } from "@/lib/forms";
 import { env } from "@/lib/env";
 import { sendFormEmails } from "@/lib/mailer";
@@ -398,4 +400,52 @@ export async function createEventTicketPayment(
       message: `De betaling kon niet gestart worden${detail}.`
     };
   }
+}
+
+export async function unlockEventAccess(
+  _prevState: FormStatus,
+  formData: FormData
+): Promise<FormStatus> {
+  const eventSlug = readString(formData, "event_slug");
+  const eventTitle = readString(formData, "event_title");
+  const accessPassword = readString(formData, "access_password");
+
+  if (!eventSlug || !accessPassword) {
+    return {
+      success: false,
+      message: "Vul het wachtwoord voor dit event in."
+    };
+  }
+
+  const event = await getEventBySlug(eventSlug);
+
+  if (!event) {
+    return {
+      success: false,
+      message: "Dit event werd niet gevonden."
+    };
+  }
+
+  const expectedPassword =
+    "accessPassword" in event && typeof event.accessPassword === "string"
+      ? event.accessPassword
+      : "";
+
+  if (!expectedPassword || accessPassword !== expectedPassword) {
+    return {
+      success: false,
+      message: "Het wachtwoord klopt niet."
+    };
+  }
+
+  const cookieStore = await cookies();
+  cookieStore.set(getEventAccessCookieName(eventSlug), createEventAccessToken(eventSlug, accessPassword), {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: env.appUrl.startsWith("https://"),
+    path: "/",
+    maxAge: 60 * 60 * 8
+  });
+
+  redirect(`/${eventSlug}`);
 }

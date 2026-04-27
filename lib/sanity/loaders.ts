@@ -1,7 +1,17 @@
 import { cache } from "react";
-import { events as fallbackEvents, eventMap, menuItems as fallbackMenuItems, site as fallbackSite } from "@/lib/site-data";
+import {
+  events as fallbackEvents,
+  eventMap,
+  menuItems as fallbackMenuItems,
+  site as fallbackSite
+} from "@/lib/site-data";
 import { sanityClient } from "@/lib/sanity/client";
-import { eventsQuery, menuItemsQuery, siteSettingsQuery } from "@/lib/sanity/queries";
+import {
+  eventSlugsQuery,
+  eventsQuery,
+  menuItemsQuery,
+  siteSettingsQuery
+} from "@/lib/sanity/queries";
 
 type SanitySiteSettings = {
   siteTitle?: string;
@@ -37,6 +47,9 @@ type SanityEvent = {
   startsAt: string;
   teaser: string;
   venue?: string;
+  listingVisibility?: "public" | "private";
+  accessMode?: "open" | "password";
+  accessPassword?: string;
   primaryCtaLabel?: string;
   ticketingMode?: "native" | "external" | "info";
   ticketUrl?: string;
@@ -80,6 +93,9 @@ function toEventSummary(event: SanityEvent) {
     availabilityLabel:
       totalAvailability > 0 ? `${totalAvailability} tickets beschikbaar` : "Beperkte plaatsen",
     venue: event.venue || "In den Boule, Leuven",
+    listingVisibility: event.listingVisibility || "public",
+    accessMode: event.accessMode || "open",
+    accessPassword: event.accessPassword,
     ticketingMode: event.ticketingMode || "native",
     ticketUrl: event.ticketUrl,
     ticketInfo: event.ticketInfo,
@@ -158,16 +174,36 @@ export const getEvents = cache(async () => {
   }
 });
 
+export const getAllEventSlugs = cache(async () => {
+  try {
+    const data = await sanityClient.fetch<Array<{ slug?: string }>>(eventSlugsQuery);
+    const slugs = data
+      .map((item) => item.slug?.trim())
+      .filter((value): value is string => Boolean(value));
+
+    if (slugs.length) {
+      return slugs;
+    }
+
+    return fallbackEvents.map((event) => event.slug);
+  } catch {
+    return fallbackEvents.map((event) => event.slug);
+  }
+});
+
 export const getEventBySlug = cache(async (slug: string) => {
   try {
     const data = await sanityClient.fetch<SanityEvent | null>(
-      `*[_type == "event" && slug.current == $slug][0]{
+      `*[_type == "event" && published == true && slug.current == $slug][0]{
         _id,
         title,
         slug,
         startsAt,
         teaser,
         venue,
+        listingVisibility,
+        accessMode,
+        accessPassword,
         primaryCtaLabel,
         ticketingMode,
         ticketUrl,

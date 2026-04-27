@@ -34,6 +34,7 @@ export const eventType = defineType({
       title: "Slug",
       type: "slug",
       options: { source: "title", maxLength: 96 },
+      description: "Dit wordt de eigen event-URL, bijvoorbeeld /reunie-8-mei.",
       group: "content",
       validation: (rule) => rule.required()
     }),
@@ -88,6 +89,43 @@ export const eventType = defineType({
       },
       description: "Kies hoe bezoekers tickets moeten kopen voor dit event.",
       group: "tickets"
+    }),
+    defineField({
+      name: "listingVisibility",
+      title: "Zichtbaarheid op events-pagina",
+      type: "string",
+      initialValue: "public",
+      options: {
+        list: [
+          { title: "Publiek", value: "public" },
+          { title: "Privé (alleen via rechtstreekse slug)", value: "private" }
+        ],
+        layout: "radio"
+      },
+      description: "Privé-events verschijnen niet op /events, maar zijn wel bereikbaar via hun eigen slug.",
+      group: "publish"
+    }),
+    defineField({
+      name: "accessMode",
+      title: "Toegang",
+      type: "string",
+      initialValue: "open",
+      options: {
+        list: [
+          { title: "Open", value: "open" },
+          { title: "Met wachtwoord", value: "password" }
+        ],
+        layout: "radio"
+      },
+      group: "publish"
+    }),
+    defineField({
+      name: "accessPassword",
+      title: "Event wachtwoord",
+      type: "string",
+      hidden: ({ document }) => document?.accessMode !== "password",
+      description: "Wordt gevraagd voordat de eventpagina zichtbaar wordt.",
+      group: "publish"
     }),
     defineField({
       name: "ticketUrl",
@@ -186,13 +224,17 @@ export const eventType = defineType({
       subtitle: "startsAt",
       media: "heroImage",
       venue: "venue",
-      published: "published"
+      published: "published",
+      listingVisibility: "listingVisibility",
+      accessMode: "accessMode"
     },
-    prepare({ title, subtitle, media, venue, published }) {
+    prepare({ title, subtitle, media, venue, published, listingVisibility, accessMode }) {
       return {
         title,
         subtitle: [
           published === false ? "Niet publiek" : "Publiek",
+          listingVisibility === "private" ? "Privé-link" : "In overzicht",
+          accessMode === "password" ? "Wachtwoord" : "Open",
           subtitle || null,
           venue || null
         ]

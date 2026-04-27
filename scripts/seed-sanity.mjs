@@ -110,6 +110,8 @@ const events = [
     teaser: "Live trio, deelgerechten en een intieme zaalopstelling voor 60 gasten.",
     venue: "In den Boule, Leuven",
     primaryCtaLabel: "Koop ticket",
+    listingVisibility: "public",
+    accessMode: "open",
     ticketingMode: "native",
     ticketInfo: "Na betaling ontvang je een bevestiging per e-mail. De uiteindelijke e-ticket mailflow koppelen we in de volgende stap.",
     published: true,
@@ -133,6 +135,8 @@ const events = [
     teaser: "Een exclusieve avond met 5 gangen, pairing en storytelling aan lange tafel.",
     venue: "In den Boule, Leuven",
     primaryCtaLabel: "Reserveer je stoel",
+    listingVisibility: "public",
+    accessMode: "open",
     ticketingMode: "native",
     published: true,
     ticketTypes: [
@@ -155,6 +159,8 @@ const events = [
     teaser: "Familietafels, brunchbuffet en kinderformule met tijdssloten.",
     venue: "In den Boule, Leuven",
     primaryCtaLabel: "Boek brunchslot",
+    listingVisibility: "public",
+    accessMode: "open",
     ticketingMode: "native",
     published: true,
     ticketTypes: [

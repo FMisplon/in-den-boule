@@ -17,16 +17,22 @@ export const menuItemsQuery = `*[_type == "menuItem" && available == true] | ord
   "category": category->title
 }`;
 
-export const eventsQuery = `*[_type == "event" && published == true] | order(startsAt asc){
+export const eventsQuery = `*[_type == "event" && published == true && listingVisibility != "private"] | order(startsAt asc){
   _id,
   title,
   slug,
   startsAt,
   teaser,
   venue,
+  listingVisibility,
+  accessMode,
   primaryCtaLabel,
   ticketingMode,
   ticketUrl,
   ticketInfo,
   ticketTypes
+}`;
+
+export const eventSlugsQuery = `*[_type == "event" && published == true && defined(slug.current)]{
+  "slug": slug.current
 }`;

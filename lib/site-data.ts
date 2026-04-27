@@ -21,6 +21,8 @@ export type EventItem = {
   description: string;
   ctaLabel: string;
   venue?: string;
+  listingVisibility?: "public" | "private";
+  accessMode?: "open" | "password";
   ticketingMode?: "native" | "external" | "info";
   ticketUrl?: string;
   ticketInfo?: string;
@@ -99,6 +101,8 @@ export const events: EventItem[] = [
     description: "Een avond die eten, muziek en cafékarakter samenbrengt. Voor de demo tonen we al hoe een standalone eventpagina kan werken voor promotie en ticketverkoop.",
     ctaLabel: "Koop ticket",
     venue: "In den Boule, Leuven",
+    listingVisibility: "public",
+    accessMode: "open",
     ticketingMode: "native",
     ticketInfo: "Na betaling ontvang je een bevestiging per e-mail. De uiteindelijke e-ticket mailflow koppelen we in de volgende stap.",
     ticketTypes: [
@@ -122,6 +126,8 @@ export const events: EventItem[] = [
     description: "Dit is het type event dat baat heeft bij een eigen verhaal, timing, tickettypes en beperkte capaciteit. In de echte build komt dit uit Sanity met voorraadkoppeling via Supabase.",
     ctaLabel: "Reserveer je stoel",
     venue: "In den Boule, Leuven",
+    listingVisibility: "public",
+    accessMode: "open",
     ticketingMode: "native",
     ticketTypes: [
       {
@@ -144,6 +150,8 @@ export const events: EventItem[] = [
     description: "Deze flow toont hoe events ook met varianten of tijdssloten gepresenteerd kunnen worden, zonder dat de homepage overvol raakt.",
     ctaLabel: "Boek brunchslot",
     venue: "In den Boule, Leuven",
+    listingVisibility: "public",
+    accessMode: "open",
     ticketingMode: "native",
     ticketTypes: [
       {

@@ -27,7 +27,7 @@ export default async function EventsPage() {
                 <span>{event.priceLabel}</span>
                 <span>{event.availabilityLabel}</span>
               </div>
-              <Link className="button" href={`/events/${event.slug}`}>
+              <Link className="button" href={`/${event.slug}`}>
                 {event.ctaLabel}
               </Link>
             </article>
