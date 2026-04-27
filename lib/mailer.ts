@@ -28,7 +28,13 @@ type VenueMail = {
   message?: string | null;
 };
 
-type FormMail = ReservationMail | ContactMail | VenueMail;
+type NewsletterMail = {
+  kind: "newsletter";
+  email: string;
+  source?: string | null;
+};
+
+type FormMail = ReservationMail | ContactMail | VenueMail | NewsletterMail;
 
 type MailResult = {
   enabled: boolean;
@@ -108,6 +114,24 @@ function getTransporter() {
 }
 
 function buildNotificationMail(formMail: FormMail) {
+  if (formMail.kind === "newsletter") {
+    return {
+      subject: `[In den Boule] Nieuwe nieuwsbriefinschrijving`,
+      text: [
+        "Nieuwe nieuwsbriefinschrijving",
+        "",
+        `E-mail: ${formMail.email}`,
+        `Bron: ${formMail.source || "website"}`,
+        ""
+      ].join("\n"),
+      html: `
+        <h2>Nieuwe nieuwsbriefinschrijving</h2>
+        <p><strong>E-mail:</strong> ${escapeHtml(formMail.email)}</p>
+        <p><strong>Bron:</strong> ${escapeHtml(formMail.source || "website")}</p>
+      `
+    };
+  }
+
   if (formMail.kind === "reservation") {
     return {
       subject: `[In den Boule] Nieuwe reservatieaanvraag van ${formMail.name}`,
@@ -183,6 +207,28 @@ function buildNotificationMail(formMail: FormMail) {
 }
 
 function buildAutoreplyMail(formMail: FormMail) {
+  if (formMail.kind === "newsletter") {
+    return {
+      subject: "Je staat op de nieuwsbrief van In den Boule",
+      text: [
+        "Dag,",
+        "",
+        "Bedankt voor je inschrijving op de nieuwsbrief van In den Boule.",
+        "We houden je graag op de hoogte van events, specials en nieuws uit het café.",
+        "",
+        "Met vriendelijke groeten,",
+        "In den Boule",
+        "hallo@indenboule.be"
+      ].join("\n"),
+      html: `
+        <p>Dag,</p>
+        <p>Bedankt voor je inschrijving op de nieuwsbrief van <strong>In den Boule</strong>.</p>
+        <p>We houden je graag op de hoogte van events, specials en nieuws uit het café.</p>
+        <p>Met vriendelijke groeten,<br />In den Boule<br />hallo@indenboule.be</p>
+      `
+    };
+  }
+
   if (formMail.kind === "reservation") {
     return {
       subject: "We hebben je reservatieaanvraag goed ontvangen",
@@ -273,7 +319,7 @@ export async function sendFormEmails(formMail: FormMail): Promise<MailResult> {
       mailer.transporter.sendMail({
         from: mailer.config.from,
         to: mailer.config.recipients,
-        replyTo: formMail.email,
+        replyTo: formMail.kind === "newsletter" ? mailer.config.replyTo : formMail.email,
         subject: internalMail.subject,
         text: internalMail.text,
         html: internalMail.html

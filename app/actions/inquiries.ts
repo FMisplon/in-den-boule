@@ -176,6 +176,61 @@ export async function submitVenueInquiry(
   };
 }
 
+export async function submitNewsletterSignup(
+  _prevState: FormStatus,
+  formData: FormData
+): Promise<FormStatus> {
+  const email = readString(formData, "email");
+  const source = readString(formData, "source");
+
+  if (!email) {
+    return {
+      success: false,
+      message: "Vul een e-mailadres in om je in te schrijven."
+    };
+  }
+
+  const supabase = getSupabaseForAction();
+
+  if (!supabase) {
+    return { success: false, message: "Serverconfiguratie ontbreekt voor nieuwsbriefinschrijvingen." };
+  }
+
+  const { error } = await supabase.from("newsletter_signups").insert({
+    email,
+    source: source || "website",
+    status: "subscribed"
+  });
+
+  if (error?.code === "23505") {
+    return {
+      success: true,
+      message: "Dit e-mailadres staat al op de nieuwsbrief."
+    };
+  }
+
+  if (error) {
+    return {
+      success: false,
+      message: "De inschrijving kon niet opgeslagen worden. Probeer opnieuw."
+    };
+  }
+
+  const mailResult = await sendFormEmails({
+    kind: "newsletter",
+    email,
+    source: source || "website"
+  });
+
+  revalidatePath("/");
+  return {
+    success: true,
+    message: mailResult.warning
+      ? `Je bent ingeschreven op de nieuwsbrief. ${mailResult.warning}`
+      : "Je bent ingeschreven op de nieuwsbrief. We stuurden ook een bevestiging per e-mail."
+  };
+}
+
 export async function createGiftCardPayment(
   _prevState: FormStatus,
   formData: FormData

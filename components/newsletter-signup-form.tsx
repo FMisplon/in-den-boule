@@ -1,0 +1,34 @@
+"use client";
+
+import { useActionState } from "react";
+import { submitNewsletterSignup } from "@/app/actions/inquiries";
+import { FormFeedback } from "@/components/form-feedback";
+import { SubmitButton } from "@/components/submit-button";
+import { idleFormState } from "@/lib/forms";
+
+export function NewsletterSignupForm() {
+  const [state, formAction] = useActionState(submitNewsletterSignup, idleFormState);
+
+  return (
+    <form className="newsletter-form" action={formAction}>
+      <input name="source" type="hidden" value="site-footer" />
+      <label className="newsletter-label" htmlFor="newsletter-email">
+        Nieuwsbrief
+      </label>
+      <div className="newsletter-row">
+        <input
+          id="newsletter-email"
+          name="email"
+          type="email"
+          placeholder="naam@email.be"
+          autoComplete="email"
+        />
+        <SubmitButton>Schrijf in</SubmitButton>
+      </div>
+      <p className="newsletter-copy">
+        Schrijf je in voor nieuws over events, specials en nieuwe formules in In den Boule.
+      </p>
+      <FormFeedback state={state} />
+    </form>
+  );
+}

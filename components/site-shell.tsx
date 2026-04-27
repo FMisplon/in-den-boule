@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
+import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { mainNav, site } from "@/lib/site-data";
 
 type SiteShellProps = {
@@ -49,6 +50,9 @@ export function SiteShell({
       </div>
 
       <footer className="site-footer site-footer-home">
+        <div className="footer-block footer-newsletter">
+          <NewsletterSignupForm />
+        </div>
         <div className="footer-block">
           <p>{site.name}</p>
           <p>{site.address}</p>
