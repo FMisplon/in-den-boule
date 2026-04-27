@@ -43,6 +43,68 @@ async function addToNewsletterList(email: string, source: string) {
   }
 }
 
+export async function submitEventWaitlist(
+  _prevState: FormStatus,
+  formData: FormData
+): Promise<FormStatus> {
+  const eventSlug = readString(formData, "event_slug");
+  const eventTitle = readString(formData, "event_title");
+  const name = readString(formData, "name");
+  const email = readString(formData, "email");
+
+  if (!eventSlug || !eventTitle || !name || !email) {
+    return {
+      success: false,
+      message: "Vul naam en e-mail in om je op de wachtlijst te zetten."
+    };
+  }
+
+  const supabase = getSupabaseForAction();
+
+  if (!supabase) {
+    return { success: false, message: "Serverconfiguratie ontbreekt voor de wachtlijst." };
+  }
+
+  const { error } = await supabase.from("event_waitlist_signups").insert({
+    event_slug: eventSlug,
+    event_title: eventTitle,
+    name,
+    email
+  });
+
+  if (error?.code === "23505") {
+    return {
+      success: true,
+      message: "Dit e-mailadres staat al op de wachtlijst voor dit event."
+    };
+  }
+
+  if (error) {
+    return {
+      success: false,
+      message: "De wachtlijstinschrijving kon niet opgeslagen worden. Probeer opnieuw."
+    };
+  }
+
+  const mailResult = await sendFormEmails({
+    kind: "event-waitlist",
+    name,
+    email,
+    eventTitle
+  });
+
+  if (wantsNewsletter(formData)) {
+    await addToNewsletterList(email, "event-waitlist");
+  }
+
+  return {
+    success: true,
+    message: mailResult.warning
+      ? `Je staat op de wachtlijst. ${mailResult.warning}`
+      : "Je staat op de wachtlijst. We stuurden ook een bevestiging per e-mail."
+  };
+}
+
 export async function submitReservation(
   _prevState: FormStatus,
   formData: FormData

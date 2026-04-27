@@ -116,9 +116,12 @@ function resolveEventSalesStatus(event: SanityEvent) {
   }
 
   if (event.salesMode === "presale") {
+    const isPrivatePresale =
+      event.listingVisibility === "private" || event.accessMode === "password";
+
     return {
       status: "presale" as const,
-      badge: "Presale",
+      badge: isPrivatePresale ? "Private presale" : "Presale",
       canBuyTickets: true,
       availabilityLabel:
         totalAvailability > 0 ? `${totalAvailability} tickets beschikbaar` : "Presale"

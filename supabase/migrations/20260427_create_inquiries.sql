@@ -67,12 +67,23 @@ create table if not exists public.newsletter_signups (
   status text not null default 'subscribed'
 );
 
+create table if not exists public.event_waitlist_signups (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  event_slug text not null,
+  event_title text not null,
+  name text not null,
+  email text not null,
+  unique (event_slug, email)
+);
+
 alter table public.reservation_requests enable row level security;
 alter table public.contact_requests enable row level security;
 alter table public.venue_requests enable row level security;
 alter table public.gift_card_orders enable row level security;
 alter table public.event_ticket_orders enable row level security;
 alter table public.newsletter_signups enable row level security;
+alter table public.event_waitlist_signups enable row level security;
 
 grant usage on schema public to service_role;
 
@@ -82,3 +93,4 @@ grant select, insert on public.venue_requests to service_role;
 grant select, insert, update on public.gift_card_orders to service_role;
 grant select, insert, update on public.event_ticket_orders to service_role;
 grant select, insert, update on public.newsletter_signups to service_role;
+grant select, insert on public.event_waitlist_signups to service_role;

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { EventAccessForm } from "@/components/event-access-form";
 import { EventTicketForm } from "@/components/event-ticket-form";
+import { EventWaitlistForm } from "@/components/event-waitlist-form";
 import { SiteShell } from "@/components/site-shell";
 import type { EventItem } from "@/lib/site-data";
 
@@ -22,6 +23,12 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
         <h1>{event.title}</h1>
         <p className="page-intro">{event.description}</p>
         {event.salesBadge ? <span className="event-status-badge event-status-badge-hero">{event.salesBadge}</span> : null}
+        {event.salesStatus === "presale" &&
+        (event.listingVisibility === "private" || event.accessMode === "password") ? (
+          <p className="page-intro" style={{ marginTop: "1rem" }}>
+            Presale enkel op uitnodiging. Deel de rechtstreekse link alleen met de juiste gasten.
+          </p>
+        ) : null}
       </section>
 
       <section className="contact-band contact-band-page">
@@ -41,7 +48,7 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
             Contacteer ons
           </Link>
         ) : salesStatus === "waitlist" ? (
-          <Link className="button" href="/contact">
+          <Link className="button" href="#waitlist">
             Schrijf je in op wachtlijst
           </Link>
         ) : event.ticketingMode === "external" && event.ticketUrl ? (
@@ -68,6 +75,12 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
               <p style={{ marginTop: "1rem" }}>
                 Dit event verschijnt niet op de openbare evenementenpagina en is alleen
                 bereikbaar via de rechtstreekse link.
+              </p>
+            ) : null}
+            {salesStatus === "presale" &&
+            (event.listingVisibility === "private" || event.accessMode === "password") ? (
+              <p style={{ marginTop: "1rem" }}>
+                Deze presale is bewust afgeschermd en bedoeld voor gasten met de juiste link of toegangscode.
               </p>
             ) : null}
           </article>
@@ -117,7 +130,7 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
               {event.ticketInfo ? <p style={{ marginTop: "1rem" }}>{event.ticketInfo}</p> : null}
             </article>
           ) : (
-            <article className="venue-panel venue-panel-accent">
+            <article className="venue-panel venue-panel-accent" id={salesStatus === "waitlist" ? "waitlist" : undefined}>
               <h3>
                 {salesStatus === "waitlist"
                   ? "Wachtlijst"
@@ -128,22 +141,24 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
               <p>
                 {salesStatus === "waitlist"
                   ? event.ticketInfo ||
-                    "Dit event werkt momenteel met een wachtlijst. Neem contact op om je interesse door te geven."
+                    "Laat hieronder je gegevens achter en we contacteren je zodra er opnieuw plaatsen beschikbaar zijn."
                   : salesStatus === "sold_out"
                     ? event.ticketInfo ||
                       "Alle tickets voor dit event zijn momenteel opgebruikt. Neem contact op als je op de hoogte wilt blijven."
                     : event.ticketInfo ||
-                  "Ticketverkoop voor dit event loopt via de organisatie. Neem contact op voor beschikbaarheid."}
+                      "Ticketverkoop voor dit event loopt via de organisatie. Neem contact op voor beschikbaarheid."}
               </p>
-              <Link className="button" href={event.ticketUrl || "/contact"}>
-                {salesStatus === "waitlist"
-                  ? "Contacteer ons voor wachtlijst"
-                  : salesStatus === "sold_out"
+              {salesStatus === "waitlist" ? (
+                <EventWaitlistForm eventSlug={event.slug} eventTitle={event.title} />
+              ) : (
+                <Link className="button" href={event.ticketUrl || "/contact"}>
+                  {salesStatus === "sold_out"
                     ? "Vraag naar extra plaatsen"
                     : event.ticketingMode === "external"
                       ? "Open ticketpagina"
                       : "Contacteer ons"}
-              </Link>
+                </Link>
+              )}
             </article>
           )}
         </div>

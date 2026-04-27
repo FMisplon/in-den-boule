@@ -34,7 +34,14 @@ type NewsletterMail = {
   source?: string | null;
 };
 
-type FormMail = ReservationMail | ContactMail | VenueMail | NewsletterMail;
+type EventWaitlistMail = {
+  kind: "event-waitlist";
+  name: string;
+  email: string;
+  eventTitle: string;
+};
+
+type FormMail = ReservationMail | ContactMail | VenueMail | NewsletterMail | EventWaitlistMail;
 
 type MailResult = {
   enabled: boolean;
@@ -114,6 +121,26 @@ function getTransporter() {
 }
 
 function buildNotificationMail(formMail: FormMail) {
+  if (formMail.kind === "event-waitlist") {
+    return {
+      subject: `[In den Boule] Nieuwe wachtlijstinschrijving voor ${formMail.eventTitle}`,
+      text: [
+        "Nieuwe wachtlijstinschrijving",
+        "",
+        `Event: ${formMail.eventTitle}`,
+        `Naam: ${formMail.name}`,
+        `E-mail: ${formMail.email}`,
+        ""
+      ].join("\n"),
+      html: `
+        <h2>Nieuwe wachtlijstinschrijving</h2>
+        <p><strong>Event:</strong> ${escapeHtml(formMail.eventTitle)}</p>
+        <p><strong>Naam:</strong> ${escapeHtml(formMail.name)}</p>
+        <p><strong>E-mail:</strong> ${escapeHtml(formMail.email)}</p>
+      `
+    };
+  }
+
   if (formMail.kind === "newsletter") {
     return {
       subject: `[In den Boule] Nieuwe nieuwsbriefinschrijving`,
@@ -207,6 +234,28 @@ function buildNotificationMail(formMail: FormMail) {
 }
 
 function buildAutoreplyMail(formMail: FormMail) {
+  if (formMail.kind === "event-waitlist") {
+    return {
+      subject: `Je staat op de wachtlijst voor ${formMail.eventTitle}`,
+      text: [
+        `Dag ${formMail.name},`,
+        "",
+        `Bedankt voor je interesse in ${formMail.eventTitle}.`,
+        "We hebben je op de wachtlijst gezet en laten iets weten zodra er plaatsen vrijkomen of extra tickets beschikbaar komen.",
+        "",
+        "Met vriendelijke groeten,",
+        "In den Boule",
+        "hallo@indenboule.be"
+      ].join("\n"),
+      html: `
+        <p>Dag ${escapeHtml(formMail.name)},</p>
+        <p>Bedankt voor je interesse in <strong>${escapeHtml(formMail.eventTitle)}</strong>.</p>
+        <p>We hebben je op de wachtlijst gezet en laten iets weten zodra er plaatsen vrijkomen of extra tickets beschikbaar komen.</p>
+        <p>Met vriendelijke groeten,<br />In den Boule<br />hallo@indenboule.be</p>
+      `
+    };
+  }
+
   if (formMail.kind === "newsletter") {
     return {
       subject: "Je staat op de nieuwsbrief van In den Boule",
@@ -319,7 +368,8 @@ export async function sendFormEmails(formMail: FormMail): Promise<MailResult> {
       mailer.transporter.sendMail({
         from: mailer.config.from,
         to: mailer.config.recipients,
-        replyTo: formMail.kind === "newsletter" ? mailer.config.replyTo : formMail.email,
+        replyTo:
+          formMail.kind === "newsletter" ? mailer.config.replyTo : formMail.email,
         subject: internalMail.subject,
         text: internalMail.text,
         html: internalMail.html
