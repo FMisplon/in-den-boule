@@ -1,9 +1,10 @@
 "use client";
 
 import { useActionState } from "react";
-import { idleFormState, submitVenueInquiry } from "@/app/actions/inquiries";
+import { submitVenueInquiry } from "@/app/actions/inquiries";
 import { FormFeedback } from "@/components/form-feedback";
 import { SubmitButton } from "@/components/submit-button";
+import { idleFormState } from "@/lib/forms";
 
 export function VenueInquiryForm() {
   const [state, formAction] = useActionState(submitVenueInquiry, idleFormState);

@@ -1,9 +1,10 @@
 "use client";
 
 import { useActionState } from "react";
-import { idleFormState, submitReservation } from "@/app/actions/inquiries";
+import { submitReservation } from "@/app/actions/inquiries";
 import { FormFeedback } from "@/components/form-feedback";
 import { SubmitButton } from "@/components/submit-button";
+import { idleFormState } from "@/lib/forms";
 
 export function ReservationForm() {
   const [state, formAction] = useActionState(submitReservation, idleFormState);

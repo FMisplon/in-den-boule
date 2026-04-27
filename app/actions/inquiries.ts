@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createMolliePayment } from "@/lib/mollie";
-import { idleFormState, readString, type FormStatus } from "@/lib/forms";
+import { readString, type FormStatus } from "@/lib/forms";
 import { env } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -217,5 +217,3 @@ export async function createGiftCardPayment(
     };
   }
 }
-
-export { idleFormState };

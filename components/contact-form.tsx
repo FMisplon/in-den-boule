@@ -1,9 +1,10 @@
 "use client";
 
 import { useActionState } from "react";
-import { idleFormState, submitContact } from "@/app/actions/inquiries";
+import { submitContact } from "@/app/actions/inquiries";
 import { FormFeedback } from "@/components/form-feedback";
 import { SubmitButton } from "@/components/submit-button";
+import { idleFormState } from "@/lib/forms";
 
 export function ContactForm() {
   const [state, formAction] = useActionState(submitContact, idleFormState);
