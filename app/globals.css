@@ -681,6 +681,14 @@ textarea {
   gap: 1rem;
 }
 
+.contact-map-card {
+  padding: 0;
+}
+
+.contact-map-copy {
+  padding: 1.4rem 1.4rem 0;
+}
+
 .contact-map {
   overflow: hidden;
   margin-top: 1rem;
@@ -692,13 +700,20 @@ textarea {
 .contact-map iframe {
   display: block;
   width: 100%;
-  min-height: 220px;
+  min-height: 300px;
   border: 0;
+}
+
+.contact-map-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem 1.4rem 1.4rem;
 }
 
 .contact-map-link {
   display: inline-flex;
-  margin-top: 0.9rem;
   color: var(--olive-deep);
   font-weight: 700;
 }
