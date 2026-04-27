@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { CopyEventLinkInput } from "../components/copy-event-link-input";
 
 export const eventType = defineType({
   name: "event",
@@ -122,6 +123,17 @@ export const eventType = defineType({
         layout: "radio"
       },
       description: "Privé-events verschijnen niet op /events, maar zijn wel bereikbaar via hun eigen slug.",
+      group: "publish"
+    }),
+    defineField({
+      name: "directLinkHelper",
+      title: "Rechtstreekse link",
+      type: "string",
+      readOnly: true,
+      initialValue: "",
+      components: {
+        input: CopyEventLinkInput
+      },
       group: "publish"
     }),
     defineField({
