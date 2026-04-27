@@ -1,12 +1,15 @@
 "use client";
 
 import { useActionState } from "react";
-import { idleShopAdminState, unlockShopAdmin } from "@/app/actions/shop-admin";
+import { unlockShopAdmin } from "@/app/actions/shop-admin";
 import { FormFeedback } from "@/components/form-feedback";
 import { SubmitButton } from "@/components/submit-button";
 
 export function ShopAdminAccessForm() {
-  const [state, formAction] = useActionState(unlockShopAdmin, idleShopAdminState);
+  const [state, formAction] = useActionState(unlockShopAdmin, {
+    success: false,
+    message: ""
+  });
 
   return (
     <form className="contact-form" action={formAction}>

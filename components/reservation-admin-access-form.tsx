@@ -1,18 +1,15 @@
 "use client";
 
 import { useActionState } from "react";
-import {
-  idleReservationAdminState,
-  unlockReservationAdmin
-} from "@/app/actions/reservations-admin";
+import { unlockReservationAdmin } from "@/app/actions/reservations-admin";
 import { FormFeedback } from "@/components/form-feedback";
 import { SubmitButton } from "@/components/submit-button";
 
 export function ReservationAdminAccessForm() {
-  const [state, formAction] = useActionState(
-    unlockReservationAdmin,
-    idleReservationAdminState
-  );
+  const [state, formAction] = useActionState(unlockReservationAdmin, {
+    success: false,
+    message: ""
+  });
 
   return (
     <form className="contact-form" action={formAction}>

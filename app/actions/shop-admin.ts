@@ -22,11 +22,6 @@ export type ShopAdminState = {
   adminNote?: string | null;
 };
 
-export const idleShopAdminState: ShopAdminState = {
-  success: false,
-  message: ""
-};
-
 export async function unlockShopAdmin(
   _prevState: ShopAdminState,
   formData: FormData

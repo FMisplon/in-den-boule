@@ -2,7 +2,6 @@
 
 import { useActionState, useEffect, useState } from "react";
 import {
-  idleReservationAdminState,
   updateReservationAdminState,
   type ReservationAdminState
 } from "@/app/actions/reservations-admin";
@@ -32,7 +31,10 @@ const statusLabels: Record<string, string> = {
 };
 
 function ReservationAdminCard({ reservation }: { reservation: ReservationRecord }) {
-  const [state, formAction] = useActionState(updateReservationAdminState, idleReservationAdminState);
+  const [state, formAction] = useActionState(updateReservationAdminState, {
+    success: false,
+    message: ""
+  });
   const [status, setStatus] = useState(reservation.status || "new");
   const [handledBy, setHandledBy] = useState(reservation.handled_by || "");
   const [adminNote, setAdminNote] = useState(reservation.admin_note || "");

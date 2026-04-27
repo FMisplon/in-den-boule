@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
 import {
-  idleShopAdminState,
   updateShopOrderAdminState,
   type ShopAdminState
 } from "@/app/actions/shop-admin";
@@ -53,7 +52,10 @@ function formatAmount(order: ShopOrderRecord) {
 }
 
 function ShopAdminCard({ order }: { order: ShopOrderRecord }) {
-  const [state, formAction] = useActionState(updateShopOrderAdminState, idleShopAdminState);
+  const [state, formAction] = useActionState(updateShopOrderAdminState, {
+    success: false,
+    message: ""
+  });
   const [adminStatus, setAdminStatus] = useState(order.admin_status || "new");
   const [handledBy, setHandledBy] = useState(order.handled_by || "");
   const [adminNote, setAdminNote] = useState(order.admin_note || "");

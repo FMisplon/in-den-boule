@@ -22,11 +22,6 @@ export type ReservationAdminState = {
   adminNote?: string | null;
 };
 
-export const idleReservationAdminState: ReservationAdminState = {
-  success: false,
-  message: ""
-};
-
 export async function unlockReservationAdmin(
   _prevState: ReservationAdminState,
   formData: FormData
