@@ -3,6 +3,7 @@ import { dataset, projectId } from "./sanity/env";
 
 export default defineCliConfig({
   api: { projectId, dataset },
-  // Set this once the final hosted studio URL is chosen.
-  // Example: studioHost: "indenboule-cms"
+  deployment: {
+    appId: "ikm5rj7pre98z4szkxyoby4d"
+  }
 });
