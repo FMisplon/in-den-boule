@@ -130,10 +130,12 @@ export async function SiteShell({
         ) : null}
         <div className="footer-block footer-legal">
           <p className="footer-heading">Wettelijk</p>
-          <Link href="/privacy">Privacybeleid</Link>
-          <Link href="/cookiebeleid">Cookiebeleid</Link>
-          <CookiePreferencesButton className="footer-link-button" />
-          <Link href="/algemene-voorwaarden">Algemene voorwaarden</Link>
+          <div className="footer-link-list">
+            <Link href="/privacy">Privacybeleid</Link>
+            <Link href="/cookiebeleid">Cookiebeleid</Link>
+            <CookiePreferencesButton className="footer-link-button" />
+            <Link href="/algemene-voorwaarden">Algemene voorwaarden</Link>
+          </div>
         </div>
         <div className="footer-block footer-credit">
           <p className="footer-heading">Design &amp; development</p>
@@ -144,10 +146,10 @@ export async function SiteShell({
             aria-label="Glowth"
           >
             <Image
-              src="/assets/images/glowth-logo-white.png"
+              src="/assets/images/LogoTrans.svg"
               alt="Glowth logo"
-              width={160}
-              height={94}
+              width={220}
+              height={128}
             />
           </a>
         </div>

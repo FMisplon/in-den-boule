@@ -35,7 +35,9 @@ export function GiftCardForm({ product }: GiftCardFormProps) {
       </label>
       <fieldset className="inline-choice-group">
         <legend>De cadeaubon is bestemd voor</legend>
-        <label className={`inline-choice inline-choice-option ${giftFor === "self" ? "is-active" : ""}`}>
+        <label
+          className={`inline-choice inline-choice-option ${giftFor === "self" ? "is-active" : ""}`}
+        >
           <input
             checked={giftFor === "self"}
             name="gift_for"
@@ -43,12 +45,14 @@ export function GiftCardForm({ product }: GiftCardFormProps) {
             value="self"
             onChange={() => setGiftFor("self")}
           />
-          <span>
+          <span className="inline-choice-copy">
             <strong>Voor mezelf</strong>
             <small>Ik ontvang de cadeaubon zelf.</small>
           </span>
         </label>
-        <label className={`inline-choice inline-choice-option ${giftFor === "send" ? "is-active" : ""}`}>
+        <label
+          className={`inline-choice inline-choice-option ${giftFor === "send" ? "is-active" : ""}`}
+        >
           <input
             checked={giftFor === "send"}
             name="gift_for"
@@ -56,7 +60,7 @@ export function GiftCardForm({ product }: GiftCardFormProps) {
             value="send"
             onChange={() => setGiftFor("send")}
           />
-          <span>
+          <span className="inline-choice-copy">
             <strong>Voor iemand anders</strong>
             <small>We sturen de cadeaubon meteen door naar de ontvanger.</small>
           </span>

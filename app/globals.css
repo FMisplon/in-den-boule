@@ -745,6 +745,7 @@ img {
 }
 
 .inline-choice-option {
+  width: 100%;
   padding: 0.9rem 1rem;
   border: 1px solid rgba(86, 60, 28, 0.12);
   border-radius: 18px;
@@ -756,16 +757,18 @@ img {
   background: rgba(230, 242, 232, 0.92);
 }
 
-.inline-choice span {
+.inline-choice-copy {
   display: grid;
   gap: 0.1rem;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
-.inline-choice strong {
+.inline-choice-copy strong {
   color: var(--ink);
 }
 
-.inline-choice small {
+.inline-choice-copy small {
   color: var(--muted);
   font-size: 0.92rem;
 }
@@ -784,6 +787,11 @@ img {
 
 .gift-card-form-intro {
   margin: 0 0 0.35rem;
+}
+
+.shop-order-layout {
+  grid-template-columns: minmax(18rem, 0.9fr) minmax(0, 1.1fr);
+  align-items: start;
 }
 
 .form-feedback {
@@ -983,7 +991,7 @@ textarea {
 
 .site-footer {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 0.8fr));
+  grid-template-columns: minmax(0, 1.45fr) repeat(3, minmax(0, 0.85fr));
   align-items: flex-start;
   gap: 1.5rem;
   padding: 3rem 0 1rem;
@@ -1004,6 +1012,7 @@ textarea {
   display: grid;
   align-content: start;
   gap: 0.45rem;
+  justify-items: start;
 }
 
 .footer-newsletter {
@@ -1273,6 +1282,12 @@ textarea {
   gap: 0.55rem;
 }
 
+.footer-link-list {
+  display: grid;
+  gap: 0.55rem;
+  justify-items: start;
+}
+
 .footer-link-button {
   padding: 0;
   border: 0;
@@ -1282,6 +1297,21 @@ textarea {
   cursor: pointer;
 }
 
+.footer-link-list a,
+.footer-link-button {
+  color: #f5e4bc;
+  opacity: 0.92;
+}
+
+.footer-link-list a:hover,
+.footer-link-list a:focus-visible,
+.footer-link-button:hover,
+.footer-link-button:focus-visible {
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
 .footer-credit a {
   display: inline-flex;
   align-items: center;
@@ -1289,7 +1319,7 @@ textarea {
 }
 
 .footer-credit img {
-  width: 170px;
+  width: 220px;
   height: auto;
   object-fit: contain;
 }

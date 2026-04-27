@@ -6,7 +6,6 @@ import {
   type PageHeroKey,
   eventMap,
   menuItems as fallbackMenuItems,
-  shopProducts as fallbackShopProducts,
   type ShopProductItem,
   site as fallbackSite
 } from "@/lib/site-data";
@@ -436,9 +435,9 @@ export const getShopProducts = cache(async (): Promise<ShopProductItem[]> => {
       return mapped;
     }
 
-    return fallbackShopProducts;
+    return [];
   } catch {
-    return fallbackShopProducts;
+    return [];
   }
 });
 

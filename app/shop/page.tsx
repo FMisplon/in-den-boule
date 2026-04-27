@@ -23,6 +23,7 @@ export default async function ShopPage() {
   const giftCardProduct = products.find(
     (product) => product.productType === "gift-card-digital" && product.priceOptions.length > 0
   );
+  const hasProducts = products.length > 0;
 
   return (
     <SiteShell ctaHref="/shop" ctaLabel="Bestel cadeaubon">
@@ -35,27 +36,31 @@ export default async function ShopPage() {
       />
 
       <section className="section shop-section">
-        <div className="shop-grid">
-          {products.map((product) => (
-            <article className="shop-card" key={product.slug}>
-              <span>
-                {product.productType === "gift-card-digital" ? "Digitale cadeaubon" : "Fysiek product"}
-              </span>
-              <h3>{product.title}</h3>
-              <p>
-                {product.excerpt ||
-                  "Dit product wordt via Sanity beheerd en kan later verder uitgebreid worden."}
-              </p>
-              <strong>
-                {product.priceOptions.length
-                  ? formatPriceOptions(product.priceOptions.map((option) => option.amount))
-                  : "Binnenkort beschikbaar"}
-              </strong>
-            </article>
-          ))}
-        </div>
+        {hasProducts ? (
+          <div className="shop-grid">
+            {products.map((product) => (
+              <article className="shop-card" key={product.slug}>
+                <span>
+                  {product.productType === "gift-card-digital"
+                    ? "Digitale cadeaubon"
+                    : "Fysiek product"}
+                </span>
+                <h3>{product.title}</h3>
+                <p>
+                  {product.excerpt ||
+                    "Dit product wordt via Sanity beheerd en kan later verder uitgebreid worden."}
+                </p>
+                <strong>
+                  {product.priceOptions.length
+                    ? formatPriceOptions(product.priceOptions.map((option) => option.amount))
+                    : "Binnenkort beschikbaar"}
+                </strong>
+              </article>
+            ))}
+          </div>
+        ) : null}
         {giftCardProduct ? (
-          <div className="venue-layout venue-form-layout">
+          <div className="venue-layout venue-form-layout shop-order-layout">
             <article className="venue-panel">
               <p className="eyebrow">Cadeaubon bestellen</p>
               <h3>{giftCardProduct.title}</h3>
@@ -82,8 +87,9 @@ export default async function ShopPage() {
               <p className="eyebrow">Shop</p>
               <h3>Nog geen actieve digitale cadeaubon.</h3>
               <p>
-                Voeg in Sanity een actief shopproduct van het type digitale cadeaubon toe met
-                minstens één prijsoptie om de checkoutflow hier te tonen.
+                Deze pagina wordt nu bewust alleen vanuit Sanity gevoed. Voeg daar een actief
+                shopproduct van het type digitale cadeaubon toe met minstens één prijsoptie om de
+                checkoutflow hier te tonen.
               </p>
             </article>
           </div>
