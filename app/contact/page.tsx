@@ -38,6 +38,22 @@ export default async function ContactPage() {
               <h3>Adres</h3>
               <p>Augustijnenstraat 2</p>
               <p>3000 Leuven</p>
+              <div className="contact-map">
+                <iframe
+                  title="Kaart van In den Boule"
+                  src="https://www.openstreetmap.org/export/embed.html?bbox=4.6956%2C50.8785%2C4.7046%2C50.8835&layer=mapnik&marker=50.8810%2C4.7001"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+              <a
+                className="contact-map-link"
+                href="https://www.openstreetmap.org/?mlat=50.8810&mlon=4.7001#map=18/50.8810/4.7001"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open kaart in OpenStreetMap
+              </a>
             </article>
             <article>
               <h3>Openingsuren</h3>
