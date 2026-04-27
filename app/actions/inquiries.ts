@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { createMolliePayment } from "@/lib/mollie";
 import { readString, type FormStatus } from "@/lib/forms";
 import { env } from "@/lib/env";
@@ -157,7 +158,6 @@ export async function createGiftCardPayment(
   const supabase = getSupabaseForAction();
 
   if (!supabase) {
-    console.error("[GiftCard] Missing Supabase server configuration");
     return { success: false, message: "Serverconfiguratie ontbreekt voor cadeaubonnen." };
   }
 
@@ -176,10 +176,9 @@ export async function createGiftCardPayment(
     .single();
 
   if (insertError || !insertedOrder) {
-    console.error("[GiftCard] Order insert failed", insertError);
     return {
       success: false,
-      message: "De cadeaubon kon niet gestart worden. Probeer opnieuw."
+      message: `Cadeaubonopslag mislukt${insertError?.message ? `: ${insertError.message}` : "."}`
     };
   }
 
@@ -205,19 +204,25 @@ export async function createGiftCardPayment(
       .eq("id", insertedOrder.id);
 
     if (updateError || !payment._links?.checkout?.href) {
-      console.error("[GiftCard] Payment update or checkout link failed", updateError);
       return {
         success: false,
-        message: "De betaling kon niet correct voorbereid worden."
+        message: `Betaling kon niet correct voorbereid worden${
+          updateError?.message ? `: ${updateError.message}` : "."
+        }`
       };
     }
 
     redirect(payment._links.checkout.href);
   } catch (error) {
-    console.error("[GiftCard] Payment creation failed", error);
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
+    const detail =
+      error instanceof Error && error.message ? ` (${error.message.slice(0, 160)})` : "";
     return {
       success: false,
-      message: "De betaling kon niet gestart worden. Probeer opnieuw."
+      message: `De betaling kon niet gestart worden${detail}.`
     };
   }
 }
