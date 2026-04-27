@@ -112,6 +112,7 @@ const events = [
     primaryCtaLabel: "Koop ticket",
     listingVisibility: "public",
     accessMode: "open",
+    salesMode: "on_sale",
     ticketingMode: "native",
     ticketInfo: "Na betaling ontvang je een bevestiging per e-mail. De uiteindelijke e-ticket mailflow koppelen we in de volgende stap.",
     published: true,
@@ -137,6 +138,7 @@ const events = [
     primaryCtaLabel: "Reserveer je stoel",
     listingVisibility: "public",
     accessMode: "open",
+    salesMode: "presale",
     ticketingMode: "native",
     published: true,
     ticketTypes: [
@@ -161,6 +163,7 @@ const events = [
     primaryCtaLabel: "Boek brunchslot",
     listingVisibility: "public",
     accessMode: "open",
+    salesMode: "waitlist",
     ticketingMode: "native",
     published: true,
     ticketTypes: [

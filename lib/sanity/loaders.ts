@@ -50,6 +50,7 @@ type SanityEvent = {
   listingVisibility?: "public" | "private";
   accessMode?: "open" | "password";
   accessPassword?: string;
+  salesMode?: "on_sale" | "presale" | "waitlist";
   primaryCtaLabel?: string;
   ticketingMode?: "native" | "external" | "info";
   ticketUrl?: string;
@@ -57,6 +58,50 @@ type SanityEvent = {
   ticketTypes?: SanityEventTicketType[];
   body?: unknown[];
 };
+
+function resolveEventSalesStatus(event: SanityEvent) {
+  const totalAvailability = (event.ticketTypes || []).reduce(
+    (sum, ticket) => sum + (ticket.availableQuantity || 0),
+    0
+  );
+
+  if (totalAvailability <= 0 && (event.ticketTypes?.length || 0) > 0) {
+    return {
+      status: "sold_out" as const,
+      badge: "Uitverkocht",
+      canBuyTickets: false,
+      availabilityLabel: "Uitverkocht"
+    };
+  }
+
+  if (event.salesMode === "waitlist") {
+    return {
+      status: "waitlist" as const,
+      badge: "Wachtlijst",
+      canBuyTickets: false,
+      availabilityLabel:
+        totalAvailability > 0 ? `${totalAvailability} plaatsen op aanvraag` : "Wachtlijst"
+    };
+  }
+
+  if (event.salesMode === "presale") {
+    return {
+      status: "presale" as const,
+      badge: "Presale",
+      canBuyTickets: true,
+      availabilityLabel:
+        totalAvailability > 0 ? `${totalAvailability} tickets beschikbaar` : "Presale"
+    };
+  }
+
+  return {
+    status: "on_sale" as const,
+    badge: "Tickets live",
+    canBuyTickets: true,
+    availabilityLabel:
+      totalAvailability > 0 ? `${totalAvailability} tickets beschikbaar` : "Beperkte plaatsen"
+  };
+}
 
 function formatEventDate(dateValue: string) {
   return new Intl.DateTimeFormat("nl-BE", {
@@ -77,10 +122,7 @@ function toEventSummary(event: SanityEvent) {
   }
 
   const firstTicket = event.ticketTypes?.[0];
-  const totalAvailability = (event.ticketTypes || []).reduce(
-    (sum, ticket) => sum + (ticket.availableQuantity || 0),
-    0
-  );
+  const sales = resolveEventSalesStatus(event);
 
   return {
     slug,
@@ -90,12 +132,15 @@ function toEventSummary(event: SanityEvent) {
     ctaLabel: event.primaryCtaLabel || "Koop ticket",
     dateLabel: formatEventDate(event.startsAt),
     priceLabel: firstTicket?.priceLabel || "Prijs volgt",
-    availabilityLabel:
-      totalAvailability > 0 ? `${totalAvailability} tickets beschikbaar` : "Beperkte plaatsen",
+    availabilityLabel: sales.availabilityLabel,
     venue: event.venue || "In den Boule, Leuven",
     listingVisibility: event.listingVisibility || "public",
     accessMode: event.accessMode || "open",
     accessPassword: event.accessPassword,
+    salesMode: event.salesMode || "on_sale",
+    salesStatus: sales.status,
+    salesBadge: sales.badge,
+    canBuyTickets: sales.canBuyTickets,
     ticketingMode: event.ticketingMode || "native",
     ticketUrl: event.ticketUrl,
     ticketInfo: event.ticketInfo,
@@ -105,7 +150,8 @@ function toEventSummary(event: SanityEvent) {
       description: ticket.description,
       priceLabel: ticket.priceLabel,
       priceCents: ticket.priceCents,
-      availableQuantity: ticket.availableQuantity
+      availableQuantity: ticket.availableQuantity,
+      isSoldOut: (ticket.availableQuantity || 0) <= 0
     }))
   };
 }
@@ -204,6 +250,7 @@ export const getEventBySlug = cache(async (slug: string) => {
         listingVisibility,
         accessMode,
         accessPassword,
+        salesMode,
         primaryCtaLabel,
         ticketingMode,
         ticketUrl,

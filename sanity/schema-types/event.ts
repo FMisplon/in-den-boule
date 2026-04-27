@@ -91,6 +91,23 @@ export const eventType = defineType({
       group: "tickets"
     }),
     defineField({
+      name: "salesMode",
+      title: "Verkoopstatus",
+      type: "string",
+      initialValue: "on_sale",
+      options: {
+        list: [
+          { title: "Tickets live", value: "on_sale" },
+          { title: "Presale", value: "presale" },
+          { title: "Wachtlijst", value: "waitlist" }
+        ],
+        layout: "radio"
+      },
+      description:
+        "Uitverkocht hoef je niet handmatig te kiezen: zodra alle resterende aantallen op 0 staan, wordt het event automatisch uitverkocht.",
+      group: "tickets"
+    }),
+    defineField({
       name: "listingVisibility",
       title: "Zichtbaarheid op events-pagina",
       type: "string",
@@ -178,8 +195,10 @@ export const eventType = defineType({
             }),
             defineField({
               name: "availableQuantity",
-              title: "Beschikbaar aantal",
+              title: "Resterend aantal",
               type: "number",
+              description:
+                "Aantal tickets dat nog verkocht kan worden. Zet op 0 om dit tickettype uit te verkopen.",
               validation: (rule) => rule.min(0)
             })
           ],
@@ -192,7 +211,14 @@ export const eventType = defineType({
             prepare({ title, subtitle, availableQuantity }) {
               return {
                 title,
-                subtitle: [subtitle, typeof availableQuantity === "number" ? `${availableQuantity} beschikbaar` : null]
+                subtitle: [
+                  subtitle,
+                  typeof availableQuantity === "number"
+                    ? availableQuantity > 0
+                      ? `${availableQuantity} beschikbaar`
+                      : "Uitverkocht"
+                    : null
+                ]
                   .filter(Boolean)
                   .join(" · ")
               };
@@ -226,15 +252,34 @@ export const eventType = defineType({
       venue: "venue",
       published: "published",
       listingVisibility: "listingVisibility",
-      accessMode: "accessMode"
+      accessMode: "accessMode",
+      salesMode: "salesMode",
+      ticketTypes: "ticketTypes"
     },
-    prepare({ title, subtitle, media, venue, published, listingVisibility, accessMode }) {
+    prepare({ title, subtitle, media, venue, published, listingVisibility, accessMode, salesMode, ticketTypes }) {
+      const totalAvailability = Array.isArray(ticketTypes)
+        ? ticketTypes.reduce(
+            (sum: number, ticket: { availableQuantity?: number }) =>
+              sum + (ticket?.availableQuantity || 0),
+            0
+          )
+        : 0;
+      const salesLabel =
+        totalAvailability <= 0 && Array.isArray(ticketTypes) && ticketTypes.length > 0
+          ? "Uitverkocht"
+          : salesMode === "waitlist"
+            ? "Wachtlijst"
+            : salesMode === "presale"
+              ? "Presale"
+              : "Tickets live";
+
       return {
         title,
         subtitle: [
           published === false ? "Niet publiek" : "Publiek",
           listingVisibility === "private" ? "Privé-link" : "In overzicht",
           accessMode === "password" ? "Wachtwoord" : "Open",
+          salesLabel,
           subtitle || null,
           venue || null
         ]

@@ -12,6 +12,8 @@ type EventDetailViewProps = {
 export function EventDetailView({ event, isUnlocked = true }: EventDetailViewProps) {
   const requiresPassword = event.accessMode === "password";
   const blocked = requiresPassword && !isUnlocked;
+  const salesStatus = event.salesStatus || "on_sale";
+  const canBuyTickets = event.canBuyTickets !== false;
 
   return (
     <SiteShell ctaHref="/events" ctaLabel="Bekijk alle events">
@@ -19,6 +21,7 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
         <p className="eyebrow">{event.listingVisibility === "private" ? "Prive event" : "Event"}</p>
         <h1>{event.title}</h1>
         <p className="page-intro">{event.description}</p>
+        {event.salesBadge ? <span className="event-status-badge event-status-badge-hero">{event.salesBadge}</span> : null}
       </section>
 
       <section className="contact-band contact-band-page">
@@ -32,6 +35,14 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
         {blocked ? (
           <Link className="button" href="#toegang">
             Open met wachtwoord
+          </Link>
+        ) : salesStatus === "sold_out" ? (
+          <Link className="button" href="/contact">
+            Contacteer ons
+          </Link>
+        ) : salesStatus === "waitlist" ? (
+          <Link className="button" href="/contact">
+            Schrijf je in op wachtlijst
           </Link>
         ) : event.ticketingMode === "external" && event.ticketUrl ? (
           <Link className="button" href={event.ticketUrl}>
@@ -69,7 +80,7 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
               </p>
               <EventAccessForm eventSlug={event.slug} eventTitle={event.title} />
             </article>
-          ) : event.ticketingMode === "native" && event.ticketTypes?.length ? (
+          ) : event.ticketingMode === "native" && event.ticketTypes?.length && canBuyTickets ? (
             <article className="venue-panel venue-panel-accent" id="tickets">
               <h3>Bestel je tickets</h3>
               <p style={{ marginBottom: "1.5rem" }}>
@@ -92,7 +103,7 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
                     {ticket.description ? <p style={{ margin: 0 }}>{ticket.description}</p> : null}
                     {typeof ticket.availableQuantity === "number" ? (
                       <p style={{ margin: "0.35rem 0 0", fontSize: "0.95rem" }}>
-                        {ticket.availableQuantity} beschikbaar
+                        {ticket.isSoldOut ? "Uitverkocht" : `${ticket.availableQuantity} beschikbaar`}
                       </p>
                     ) : null}
                   </div>
@@ -107,13 +118,31 @@ export function EventDetailView({ event, isUnlocked = true }: EventDetailViewPro
             </article>
           ) : (
             <article className="venue-panel venue-panel-accent">
-              <h3>Ticketinfo</h3>
+              <h3>
+                {salesStatus === "waitlist"
+                  ? "Wachtlijst"
+                  : salesStatus === "sold_out"
+                    ? "Uitverkocht"
+                    : "Ticketinfo"}
+              </h3>
               <p>
-                {event.ticketInfo ||
+                {salesStatus === "waitlist"
+                  ? event.ticketInfo ||
+                    "Dit event werkt momenteel met een wachtlijst. Neem contact op om je interesse door te geven."
+                  : salesStatus === "sold_out"
+                    ? event.ticketInfo ||
+                      "Alle tickets voor dit event zijn momenteel opgebruikt. Neem contact op als je op de hoogte wilt blijven."
+                    : event.ticketInfo ||
                   "Ticketverkoop voor dit event loopt via de organisatie. Neem contact op voor beschikbaarheid."}
               </p>
               <Link className="button" href={event.ticketUrl || "/contact"}>
-                {event.ticketingMode === "external" ? "Open ticketpagina" : "Contacteer ons"}
+                {salesStatus === "waitlist"
+                  ? "Contacteer ons voor wachtlijst"
+                  : salesStatus === "sold_out"
+                    ? "Vraag naar extra plaatsen"
+                    : event.ticketingMode === "external"
+                      ? "Open ticketpagina"
+                      : "Contacteer ons"}
               </Link>
             </article>
           )}

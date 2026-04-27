@@ -23,6 +23,10 @@ export type EventItem = {
   venue?: string;
   listingVisibility?: "public" | "private";
   accessMode?: "open" | "password";
+  salesMode?: "on_sale" | "presale" | "waitlist";
+  salesStatus?: "on_sale" | "presale" | "waitlist" | "sold_out";
+  salesBadge?: string;
+  canBuyTickets?: boolean;
   ticketingMode?: "native" | "external" | "info";
   ticketUrl?: string;
   ticketInfo?: string;
@@ -33,6 +37,7 @@ export type EventItem = {
     priceLabel: string;
     priceCents?: number;
     availableQuantity?: number;
+    isSoldOut?: boolean;
   }>;
 };
 
@@ -103,6 +108,10 @@ export const events: EventItem[] = [
     venue: "In den Boule, Leuven",
     listingVisibility: "public",
     accessMode: "open",
+    salesMode: "on_sale",
+    salesStatus: "on_sale",
+    salesBadge: "Tickets live",
+    canBuyTickets: true,
     ticketingMode: "native",
     ticketInfo: "Na betaling ontvang je een bevestiging per e-mail. De uiteindelijke e-ticket mailflow koppelen we in de volgende stap.",
     ticketTypes: [
@@ -112,7 +121,8 @@ export const events: EventItem[] = [
         description: "Toegang tot concertavond en bitesformule.",
         priceLabel: "27 euro",
         priceCents: 2700,
-        availableQuantity: 62
+        availableQuantity: 62,
+        isSoldOut: false
       }
     ]
   },
@@ -128,6 +138,10 @@ export const events: EventItem[] = [
     venue: "In den Boule, Leuven",
     listingVisibility: "public",
     accessMode: "open",
+    salesMode: "presale",
+    salesStatus: "presale",
+    salesBadge: "Presale",
+    canBuyTickets: true,
     ticketingMode: "native",
     ticketTypes: [
       {
@@ -136,7 +150,8 @@ export const events: EventItem[] = [
         description: "5 gangen aan de lange tafel met pairing.",
         priceLabel: "79 euro",
         priceCents: 7900,
-        availableQuantity: 18
+        availableQuantity: 18,
+        isSoldOut: false
       }
     ]
   },
@@ -152,6 +167,10 @@ export const events: EventItem[] = [
     venue: "In den Boule, Leuven",
     listingVisibility: "public",
     accessMode: "open",
+    salesMode: "waitlist",
+    salesStatus: "waitlist",
+    salesBadge: "Wachtlijst",
+    canBuyTickets: false,
     ticketingMode: "native",
     ticketTypes: [
       {
@@ -160,7 +179,8 @@ export const events: EventItem[] = [
         description: "Brunchtoegang per persoon.",
         priceLabel: "42 euro",
         priceCents: 4200,
-        availableQuantity: 36
+        availableQuantity: 36,
+        isSoldOut: false
       }
     ]
   }

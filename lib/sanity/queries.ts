@@ -26,6 +26,7 @@ export const eventsQuery = `*[_type == "event" && published == true && listingVi
   venue,
   listingVisibility,
   accessMode,
+  salesMode,
   primaryCtaLabel,
   ticketingMode,
   ticketUrl,
