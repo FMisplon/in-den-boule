@@ -638,11 +638,124 @@ img {
   min-height: 100%;
 }
 
+.home-promo-list {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.home-promo-card {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.44fr) minmax(0, 0.56fr);
+  overflow: hidden;
+  border: 1px solid rgba(248, 232, 196, 0.18);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(135deg, rgba(25, 19, 15, 0.16), rgba(25, 19, 15, 0.04)),
+    rgba(248, 242, 229, 0.84);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.home-promo-media {
+  position: relative;
+  min-height: 18rem;
+  background:
+    radial-gradient(circle at top right, rgba(223, 200, 155, 0.18), transparent 48%),
+    rgba(255, 248, 240, 0.82);
+}
+
+.home-promo-media img {
+  object-fit: cover;
+}
+
+.home-promo-copy {
+  display: grid;
+  align-content: center;
+  gap: 0.9rem;
+  padding: 1.5rem 1.5rem 1.6rem;
+}
+
+.home-promo-date {
+  color: var(--accent-deep);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.home-promo-copy h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.05;
+}
+
+.home-promo-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.home-promo-copy .button {
+  margin-top: 0.15rem;
+  width: fit-content;
+}
+
+.empty-state-card {
+  display: grid;
+  gap: 0.9rem;
+  max-width: 44rem;
+  padding: 1.6rem;
+  border: 1px solid rgba(248, 232, 196, 0.18);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(135deg, rgba(25, 19, 15, 0.16), rgba(25, 19, 15, 0.04)),
+    rgba(248, 242, 229, 0.84);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.empty-state-card span {
+  color: var(--accent-deep);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.empty-state-card h2,
+.empty-state-card p {
+  margin: 0;
+}
+
+.empty-state-card p {
+  color: var(--muted);
+  line-height: 1.75;
+}
+
 .menu-filter {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+}
+
+.menu-filter-stack {
+  display: grid;
+  gap: 0.9rem;
   margin-bottom: 1.25rem;
+}
+
+.menu-filter-group {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.menu-filter-heading {
+  color: rgba(255, 248, 236, 0.86);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .filter-chip {
@@ -658,6 +771,42 @@ img {
 .filter-chip.is-active {
   background: var(--olive);
   color: #fff8f0;
+}
+
+.filter-chip-secondary.is-active {
+  background: rgba(223, 200, 155, 0.92);
+  color: var(--ink);
+  border-color: rgba(86, 60, 28, 0.18);
+}
+
+.menu-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.menu-card-tag {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 1.75rem;
+  padding: 0.2rem 0.65rem;
+  gap: 0.38rem;
+  border: 1px solid rgba(37, 112, 56, 0.18);
+  border-radius: 999px;
+  background: rgba(37, 112, 56, 0.08);
+  color: var(--olive);
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.menu-card-tag svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: 0 0 auto;
 }
 
 .featured-event,
@@ -845,7 +994,7 @@ label {
   border-radius: 0.3rem;
 }
 
-input,
+input:not([type="checkbox"]):not([type="radio"]),
 select,
 textarea {
   width: 100%;
@@ -858,6 +1007,22 @@ textarea {
 
 textarea {
   resize: vertical;
+}
+
+input[type="radio"] {
+  width: 1.05rem;
+  min-width: 1.05rem;
+  height: 1.05rem;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  accent-color: var(--accent);
+}
+
+input[type="checkbox"] {
+  accent-color: var(--accent);
 }
 
 .plan-header {
@@ -1320,7 +1485,7 @@ textarea {
 }
 
 .footer-credit img {
-  width: 220px;
+  width: 132px;
   height: auto;
   object-fit: contain;
 }
@@ -1428,6 +1593,7 @@ textarea {
   .site-nav,
   .hero,
   .story-ribbon,
+  .home-promo-card,
   .reservation-layout,
   .venue-layout,
   .contact-layout,
@@ -1462,6 +1628,10 @@ textarea {
 
   .hero-visual {
     min-height: 28rem;
+  }
+
+  .home-promo-media {
+    min-height: 14rem;
   }
 
   .admin-meta-grid {

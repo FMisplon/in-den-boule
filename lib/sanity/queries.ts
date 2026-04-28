@@ -15,7 +15,19 @@ export const homePageQuery = `*[_type == "homePage"][0]{
   conceptCards,
   highlightsEyebrow,
   highlightsTitle,
-  highlightCards
+  highlightCards,
+  promotionsEyebrow,
+  promotionsTitle,
+  promotions[]{
+    title,
+    body,
+    image,
+    imageAlt,
+    startsOn,
+    endsOn,
+    ctaLabel,
+    ctaHref
+  }
 }`;
 
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
@@ -42,13 +54,14 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   }
 }`;
 
-export const menuItemsQuery = `*[_type == "menuItem" && available == true] | order(sortOrder asc){
+export const menuItemsQuery = `*[_type == "menuItem" && available != false] | order(sortOrder asc){
   _id,
   title,
   description,
   priceLabel,
   featured,
   image,
+  "tags": labels,
   "category": category->title
 }`;
 

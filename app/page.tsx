@@ -1,8 +1,17 @@
 import Link from "next/link";
+import Image from "next/image";
 import { SiteShell } from "@/components/site-shell";
 import { getEvents, getHomePage, getSiteSettings } from "@/lib/sanity/loaders";
 
 export const revalidate = 60;
+
+function formatPromoDate(value: string) {
+  return new Intl.DateTimeFormat("nl-BE", {
+    timeZone: "Europe/Brussels",
+    day: "numeric",
+    month: "long"
+  }).format(new Date(`${value}T12:00:00+02:00`));
+}
 
 export default async function HomePage() {
   const [events, site, home] = await Promise.all([getEvents(), getSiteSettings(), getHomePage()]);
@@ -60,6 +69,45 @@ export default async function HomePage() {
           <img src="/assets/images/logo-boule-transparent.png" alt="Boule logo in groen" />
         </article>
       </section>
+
+      {home.promotions.length ? (
+        <section className="section home-promo-section">
+          <div className="section-heading">
+            <p className="eyebrow">{home.promotionsEyebrow}</p>
+            <h2>{home.promotionsTitle}</h2>
+          </div>
+          <div className="home-promo-list">
+            {home.promotions.map((promotion) => (
+              <article className="home-promo-card" key={`${promotion.title}-${promotion.startsOn}`}>
+                <div className="home-promo-media">
+                  {promotion.imageUrl ? (
+                    <Image
+                      src={promotion.imageUrl}
+                      alt={promotion.imageAlt || promotion.title}
+                      fill
+                      sizes="(max-width: 980px) 100vw, 34vw"
+                    />
+                  ) : null}
+                </div>
+                <div className="home-promo-copy">
+                  <span className="home-promo-date">
+                    {promotion.startsOn === promotion.endsOn
+                      ? `Alleen op ${formatPromoDate(promotion.startsOn)}`
+                      : `${formatPromoDate(promotion.startsOn)} tot ${formatPromoDate(promotion.endsOn)}`}
+                  </span>
+                  <h3>{promotion.title}</h3>
+                  <p>{promotion.body}</p>
+                  {promotion.ctaLabel && promotion.ctaHref ? (
+                    <Link className="button" href={promotion.ctaHref}>
+                      {promotion.ctaLabel}
+                    </Link>
+                  ) : null}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="section concept-section">
         <div className="section-heading">

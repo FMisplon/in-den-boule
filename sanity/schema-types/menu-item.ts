@@ -68,10 +68,24 @@ export const menuItemType = defineType({
     }),
     defineField({
       name: "tags",
-      title: "Labels",
+      title: "Dieetwensen",
       type: "array",
-      of: [defineArrayMember({ type: "string" })],
-      description: "Optioneel voor latere filtering of badges.",
+      of: [
+        defineArrayMember({
+          type: "string",
+          options: {
+            list: [
+              { title: "Veggie", value: "Veggie" },
+              { title: "Vegan", value: "Vegan" },
+              { title: "Glutenvrij", value: "Glutenvrij" }
+            ]
+          }
+        })
+      ],
+      options: {
+        layout: "tags"
+      },
+      description: "Kies alleen de dieetwensen die op de kaart en als extra filter zichtbaar mogen worden.",
       group: "display"
     }),
     defineField({

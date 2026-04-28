@@ -3,9 +3,10 @@ import {
   events as fallbackEvents,
   homePage as fallbackHomePage,
   type HomePageConfig,
+  type HomePagePromotionCard,
+  type MenuDietaryLabel,
   type PageHeroKey,
   eventMap,
-  menuItems as fallbackMenuItems,
   type ShopProductItem,
   site as fallbackSite
 } from "@/lib/site-data";
@@ -24,6 +25,33 @@ const SANITY_REVALIDATE_SECONDS = 60;
 const SANITY_FETCH_OPTIONS = {
   next: { revalidate: SANITY_REVALIDATE_SECONDS }
 };
+
+function normalizeMenuDietaryLabel(value: string): MenuDietaryLabel | null {
+  const normalized = value.trim().toLowerCase();
+
+  switch (normalized) {
+    case "veggie":
+    case "vegetarisch":
+      return "Veggie";
+    case "vegan":
+      return "Vegan";
+    case "glutenvrij":
+      return "Glutenvrij";
+    default:
+      return null;
+  }
+}
+
+function getBrusselsDateString(date = new Date()) {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Brussels",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  });
+
+  return formatter.format(date);
+}
 
 function getSocialLabel(platform: "instagram" | "facebook" | "tiktok" | "linkedin" | "youtube") {
   switch (platform) {
@@ -72,6 +100,17 @@ type SanityHomePageCard = {
   ctaHref?: string;
 };
 
+type SanityHomePagePromotionCard = {
+  title?: string;
+  body?: string | RichTextValue;
+  image?: unknown;
+  imageAlt?: string;
+  startsOn?: string;
+  endsOn?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+};
+
 type SanityHomePage = {
   heroEyebrow?: string;
   heroTitle?: string;
@@ -90,6 +129,9 @@ type SanityHomePage = {
   highlightsEyebrow?: string;
   highlightsTitle?: string;
   highlightCards?: SanityHomePageCard[];
+  promotionsEyebrow?: string;
+  promotionsTitle?: string;
+  promotions?: SanityHomePagePromotionCard[];
 };
 
 type SanityMenuItem = {
@@ -98,6 +140,7 @@ type SanityMenuItem = {
   description?: string | RichTextValue;
   priceLabel: string;
   category?: string;
+  tags?: string[];
   image?: unknown;
 };
 
@@ -276,6 +319,37 @@ function mergeHomeCards(
     .filter((card) => card.title && card.body) as HomePageConfig["conceptCards"];
 }
 
+function getActiveHomePromotions(
+  promotions: SanityHomePagePromotionCard[] | undefined
+): HomePagePromotionCard[] {
+  if (!promotions?.length) {
+    return [];
+  }
+
+  const today = getBrusselsDateString();
+
+  return promotions
+    .filter((promotion) => {
+      if (!promotion.title || !promotion.body || !promotion.image || !promotion.startsOn || !promotion.endsOn) {
+        return false;
+      }
+
+      return promotion.startsOn <= today && promotion.endsOn >= today;
+    })
+    .slice(0, 3)
+    .map((promotion) => ({
+      title: promotion.title!,
+      body: richTextToPlainText(promotion.body),
+      bodyRich: Array.isArray(promotion.body) ? promotion.body : undefined,
+      imageUrl: urlFor(promotion.image).width(1600).height(1100).fit("crop").url(),
+      imageAlt: promotion.imageAlt?.trim() || promotion.title!,
+      startsOn: promotion.startsOn!,
+      endsOn: promotion.endsOn!,
+      ctaLabel: promotion.ctaLabel?.trim(),
+      ctaHref: promotion.ctaHref?.trim()
+    }));
+}
+
 export const getHomePage = cache(async () => {
   try {
     const data = await sanityClient.fetch<SanityHomePage | null>(
@@ -308,7 +382,10 @@ export const getHomePage = cache(async () => {
       conceptCards: mergeHomeCards(data.conceptCards, fallbackHomePage.conceptCards),
       highlightsEyebrow: data.highlightsEyebrow || fallbackHomePage.highlightsEyebrow,
       highlightsTitle: data.highlightsTitle || fallbackHomePage.highlightsTitle,
-      highlightCards: mergeHomeCards(data.highlightCards, fallbackHomePage.highlightCards)
+      highlightCards: mergeHomeCards(data.highlightCards, fallbackHomePage.highlightCards),
+      promotionsEyebrow: data.promotionsEyebrow || fallbackHomePage.promotionsEyebrow,
+      promotionsTitle: data.promotionsTitle || fallbackHomePage.promotionsTitle,
+      promotions: getActiveHomePromotions(data.promotions)
     };
   } catch {
     return fallbackHomePage;
@@ -374,7 +451,7 @@ export const getMenuItems = cache(async () => {
     const data = await sanityClient.fetch<SanityMenuItem[]>(menuItemsQuery, {}, SANITY_FETCH_OPTIONS);
 
     if (!data?.length) {
-      return fallbackMenuItems;
+      return [];
     }
 
     return data.map((item) => ({
@@ -382,10 +459,17 @@ export const getMenuItems = cache(async () => {
       title: item.title,
       description: richTextToPlainText(item.description),
       price: item.priceLabel,
+      tags: Array.from(
+        new Set(
+          (item.tags || [])
+            .map((tag) => normalizeMenuDietaryLabel(tag))
+            .filter((tag): tag is MenuDietaryLabel => Boolean(tag))
+        )
+      ),
       imageUrl: item.image ? urlFor(item.image).width(900).height(720).fit("crop").url() : undefined
     }));
   } catch {
-    return fallbackMenuItems;
+    return [];
   }
 });
 

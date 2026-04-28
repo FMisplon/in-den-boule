@@ -19,7 +19,18 @@ export default async function MenuPage() {
         imageAlt={heroImage?.alt}
       />
       <section className="section menu-section">
-        <MenuBrowser items={menuItems} />
+        {menuItems.length ? (
+          <MenuBrowser items={menuItems} />
+        ) : (
+          <article className="empty-state-card">
+            <span>Menu in opbouw</span>
+            <h2>Er staan nog geen gepubliceerde menu-items in Sanity.</h2>
+            <p>
+              Voeg of publiceer menu-items in de Studio en deze pagina vult zich automatisch. De site
+              toont hier voortaan geen hardcoded fallbackkaart meer.
+            </p>
+          </article>
+        )}
       </section>
     </SiteShell>
   );

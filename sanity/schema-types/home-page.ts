@@ -8,7 +8,8 @@ export const homePageType = defineType({
     { name: "hero", title: "Hero", default: true },
     { name: "story", title: "Verhaal" },
     { name: "concept", title: "Sfeer" },
-    { name: "highlights", title: "Highlights" }
+    { name: "highlights", title: "Highlights" },
+    { name: "promotions", title: "Actie / promo van de week" }
   ],
   fields: [
     defineField({
@@ -195,6 +196,117 @@ export const homePageType = defineType({
       ],
       validation: (rule) => rule.min(1),
       group: "highlights"
+    }),
+    defineField({
+      name: "promotionsEyebrow",
+      title: "Promo eyebrow",
+      type: "string",
+      initialValue: "Actie van de week",
+      group: "promotions"
+    }),
+    defineField({
+      name: "promotionsTitle",
+      title: "Promo titel",
+      type: "string",
+      initialValue: "Acties die alleen zichtbaar zijn zolang ze lopen.",
+      group: "promotions"
+    }),
+    defineField({
+      name: "promotions",
+      title: "Weekpromo's",
+      type: "array",
+      description:
+        "Plan hier maximaal 3 homepage promo's. Alleen promo's waarvan vandaag tussen start- en einddatum valt, verschijnen op de homepage.",
+      of: [
+        defineArrayMember({
+          type: "object",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Titel",
+              type: "string",
+              validation: (rule) => rule.required()
+            }),
+            defineField({
+              name: "body",
+              title: "Tekst",
+              type: "richText",
+              validation: (rule) => rule.required()
+            }),
+            defineField({
+              name: "image",
+              title: "Afbeelding",
+              type: "image",
+              options: {
+                hotspot: true
+              },
+              description: "Aanbevolen: 1600 x 1100 px of groter, horizontaal beeld.",
+              validation: (rule) => rule.required()
+            }),
+            defineField({
+              name: "imageAlt",
+              title: "Alt-tekst",
+              type: "string",
+              description: "Korte beschrijving van de promo-afbeelding."
+            }),
+            defineField({
+              name: "startsOn",
+              title: "Startdatum",
+              type: "date",
+              options: {
+                dateFormat: "YYYY-MM-DD"
+              },
+              validation: (rule) => rule.required()
+            }),
+            defineField({
+              name: "endsOn",
+              title: "Einddatum",
+              type: "date",
+              options: {
+                dateFormat: "YYYY-MM-DD"
+              },
+              validation: (rule) =>
+                rule.required().custom((value, context) => {
+                  const startsOn = (context.parent as { startsOn?: string } | undefined)?.startsOn;
+
+                  if (!value || !startsOn) {
+                    return true;
+                  }
+
+                  return value >= startsOn || "De einddatum moet gelijk zijn aan of na de startdatum.";
+                })
+            }),
+            defineField({
+              name: "ctaLabel",
+              title: "CTA label",
+              type: "string"
+            }),
+            defineField({
+              name: "ctaHref",
+              title: "CTA link",
+              type: "string"
+            })
+          ],
+          preview: {
+            select: {
+              title: "title",
+              startsOn: "startsOn",
+              endsOn: "endsOn",
+              media: "image"
+            },
+            prepare({ title, startsOn, endsOn, media }) {
+              return {
+                title,
+                subtitle:
+                  startsOn && endsOn ? `${startsOn} tot ${endsOn}` : "Promo zonder volledige planning",
+                media
+              };
+            }
+          }
+        })
+      ],
+      validation: (rule) => rule.max(3),
+      group: "promotions"
     })
   ],
   preview: {

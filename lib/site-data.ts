@@ -5,12 +5,15 @@ export type NavItem = {
   label: string;
 };
 
+export type MenuDietaryLabel = "Veggie" | "Vegan" | "Glutenvrij";
+
 export type MenuItem = {
   category: string;
   title: string;
   description: string;
   price: string;
   imageUrl?: string;
+  tags?: MenuDietaryLabel[];
 };
 
 export type EventItem = {
@@ -57,6 +60,18 @@ export type HomePageCard = {
   ctaHref?: string;
 };
 
+export type HomePagePromotionCard = {
+  title: string;
+  body: string;
+  bodyRich?: RichTextValue;
+  imageUrl?: string;
+  imageAlt?: string;
+  startsOn: string;
+  endsOn: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+};
+
 export type HomePageConfig = {
   heroEyebrow: string;
   heroTitle: string;
@@ -77,6 +92,9 @@ export type HomePageConfig = {
   highlightsEyebrow: string;
   highlightsTitle: string;
   highlightCards: HomePageCard[];
+  promotionsEyebrow: string;
+  promotionsTitle: string;
+  promotions: HomePagePromotionCard[];
 };
 
 export type ShopProductItem = {
@@ -210,7 +228,10 @@ export const homePage: HomePageConfig = {
       ctaLabel: "Naar shop",
       ctaHref: "/shop"
     }
-  ]
+  ],
+  promotionsEyebrow: "Actie van de week",
+  promotionsTitle: "Deze sectie verschijnt alleen wanneer er actieve promo's in Sanity ingepland staan.",
+  promotions: []
 };
 
 export const mainNav: NavItem[] = [
@@ -225,11 +246,11 @@ export const menuItems: MenuItem[] = [
   { category: "Pasta's", title: "Dagsoep met brood", description: "Een eenvoudige starter voor wie licht wil beginnen.", price: "6 euro" },
   { category: "Pasta's", title: "Spaghetti Boule", description: "De legendarische huisfavoriet.", price: "13 euro" },
   { category: "Pasta's", title: "Spaghetti Boule Jumbo", description: "Voor wie honger meebrengt.", price: "19 euro" },
-  { category: "Pasta's", title: "Vegetarische spaghetti", description: "De veggie variant op de klassieker.", price: "13 euro" },
+  { category: "Pasta's", title: "Vegetarische spaghetti", description: "De veggie variant op de klassieker.", price: "13 euro", tags: ["Veggie"] },
   { category: "Pasta's", title: "Spaghetti kaassaus ham", description: "Comfort food met romige kaassaus.", price: "15 euro" },
   { category: "Pasta's", title: "Spaghetti kip tomaat mascarpone", description: "Een zachte saus met kip en mascarpone.", price: "15 euro" },
   { category: "Pasta's", title: "Lasagne", description: "Klassieke lasagne uit de oven.", price: "15 euro" },
-  { category: "Pasta's", title: "Vegetarische lasagne", description: "De veggie versie van de huislasagne.", price: "15 euro" },
+  { category: "Pasta's", title: "Vegetarische lasagne", description: "De veggie versie van de huislasagne.", price: "15 euro", tags: ["Veggie"] },
   { category: "Croques", title: "Uitsmijter", description: "Boerenbrood, 2 spiegeleieren, hesp, kaas en guacamole.", price: "15 euro" },
   { category: "Croques", title: "Croque uit 't vuistje", description: "Kleine snelle croque voor tussendoor.", price: "6,5 euro" },
   { category: "Croques", title: "Croque Monsieur", description: "Ham en kaas, inclusief slaatje.", price: "10,5 euro" },
