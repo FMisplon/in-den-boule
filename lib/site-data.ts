@@ -224,7 +224,7 @@ export const homePage: HomePageConfig = {
     {
       eyebrow: "Shop",
       title: "Cadeaubonnen",
-      body: "De MVP focust bewust op gift cards als eerste echte checkoutflow.",
+      body: "Bestel digitale cadeaubonnen online en laat iemand later in het café genieten.",
       ctaLabel: "Naar shop",
       ctaHref: "/shop"
     }

@@ -1,5 +1,6 @@
 import { ContactForm } from "@/components/contact-form";
 import { PageHero } from "@/components/page-hero";
+import { AddressLines, OpeningHoursList } from "@/components/site-practical-content";
 import { SiteShell } from "@/components/site-shell";
 import { getPageHeroImage, getSiteSettings } from "@/lib/sanity/loaders";
 
@@ -14,7 +15,7 @@ export default async function ContactPage() {
       <PageHero
         eyebrow="Contact"
         title="Voor vragen, groepen, cadeaubonnen of verhuur."
-        intro="Alle praktische info en de belangrijkste contactpaden zitten hier samen op een duidelijke plek, zonder extra ruis op de homepage."
+        intro="Alle praktische info en de snelste contactpaden zitten hier samen op een heldere plek, zodat je ons vlot bereikt voor reservaties, groepen, cadeaubonnen of verhuur."
         imageUrl={heroImage?.imageUrl}
         imageAlt={heroImage?.alt}
       />
@@ -35,8 +36,7 @@ export default async function ContactPage() {
             <article className="contact-map-card">
               <div className="contact-map-copy">
                 <h3>Adres & route</h3>
-                <p>Augustijnenstraat 2</p>
-                <p>3000 Leuven</p>
+                <AddressLines address={site.address} className="practical-stack" />
               </div>
               <div className="contact-map">
                 <iframe
@@ -72,14 +72,15 @@ export default async function ContactPage() {
             </article>
             <article>
               <h3>Openingsuren</h3>
-              <p>Zondag: 20u - 03u</p>
-              <p>Maandag - donderdag: 11u - 03u</p>
-              <p>Vrijdag & zaterdag: gesloten</p>
+              <OpeningHoursList hours={site.hours} className="practical-stack" />
               <p>Keuken altijd doorlopend open</p>
             </article>
             <article>
-              <h3>Volgende integratie</h3>
-              <p>Deze formulieren landen later in Supabase en sturen notificaties naar het team.</p>
+              <h3>Snelste weg</h3>
+              <p>
+                Gebruik het formulier voor een duidelijke vraag of contacteer ons rechtstreeks per
+                mail of telefoon als het dringend is.
+              </p>
             </article>
           </aside>
         </div>

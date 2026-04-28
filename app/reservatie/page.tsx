@@ -12,8 +12,8 @@ export default async function ReservatiePage() {
     <SiteShell ctaHref="/contact" ctaLabel="Groepen & vragen">
       <PageHero
         eyebrow="Reservatie"
-        title="Boek je tafel zonder afleiding."
-        intro="De eerste versie start bewust basic: aanvraagflow zonder tafelplan, maar wel meteen voorbereid op echte opslag en notificaties."
+        title="Reserveer je tafel in een paar duidelijke stappen."
+        intro="Je aanvraag komt rechtstreeks bij het team terecht. We werken zonder ruis: kies je dag, geef je gezelschap door en voeg gerust extra context toe als er iets belangrijk is."
         imageUrl={heroImage?.imageUrl}
         imageAlt={heroImage?.alt}
       />
@@ -22,8 +22,8 @@ export default async function ReservatiePage() {
         <div className="reservation-layout">
           <div className="floor-plan">
             <div className="plan-header">
-              <h3>Fase 1 aanpak</h3>
-              <span>Vraaggestuurd reserveren, later uitbreidbaar naar zones en tafels.</span>
+              <h3>Zo verloopt je aanvraag</h3>
+              <span>We bekijken elke reservatie zorgvuldig en koppelen snel terug zodra je aanvraag bevestigd is.</span>
             </div>
             <div className="plan-grid">
               <div className="table-pill available">Datum & uur</div>
@@ -31,6 +31,9 @@ export default async function ReservatiePage() {
               <div className="table-pill terrace">Contactgegevens</div>
               <div className="table-pill lounge">Opmerking / context</div>
             </div>
+            <p className="form-hint" style={{ marginTop: "1rem" }}>
+              Vermeld gerust een verjaardag, allergie, grotere groep of iets anders waar we best rekening mee houden.
+            </p>
           </div>
           <ReservationForm />
         </div>

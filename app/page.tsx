@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import { OpeningHoursList } from "@/components/site-practical-content";
 import { SiteShell } from "@/components/site-shell";
+import { RichTextContent } from "@/components/rich-text-content";
 import { getEvents, getHomePage, getSiteSettings } from "@/lib/sanity/loaders";
 
 export const revalidate = 60;
@@ -22,7 +24,11 @@ export default async function HomePage() {
         <div className="hero-copy">
           <p className="eyebrow">{home.heroEyebrow || site.name}</p>
           <h1>{home.heroTitle || site.tagline}</h1>
-          <p className="hero-text">{home.heroText}</p>
+          {home.heroTextRich?.length ? (
+            <RichTextContent value={home.heroTextRich} className="hero-text hero-text-rich" />
+          ) : (
+            <p className="hero-text">{home.heroText}</p>
+          )}
           <div className="hero-actions">
             <Link className="button" href={home.primaryCtaHref}>
               {home.primaryCtaLabel}
@@ -48,7 +54,7 @@ export default async function HomePage() {
         </div>
         <div>
           <span>Open</span>
-          <strong>Zo: 20u-03u · Ma-Do: 11u-03u · Vr-Za gesloten</strong>
+          <OpeningHoursList hours={site.hours} className="info-strip-detail" />
         </div>
         <div>
           <span>Keuken</span>
@@ -63,7 +69,11 @@ export default async function HomePage() {
         <article className="story-card story-card-copy">
           <p className="eyebrow">{home.storyEyebrow}</p>
           <h2>{home.storyTitle}</h2>
-          <p>{home.storyText}</p>
+          {home.storyTextRich?.length ? (
+            <RichTextContent value={home.storyTextRich} className="rich-text-content" />
+          ) : (
+            <p>{home.storyText}</p>
+          )}
         </article>
         <article className="story-card story-card-logo">
           <img src="/assets/images/logo-boule-transparent.png" alt="Boule logo in groen" />
@@ -96,7 +106,11 @@ export default async function HomePage() {
                       : `${formatPromoDate(promotion.startsOn)} tot ${formatPromoDate(promotion.endsOn)}`}
                   </span>
                   <h3>{promotion.title}</h3>
-                  <p>{promotion.body}</p>
+                  {promotion.bodyRich?.length ? (
+                    <RichTextContent value={promotion.bodyRich} className="rich-text-content" />
+                  ) : (
+                    <p>{promotion.body}</p>
+                  )}
                   {promotion.ctaLabel && promotion.ctaHref ? (
                     <Link className="button" href={promotion.ctaHref}>
                       {promotion.ctaLabel}
@@ -118,7 +132,11 @@ export default async function HomePage() {
           {home.conceptCards.map((card) => (
             <article key={card.title}>
               <h3>{card.title}</h3>
-              <p>{card.body}</p>
+              {card.bodyRich?.length ? (
+                <RichTextContent value={card.bodyRich} className="rich-text-content" />
+              ) : (
+                <p>{card.body}</p>
+              )}
             </article>
           ))}
         </div>
@@ -134,11 +152,15 @@ export default async function HomePage() {
             <article className="discover-card" key={card.title}>
               {card.eyebrow ? <span>{card.eyebrow}</span> : null}
               <h3>{card.title}</h3>
-              <p>
-                {card.ctaHref === "/events" && card.body.includes("{eventCount}")
-                  ? card.body.replace("{eventCount}", String(events.length))
-                  : card.body}
-              </p>
+              {card.bodyRich?.length ? (
+                <RichTextContent value={card.bodyRich} className="rich-text-content" />
+              ) : (
+                <p>
+                  {card.ctaHref === "/events" && card.body.includes("{eventCount}")
+                    ? card.body.replace("{eventCount}", String(events.length))
+                    : card.body}
+                </p>
+              )}
               {card.ctaLabel && card.ctaHref ? (
                 <Link className="button" href={card.ctaHref}>
                   {card.ctaLabel}
