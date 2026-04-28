@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
 import { CookiePreferencesButton } from "@/components/cookie-preferences-button";
+import { SiteHeader } from "@/components/site-header";
 import { getSiteSettings } from "@/lib/sanity/loaders";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { mainNav } from "@/lib/site-data";
@@ -72,33 +73,13 @@ export async function SiteShell({
   return (
     <>
       <div className="page-shell">
-        <header className="site-header">
-          <Link className="brand" href="/" aria-label="In den Boule home">
-            <span className="brand-mark">
-              <Image
-                src="/assets/images/logo-boule-transparent.png"
-                alt="Boule logo"
-                width={160}
-                height={96}
-              />
-            </span>
-            <span className="brand-copy">
-              <strong>{site.name}</strong>
-              <small>{site.headerLine}</small>
-            </span>
-          </Link>
-
-          <nav className="site-nav" aria-label="Hoofdnavigatie">
-            {mainNav.map((item) => (
-              <Link key={item.href} href={item.href}>
-                {item.label}
-              </Link>
-            ))}
-            <Link className="button button-nav" href={ctaHref}>
-              {ctaLabel}
-            </Link>
-          </nav>
-        </header>
+        <SiteHeader
+          siteName={site.name}
+          headerLine={site.headerLine}
+          ctaHref={ctaHref}
+          ctaLabel={ctaLabel}
+          navItems={mainNav}
+        />
 
         <main>{children}</main>
       </div>

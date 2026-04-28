@@ -235,6 +235,7 @@ export const homePage: HomePageConfig = {
 };
 
 export const mainNav: NavItem[] = [
+  { href: "/reservatie", label: "Reservatie" },
   { href: "/menu", label: "Menu" },
   { href: "/events", label: "Events" },
   { href: "/shop", label: "Shop" },
