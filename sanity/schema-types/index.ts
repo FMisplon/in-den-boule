@@ -5,10 +5,12 @@ import { menuItemType } from "./menu-item";
 import { richTextType } from "./rich-text";
 import { shopProductType } from "./shop-product";
 import { siteSettingsType } from "./site-settings";
+import { venuePageType } from "./venue-page";
 
 export const schemaTypes = [
   richTextType,
   homePageType,
+  venuePageType,
   siteSettingsType,
   menuCategoryType,
   menuItemType,

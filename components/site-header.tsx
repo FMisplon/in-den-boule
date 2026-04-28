@@ -121,7 +121,7 @@ export function SiteHeader({
             aria-controls="mobile-site-nav"
             onClick={() => setIsMobileMenuOpen((current) => !current)}
           >
-            <span>Menu</span>
+            <span className="mobile-menu-label">Menu</span>
             <MobileMenuIcon isOpen={isMobileMenuOpen} />
           </button>
         </div>

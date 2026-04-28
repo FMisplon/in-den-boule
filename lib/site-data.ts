@@ -124,6 +124,26 @@ export type PageHeroKey =
   | "shop-bedankt"
   | "events-bedankt";
 
+export type VenuePageContent = {
+  heroEyebrow: string;
+  heroTitle: string;
+  heroIntro: string;
+  heroIntroRich?: RichTextValue;
+  overviewTitle: string;
+  overviewBody: string;
+  overviewBodyRich?: RichTextValue;
+  overviewBullets: string[];
+  formatsTitle: string;
+  formatsSummary: string;
+  capacities: string[];
+  formatsNote: string;
+  formatsNoteRich?: RichTextValue;
+  inquiryEyebrow: string;
+  inquiryTitle: string;
+  inquiryBody: string;
+  inquiryBodyRich?: RichTextValue;
+};
+
 export const site = {
   name: "In den Boule",
   tagline: "Join the legend",
@@ -147,7 +167,30 @@ export const site = {
     platform: "instagram" | "facebook" | "tiktok" | "linkedin" | "youtube";
     url: string;
     label: string;
-  }>
+  }>,
+  venuePage: {
+    heroEyebrow: "Verhuur",
+    heroTitle: "Huur In den Boule af voor private events, diners en feestavonden.",
+    heroIntro:
+      "Voor recepties, diners, bedrijfsmomenten en feestavonden huur je geen apart zaaltje, maar het karakter van het hele huis. We denken mee over sfeer, opstelling en praktische omkadering.",
+    overviewTitle: "Een plek met karakter voor events op maat",
+    overviewBody:
+      "In den Boule is geschikt voor avonden die warmte, persoonlijkheid en een sterk kader vragen. Van een intiem diner tot een levendige receptie: we stemmen de setting af op het type moment dat je wilt neerzetten.",
+    overviewBullets: [
+      "Private diners, recepties en feestavonden met eigen sfeer",
+      "Flexibele invulling voor bedrijven, teams en particuliere groepen",
+      "Praktische afstemming rond timing, catering, techniek en ontvangst"
+    ],
+    formatsTitle: "Formules die hier goed werken",
+    formatsSummary: "Receptie · walking dinner · seated dinner · teambuilding · brunch",
+    capacities: ["40 zittend", "70 receptie", "AV mogelijk"],
+    formatsNote:
+      "Vertel ons hoeveel gasten je verwacht en welk soort avond je voor ogen hebt, dan bekijken we samen wat het best past.",
+    inquiryEyebrow: "Offerteaanvraag",
+    inquiryTitle: "Vertel ons kort wat je organiseert.",
+    inquiryBody:
+      "Met datum, type event en een ruwe inschatting van het aantal gasten kunnen we snel inschatten wat mogelijk is en gericht terugkoppelen."
+  } as VenuePageContent
 };
 
 export const shopProducts: ShopProductItem[] = [

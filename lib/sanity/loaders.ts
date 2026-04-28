@@ -6,6 +6,7 @@ import {
   type HomePagePromotionCard,
   type MenuDietaryLabel,
   type PageHeroKey,
+  type VenuePageContent,
   eventMap,
   type ShopProductItem,
   site as fallbackSite
@@ -17,7 +18,8 @@ import {
   homePageQuery,
   menuItemsQuery,
   shopProductsQuery,
-  siteSettingsQuery
+  siteSettingsQuery,
+  venuePageQuery
 } from "@/lib/sanity/queries";
 import { richTextToPlainText, type RichTextValue } from "@/lib/sanity/rich-text";
 
@@ -66,6 +68,43 @@ function getSocialLabel(platform: "instagram" | "facebook" | "tiktok" | "linkedi
     case "youtube":
       return "YouTube";
   }
+}
+
+function mergeVenuePageContent(
+  value: SanityVenuePage | undefined,
+  fallbackVenuePage: VenuePageContent
+): VenuePageContent {
+  return {
+    heroEyebrow: value?.heroEyebrow?.trim() || fallbackVenuePage.heroEyebrow,
+    heroTitle: value?.heroTitle?.trim() || fallbackVenuePage.heroTitle,
+    heroIntro: richTextToPlainText(value?.heroIntro) || fallbackVenuePage.heroIntro,
+    heroIntroRich: Array.isArray(value?.heroIntro) ? value.heroIntro : fallbackVenuePage.heroIntroRich,
+    overviewTitle: value?.overviewTitle?.trim() || fallbackVenuePage.overviewTitle,
+    overviewBody: richTextToPlainText(value?.overviewBody) || fallbackVenuePage.overviewBody,
+    overviewBodyRich: Array.isArray(value?.overviewBody)
+      ? value.overviewBody
+      : fallbackVenuePage.overviewBodyRich,
+    overviewBullets:
+      value?.overviewBullets?.map((item) => item?.trim()).filter(Boolean).length
+        ? value.overviewBullets.map((item) => item.trim()).filter(Boolean)
+        : fallbackVenuePage.overviewBullets,
+    formatsTitle: value?.formatsTitle?.trim() || fallbackVenuePage.formatsTitle,
+    formatsSummary: value?.formatsSummary?.trim() || fallbackVenuePage.formatsSummary,
+    capacities:
+      value?.capacities?.map((item) => item?.trim()).filter(Boolean).length
+        ? value.capacities.map((item) => item.trim()).filter(Boolean)
+        : fallbackVenuePage.capacities,
+    formatsNote: richTextToPlainText(value?.formatsNote) || fallbackVenuePage.formatsNote,
+    formatsNoteRich: Array.isArray(value?.formatsNote)
+      ? value.formatsNote
+      : fallbackVenuePage.formatsNoteRich,
+    inquiryEyebrow: value?.inquiryEyebrow?.trim() || fallbackVenuePage.inquiryEyebrow,
+    inquiryTitle: value?.inquiryTitle?.trim() || fallbackVenuePage.inquiryTitle,
+    inquiryBody: richTextToPlainText(value?.inquiryBody) || fallbackVenuePage.inquiryBody,
+    inquiryBodyRich: Array.isArray(value?.inquiryBody)
+      ? value.inquiryBody
+      : fallbackVenuePage.inquiryBodyRich
+  };
 }
 
 type SanitySiteSettings = {
@@ -132,6 +171,22 @@ type SanityHomePage = {
   promotionsEyebrow?: string;
   promotionsTitle?: string;
   promotions?: SanityHomePagePromotionCard[];
+};
+
+type SanityVenuePage = {
+  heroEyebrow?: string;
+  heroTitle?: string;
+  heroIntro?: string | RichTextValue;
+  overviewTitle?: string;
+  overviewBody?: string | RichTextValue;
+  overviewBullets?: string[];
+  formatsTitle?: string;
+  formatsSummary?: string;
+  capacities?: string[];
+  formatsNote?: string | RichTextValue;
+  inquiryEyebrow?: string;
+  inquiryTitle?: string;
+  inquiryBody?: string | RichTextValue;
 };
 
 type SanityMenuItem = {
@@ -443,6 +498,24 @@ export const getSiteSettings = cache(async () => {
     };
   } catch {
     return fallbackSite;
+  }
+});
+
+export const getVenuePage = cache(async (): Promise<VenuePageContent | null> => {
+  try {
+    const data = await sanityClient.fetch<SanityVenuePage | null>(
+      venuePageQuery,
+      {},
+      SANITY_FETCH_OPTIONS
+    );
+
+    if (!data) {
+      return null;
+    }
+
+    return mergeVenuePageContent(data, fallbackSite.venuePage);
+  } catch {
+    return null;
   }
 });
 

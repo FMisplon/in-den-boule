@@ -30,6 +30,22 @@ export const homePageQuery = `*[_type == "homePage"][0]{
   }
 }`;
 
+export const venuePageQuery = `*[_type == "venuePage"][0]{
+  heroEyebrow,
+  heroTitle,
+  heroIntro,
+  overviewTitle,
+  overviewBody,
+  overviewBullets,
+  formatsTitle,
+  formatsSummary,
+  capacities,
+  formatsNote,
+  inquiryEyebrow,
+  inquiryTitle,
+  inquiryBody
+}`;
+
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   siteTitle,
   heroTagline,

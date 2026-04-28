@@ -280,7 +280,89 @@ const homePage = {
   ]
 };
 
-const documents = [...categories, ...menuItems, ...events, ...shopProducts, siteSettings, homePage];
+const venuePage = {
+  _id: "venuePage",
+  _type: "venuePage",
+  heroEyebrow: "Verhuur",
+  heroTitle: "Huur In den Boule af voor private events, diners en feestavonden.",
+  heroIntro: [
+    {
+      _key: "venue-hero-intro",
+      _type: "block",
+      style: "normal",
+      markDefs: [],
+      children: [
+        {
+          _key: "venue-hero-intro-span",
+          _type: "span",
+          marks: [],
+          text: "Voor recepties, diners, bedrijfsmomenten en feestavonden huur je geen apart zaaltje, maar het karakter van het hele huis. We denken mee over sfeer, opstelling en praktische omkadering."
+        }
+      ]
+    }
+  ],
+  overviewTitle: "Een plek met karakter voor events op maat",
+  overviewBody: [
+    {
+      _key: "venue-overview-body",
+      _type: "block",
+      style: "normal",
+      markDefs: [],
+      children: [
+        {
+          _key: "venue-overview-body-span",
+          _type: "span",
+          marks: [],
+          text: "In den Boule is geschikt voor avonden die warmte, persoonlijkheid en een sterk kader vragen. Van een intiem diner tot een levendige receptie: we stemmen de setting af op het type moment dat je wilt neerzetten."
+        }
+      ]
+    }
+  ],
+  overviewBullets: [
+    "Private diners, recepties en feestavonden met eigen sfeer",
+    "Flexibele invulling voor bedrijven, teams en particuliere groepen",
+    "Praktische afstemming rond timing, catering, techniek en ontvangst"
+  ],
+  formatsTitle: "Formules die hier goed werken",
+  formatsSummary: "Receptie · walking dinner · seated dinner · teambuilding · brunch",
+  capacities: ["40 zittend", "70 receptie", "AV mogelijk"],
+  formatsNote: [
+    {
+      _key: "venue-formats-note",
+      _type: "block",
+      style: "normal",
+      markDefs: [],
+      children: [
+        {
+          _key: "venue-formats-note-span",
+          _type: "span",
+          marks: [],
+          text: "Vertel ons hoeveel gasten je verwacht en welk soort avond je voor ogen hebt, dan bekijken we samen wat het best past."
+        }
+      ]
+    }
+  ],
+  inquiryEyebrow: "Offerteaanvraag",
+  inquiryTitle: "Vertel ons kort wat je organiseert.",
+  inquiryBody: [
+    {
+      _key: "venue-inquiry-body",
+      _type: "block",
+      style: "normal",
+      markDefs: [],
+      children: [
+        {
+          _key: "venue-inquiry-body-span",
+          _type: "span",
+          marks: [],
+          text: "Met datum, type event en een ruwe inschatting van het aantal gasten kunnen we snel inschatten wat mogelijk is en gericht terugkoppelen."
+        }
+      ]
+    }
+  ]
+};
+
+const documents = [...categories, ...menuItems, ...events, ...shopProducts, siteSettings, homePage, venuePage];
 
 const seededMenuCategoryIds = categories.map((document) => document._id);
 const seededMenuItemIds = menuItems.map((document) => document._id);
