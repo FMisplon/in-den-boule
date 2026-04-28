@@ -24,14 +24,12 @@ export const homePageType = defineType({
       title: "Hero titel",
       type: "string",
       initialValue: "Join the legend",
-      validation: (rule) => rule.required(),
       group: "hero"
     }),
     defineField({
       name: "heroText",
       title: "Hero intro",
       type: "richText",
-      validation: (rule) => rule.required(),
       group: "hero"
     }),
     defineField({
@@ -39,7 +37,6 @@ export const homePageType = defineType({
       title: "Primaire CTA label",
       type: "string",
       initialValue: "Reserveer je tafel",
-      validation: (rule) => rule.required(),
       group: "hero"
     }),
     defineField({
@@ -47,7 +44,6 @@ export const homePageType = defineType({
       title: "Primaire CTA link",
       type: "string",
       initialValue: "/reservatie",
-      validation: (rule) => rule.required(),
       group: "hero"
     }),
     defineField({
@@ -83,14 +79,12 @@ export const homePageType = defineType({
       name: "storyTitle",
       title: "Verhaal titel",
       type: "string",
-      validation: (rule) => rule.required(),
       group: "story"
     }),
     defineField({
       name: "storyText",
       title: "Verhaal tekst",
       type: "richText",
-      validation: (rule) => rule.required(),
       group: "story"
     }),
     defineField({
@@ -104,7 +98,6 @@ export const homePageType = defineType({
       name: "conceptTitle",
       title: "Sfeer titel",
       type: "string",
-      validation: (rule) => rule.required(),
       group: "concept"
     }),
     defineField({
@@ -118,14 +111,12 @@ export const homePageType = defineType({
             defineField({
               name: "title",
               title: "Titel",
-              type: "string",
-              validation: (rule) => rule.required()
+              type: "string"
             }),
             defineField({
               name: "body",
               title: "Tekst",
-              type: "richText",
-              validation: (rule) => rule.required()
+              type: "richText"
             })
           ],
           preview: {
@@ -133,7 +124,6 @@ export const homePageType = defineType({
           }
         })
       ],
-      validation: (rule) => rule.min(1),
       group: "concept"
     }),
     defineField({
@@ -147,7 +137,6 @@ export const homePageType = defineType({
       name: "highlightsTitle",
       title: "Highlights titel",
       type: "string",
-      validation: (rule) => rule.required(),
       group: "highlights"
     }),
     defineField({
@@ -166,14 +155,12 @@ export const homePageType = defineType({
             defineField({
               name: "title",
               title: "Titel",
-              type: "string",
-              validation: (rule) => rule.required()
+              type: "string"
             }),
             defineField({
               name: "body",
               title: "Tekst",
-              type: "richText",
-              validation: (rule) => rule.required()
+              type: "richText"
             }),
             defineField({
               name: "ctaLabel",
@@ -194,7 +181,6 @@ export const homePageType = defineType({
           }
         })
       ],
-      validation: (rule) => rule.min(1),
       group: "highlights"
     }),
     defineField({
@@ -224,14 +210,12 @@ export const homePageType = defineType({
             defineField({
               name: "title",
               title: "Titel",
-              type: "string",
-              validation: (rule) => rule.required()
+              type: "string"
             }),
             defineField({
               name: "body",
               title: "Tekst",
-              type: "richText",
-              validation: (rule) => rule.required()
+              type: "richText"
             }),
             defineField({
               name: "image",
@@ -240,8 +224,7 @@ export const homePageType = defineType({
               options: {
                 hotspot: true
               },
-              description: "Aanbevolen: 1600 x 1100 px of groter, horizontaal beeld.",
-              validation: (rule) => rule.required()
+              description: "Aanbevolen: 1600 x 1100 px of groter, horizontaal beeld."
             }),
             defineField({
               name: "imageAlt",
@@ -255,8 +238,7 @@ export const homePageType = defineType({
               type: "date",
               options: {
                 dateFormat: "YYYY-MM-DD"
-              },
-              validation: (rule) => rule.required()
+              }
             }),
             defineField({
               name: "endsOn",
@@ -264,17 +246,7 @@ export const homePageType = defineType({
               type: "date",
               options: {
                 dateFormat: "YYYY-MM-DD"
-              },
-              validation: (rule) =>
-                rule.required().custom((value, context) => {
-                  const startsOn = (context.parent as { startsOn?: string } | undefined)?.startsOn;
-
-                  if (!value || !startsOn) {
-                    return true;
-                  }
-
-                  return value >= startsOn || "De einddatum moet gelijk zijn aan of na de startdatum.";
-                })
+              }
             }),
             defineField({
               name: "ctaLabel",

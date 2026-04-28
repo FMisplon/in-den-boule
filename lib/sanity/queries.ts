@@ -61,7 +61,7 @@ export const menuItemsQuery = `*[_type == "menuItem" && available != false] | or
   priceLabel,
   featured,
   image,
-  "tags": labels,
+  tags,
   "category": category->title
 }`;
 
