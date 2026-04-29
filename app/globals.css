@@ -2062,9 +2062,8 @@ input[type="checkbox"] {
     height: 2rem;
   }
 
-  .brand-copy strong {
-    font-size: 0.92rem;
-    line-height: 0.9;
+  .brand-copy {
+    display: none;
   }
 
   .mobile-reserve-button {
@@ -2087,12 +2086,19 @@ input[type="checkbox"] {
     font-size: clamp(2.5rem, 13vw, 3.8rem);
   }
 
+  .hero {
+    gap: 0.8rem;
+    padding-top: 0.4rem;
+    padding-bottom: 1.5rem;
+  }
+
   .hero-copy {
+    margin-top: -1.6rem;
     padding: 1.1rem;
     border-radius: 1.45rem;
   }
 
   .hero-visual {
-    min-height: 11rem;
+    min-height: 9.5rem;
   }
 }
