@@ -7,8 +7,8 @@ import {
   createGiftCardAdminToken,
   hasValidGiftCardAdminAccess
 } from "@/lib/gift-card-access";
+import { normalizeGiftCardInput, resolveGiftCardStatus } from "@/lib/gift-card-core";
 import { env } from "@/lib/env";
-import { normalizeGiftCardInput, resolveGiftCardStatus } from "@/lib/gift-cards";
 import { readString } from "@/lib/forms";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 

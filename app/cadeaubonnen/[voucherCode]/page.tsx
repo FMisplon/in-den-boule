@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
 import { TicketQrCode } from "@/components/ticket-qr-code";
-import { resolveGiftCardStatus } from "@/lib/gift-cards";
+import { resolveGiftCardStatus } from "@/lib/gift-card-core";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
