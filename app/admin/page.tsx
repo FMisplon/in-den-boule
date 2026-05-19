@@ -71,6 +71,22 @@ const adminSections: AdminSection[] = [
         label: "Open reservaties"
       },
       {
+        title: "Verhuur admin",
+        description:
+          "Volg offerte- en verhuuraanvragen op, stuur offertes uit en archiveer afgewerkte dossiers.",
+        href: "/verhuur/admin",
+        kind: "internal",
+        label: "Open verhuur-admin"
+      },
+      {
+        title: "Events admin",
+        description:
+          "Bekijk per event ticketverkoop, aantallen per tickettype, check-ins en de lijst met kopers.",
+        href: "/events/admin",
+        kind: "internal",
+        label: "Open events-admin"
+      },
+      {
         title: "Shop admin",
         description:
           "Volg cadeaubonbestellingen op en beheer de interne status van webshoporders.",
@@ -113,6 +129,26 @@ const adminSections: AdminSection[] = [
         note: "Interne staffcode vereist"
       }
     ]
+  }
+];
+
+const developerLinks: AdminLink[] = [
+  {
+    title: "Studio-info in deze site",
+    description:
+      "Interne infopagina met uitleg over hoe de Sanity Studio voor In den Boule apart gehost wordt en hoe je schemawijzigingen deployt.",
+    href: "/studio",
+    kind: "internal",
+    label: "Open info"
+  },
+  {
+    title: "Supabase dashboard",
+    description:
+      "Open het Supabase-project voor database, tabelstructuur, query-inspectie en server-side operationele controle.",
+    href: "https://supabase.com/dashboard/project/jmhvlqlxxtmhjntpyiwi",
+    kind: "external",
+    label: "Open Supabase",
+    note: "Login vereist"
   }
 ];
 
@@ -197,6 +233,22 @@ export default async function AdminPage() {
               </div>
             </article>
           ))}
+
+          <article className="venue-panel editor-hub-panel">
+            <div className="editor-hub-panel-copy">
+              <p className="eyebrow">ADVANCED</p>
+              <h2>Developers Only</h2>
+              <p>
+                Technische links voor schema-deploys, databasebeheer en ontwikkeling. Deze blokken
+                zijn bedoeld voor intern technisch gebruik, niet voor de dagelijkse redactieflow.
+              </p>
+            </div>
+            <div className="editor-hub-grid">
+              {developerLinks.map((link) => (
+                <AdminHubLink key={link.title} link={link} />
+              ))}
+            </div>
+          </article>
         </div>
       </section>
     </SiteShell>

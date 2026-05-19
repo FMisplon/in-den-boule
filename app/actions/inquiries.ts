@@ -280,6 +280,7 @@ export async function submitVenueInquiry(
   }
 
   revalidatePath("/verhuur");
+  revalidatePath("/verhuur/admin");
   return {
     success: true,
     message: mailResult.warning

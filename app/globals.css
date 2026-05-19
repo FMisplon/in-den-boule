@@ -632,6 +632,23 @@ img {
   background: rgba(25, 19, 15, 0.08);
 }
 
+.checkin-scanner-placeholder {
+  display: grid;
+  gap: 0.55rem;
+  min-height: 12rem;
+  margin-top: 1rem;
+  padding: 1.2rem;
+  border-radius: 24px;
+  border: 1px dashed rgba(86, 60, 28, 0.24);
+  background: rgba(255, 248, 240, 0.42);
+  align-content: center;
+}
+
+.checkin-scanner-placeholder p,
+.checkin-scanner-placeholder strong {
+  margin: 0;
+}
+
 .checkin-video {
   display: block;
   width: 100%;
@@ -1496,6 +1513,51 @@ input[type="checkbox"] {
   margin-bottom: 1.5rem;
 }
 
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+}
+
+.admin-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.9rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(86, 60, 28, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 248, 240, 0.64);
+  color: rgba(25, 19, 15, 0.78);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.admin-tab.is-active {
+  border-color: rgba(37, 112, 56, 0.26);
+  background: rgba(37, 112, 56, 0.12);
+  color: rgba(25, 19, 15, 0.94);
+}
+
+.admin-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.85rem;
+  min-height: 1.85rem;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: rgba(25, 19, 15, 0.08);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
 .admin-board {
   display: grid;
   gap: 1.25rem;
@@ -1602,6 +1664,66 @@ input[type="checkbox"] {
 .admin-helptext {
   color: rgba(25, 19, 15, 0.64);
   font-size: 0.92rem;
+}
+
+.event-admin-card {
+  gap: 1.4rem;
+}
+
+.event-admin-section {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.event-admin-section-topline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.event-admin-section-topline h4 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.event-admin-ticket-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.event-admin-ticket-card,
+.event-admin-order-card {
+  padding: 1rem;
+  border: 1px solid rgba(86, 60, 28, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 248, 240, 0.58);
+}
+
+.event-admin-ticket-card strong,
+.event-admin-order-card strong {
+  display: block;
+}
+
+.event-admin-ticket-card p,
+.event-admin-order-card p {
+  margin: 0.4rem 0 0;
+}
+
+.event-admin-order-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.event-admin-order-topline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.9rem;
 }
 
 .editor-hub-section {
@@ -1925,6 +2047,16 @@ input[type="checkbox"] {
   .editor-hub-card-topline {
     flex-direction: column;
     gap: 0.7rem;
+  }
+
+  .event-admin-ticket-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .event-admin-section-topline,
+  .event-admin-order-topline {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .site-footer {

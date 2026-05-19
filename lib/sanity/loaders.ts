@@ -462,7 +462,7 @@ export const getSiteSettings = cache(async () => {
     return {
       name: data.siteTitle || fallbackSite.name,
       tagline: data.heroTagline || fallbackSite.tagline,
-      headerLine: fallbackSite.headerLine,
+      headerLine: data.heroTagline || fallbackSite.headerLine,
       address: data.address || fallbackSite.address,
       hours: data.openingHours || fallbackSite.hours,
       kitchen: fallbackSite.kitchen,

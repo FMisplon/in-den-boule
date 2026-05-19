@@ -77,7 +77,21 @@ export function CheckInScanner({ requiresAccessCode }: CheckInScannerProps) {
       detectorRef.current = detectorCtor ? new detectorCtor({ formats: ["qr_code"] }) : null;
 
       if (videoRef.current) {
+        videoRef.current.muted = true;
+        videoRef.current.autoplay = true;
+        videoRef.current.setAttribute("playsinline", "true");
         videoRef.current.srcObject = stream;
+        await new Promise<void>((resolve) => {
+          if (!videoRef.current) {
+            resolve();
+            return;
+          }
+
+          const handleLoadedMetadata = () => resolve();
+          videoRef.current.addEventListener("loadedmetadata", handleLoadedMetadata, {
+            once: true
+          });
+        });
         await videoRef.current.play();
       }
 
@@ -179,10 +193,18 @@ export function CheckInScanner({ requiresAccessCode }: CheckInScannerProps) {
           ) : null}
         </div>
         {scannerMessage ? <p className="checkin-scanner-message">{scannerMessage}</p> : null}
-        {scannerAvailable ? (
+        {scannerAvailable && scannerActive ? (
           <div className="checkin-video-shell">
             <video ref={videoRef} muted playsInline className="checkin-video" />
             <canvas ref={canvasRef} hidden aria-hidden="true" />
+          </div>
+        ) : scannerAvailable ? (
+          <div className="checkin-scanner-placeholder">
+            <strong>Camera start pas na een tik op de knop.</strong>
+            <p>
+              Na <em>Start QR-scanner</em> vraagt iPhone eventueel eerst cameratoegang. Keur dat
+              goed om live te kunnen scannen.
+            </p>
           </div>
         ) : (
           <p className="checkin-scanner-message">

@@ -147,7 +147,7 @@ export type VenuePageContent = {
 export const site = {
   name: "In den Boule",
   tagline: "Join the legend",
-  headerLine: "cafe · feest · keuken · events",
+  headerLine: "Join the legend",
   address: "Augustijnenstraat 2, 3000 Leuven",
   hours: "Zondag: 20u-03u · Maandag - Donderdag: 11u-03u · Vrijdag & Zaterdag: gesloten",
   kitchen: "Altijd doorlopend open",

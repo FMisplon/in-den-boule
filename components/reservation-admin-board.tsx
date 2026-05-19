@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useMemo, useState } from "react";
 import {
   updateReservationAdminState,
   type ReservationAdminState
@@ -31,16 +31,37 @@ const statusLabels: Record<string, string> = {
 };
 
 function formatPartySizeLabel(value: string) {
-  const trimmed = value.trim();
+  const trimmed = value.trim().replace(/\s+/g, " ");
 
   if (!trimmed) {
     return "Aantal personen onbekend";
   }
 
-  return /persoon/i.test(trimmed) ? trimmed : `${trimmed} personen`;
+  const normalized = trimmed
+    .replace(/\bpersonen\b/gi, "personen")
+    .replace(/\bpersoon\b/gi, "persoon")
+    .replace(/(\bpersonen\b)(\s+\bpersonen\b)+/gi, "personen")
+    .replace(/(\bpersoon\b)(\s+\bpersoon\b)+/gi, "persoon")
+    .trim();
+
+  return /persoon/i.test(normalized) ? normalized : `${normalized} personen`;
 }
 
-function ReservationAdminCard({ reservation }: { reservation: ReservationRecord }) {
+function isArchivedReservation(reservation: ReservationRecord, todayKey: string) {
+  if (reservation.status === "archived") {
+    return true;
+  }
+
+  return reservation.reservation_date < todayKey;
+}
+
+function ReservationAdminCard({
+  reservation,
+  onUpdated
+}: {
+  reservation: ReservationRecord;
+  onUpdated: (reservationId: string, updates: Partial<ReservationRecord>) => void;
+}) {
   const [state, formAction] = useActionState(updateReservationAdminState, {
     success: false,
     message: ""
@@ -59,7 +80,13 @@ function ReservationAdminCard({ reservation }: { reservation: ReservationRecord 
     setHandledBy(state.handledBy || "");
     setAdminNote(state.adminNote || "");
     setHandledAt(state.handledAt || null);
-  }, [reservation.id, state]);
+    onUpdated(reservation.id, {
+      status: state.status || "new",
+      handled_by: state.handledBy || null,
+      admin_note: state.adminNote || null,
+      handled_at: state.handledAt || null
+    });
+  }, [onUpdated, reservation.id, state]);
 
   return (
     <article className="admin-card">
@@ -132,6 +159,13 @@ function ReservationAdminCard({ reservation }: { reservation: ReservationRecord 
 }
 
 export function ReservationAdminBoard({ reservations }: { reservations: ReservationRecord[] }) {
+  const [reservationList, setReservationList] = useState(reservations);
+  const [activeTab, setActiveTab] = useState<"active" | "archive">("active");
+
+  useEffect(() => {
+    setReservationList(reservations);
+  }, [reservations]);
+
   if (!reservations.length) {
     return (
       <div className="venue-layout venue-form-layout">
@@ -143,7 +177,11 @@ export function ReservationAdminBoard({ reservations }: { reservations: Reservat
     );
   }
 
-  const sortedReservations = [...reservations].sort((left, right) => {
+  const todayKey = new Date().toLocaleDateString("en-CA", {
+    timeZone: "Europe/Brussels"
+  });
+
+  const sortedReservations = [...reservationList].sort((left, right) => {
     const leftPriority = left.status === "new" ? 0 : left.status === "contacted" ? 1 : 2;
     const rightPriority = right.status === "new" ? 0 : right.status === "contacted" ? 1 : 2;
 
@@ -154,11 +192,72 @@ export function ReservationAdminBoard({ reservations }: { reservations: Reservat
     return new Date(right.created_at).getTime() - new Date(left.created_at).getTime();
   });
 
+  const activeReservations = useMemo(
+    () => sortedReservations.filter((reservation) => !isArchivedReservation(reservation, todayKey)),
+    [sortedReservations, todayKey]
+  );
+  const archivedReservations = useMemo(
+    () => sortedReservations.filter((reservation) => isArchivedReservation(reservation, todayKey)),
+    [sortedReservations, todayKey]
+  );
+
+  const visibleReservations = activeTab === "active" ? activeReservations : archivedReservations;
+
+  function updateReservation(reservationId: string, updates: Partial<ReservationRecord>) {
+    setReservationList((current) =>
+      current.map((reservation) =>
+        reservation.id === reservationId ? { ...reservation, ...updates } : reservation
+      )
+    );
+  }
+
   return (
-    <div className="admin-board">
-      {sortedReservations.map((reservation) => (
-        <ReservationAdminCard key={reservation.id} reservation={reservation} />
-      ))}
-    </div>
+    <>
+      <div className="admin-tabs" role="tablist" aria-label="Reservatieoverzicht">
+        <button
+          className={`admin-tab ${activeTab === "active" ? "is-active" : ""}`}
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "active"}
+          onClick={() => setActiveTab("active")}
+        >
+          Actief
+          <span className="admin-tab-count">{activeReservations.length}</span>
+        </button>
+        <button
+          className={`admin-tab ${activeTab === "archive" ? "is-active" : ""}`}
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "archive"}
+          onClick={() => setActiveTab("archive")}
+        >
+          Archief
+          <span className="admin-tab-count">{archivedReservations.length}</span>
+        </button>
+      </div>
+
+      {visibleReservations.length ? (
+        <div className="admin-board">
+          {visibleReservations.map((reservation) => (
+            <ReservationAdminCard
+              key={reservation.id}
+              reservation={reservation}
+              onUpdated={updateReservation}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="venue-layout venue-form-layout">
+          <article className="venue-panel venue-panel-accent">
+            <h3>{activeTab === "active" ? "Geen actieve reservaties" : "Archief is nog leeg"}</h3>
+            <p>
+              {activeTab === "active"
+                ? "Voorbije reservaties en reservaties met status Afgesloten verschijnen automatisch in het archief."
+                : "Zodra reservaties voorbij zijn of manueel als Afgesloten gemarkeerd worden, verschijnen ze hier."}
+            </p>
+          </article>
+        </div>
+      )}
+    </>
   );
 }
