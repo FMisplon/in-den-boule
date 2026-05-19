@@ -5,7 +5,7 @@ import { PageHero } from "@/components/page-hero";
 import { ShopAdminAccessForm } from "@/components/shop-admin-access-form";
 import { ShopAdminBoard } from "@/components/shop-admin-board";
 import { SiteShell } from "@/components/site-shell";
-import { env } from "@/lib/env";
+import { getGiftCardAdminCode } from "@/lib/internal-admin-access";
 import {
   GIFT_CARD_ADMIN_COOKIE_NAME,
   hasValidGiftCardAdminAccess
@@ -26,9 +26,10 @@ export const metadata: Metadata = {
 
 export default async function ShopAdminPage() {
   const cookieStore = await cookies();
+  const adminCode = getGiftCardAdminCode();
   const hasAccess = hasValidGiftCardAdminAccess(
     cookieStore.get(GIFT_CARD_ADMIN_COOKIE_NAME)?.value,
-    env.giftCardAdminAccessCode
+    adminCode
   );
 
   let orders: Array<{

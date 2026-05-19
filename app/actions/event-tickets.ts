@@ -6,6 +6,7 @@ import { CHECK_IN_COOKIE_NAME, createCheckInAccessToken, hasValidCheckInAccess }
 import { env } from "@/lib/env";
 import { normalizeTicketScanValue, resolveCheckInStatus } from "@/lib/event-tickets";
 import { readString } from "@/lib/forms";
+import { getCheckInAdminCode } from "@/lib/internal-admin-access";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type CheckInState = {
@@ -20,17 +21,18 @@ export type CheckInState = {
 };
 
 function canAccessCheckIn(cookieValue: string | undefined) {
-  return hasValidCheckInAccess(cookieValue, env.checkInAccessCode);
+  return hasValidCheckInAccess(cookieValue, getCheckInAdminCode());
 }
 
 export async function unlockCheckInAccess(_prevState: CheckInState, formData: FormData): Promise<CheckInState> {
   const accessCode = readString(formData, "access_code");
+  const adminCode = getCheckInAdminCode();
 
-  if (!env.checkInAccessCode) {
+  if (!adminCode) {
     redirect("/check-in");
   }
 
-  if (!accessCode || accessCode !== env.checkInAccessCode) {
+  if (!accessCode || accessCode !== adminCode) {
     return {
       success: false,
       message: "De staffcode klopt niet."

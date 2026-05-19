@@ -5,7 +5,7 @@ import { CheckInScanner } from "@/components/check-in-scanner";
 import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
 import { CHECK_IN_COOKIE_NAME, hasValidCheckInAccess } from "@/lib/check-in-access";
-import { env } from "@/lib/env";
+import { getCheckInAdminCode } from "@/lib/internal-admin-access";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -21,9 +21,10 @@ export const metadata: Metadata = {
 
 export default async function CheckInPage() {
   const cookieStore = await cookies();
+  const adminCode = getCheckInAdminCode();
   const hasAccess = hasValidCheckInAccess(
     cookieStore.get(CHECK_IN_COOKIE_NAME)?.value,
-    env.checkInAccessCode
+    adminCode
   );
 
   return (
@@ -48,7 +49,7 @@ export default async function CheckInPage() {
             </article>
           </div>
         ) : (
-          <CheckInScanner requiresAccessCode={Boolean(env.checkInAccessCode)} />
+          <CheckInScanner requiresAccessCode={Boolean(adminCode)} />
         )}
       </section>
     </SiteShell>

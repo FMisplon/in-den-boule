@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { readString } from "@/lib/forms";
 import { env } from "@/lib/env";
+import { getReservationAdminCode } from "@/lib/internal-admin-access";
 import {
   VENUE_ADMIN_COOKIE_NAME,
   createVenueAdminToken,
@@ -27,12 +28,13 @@ export async function unlockVenueAdmin(
   formData: FormData
 ): Promise<VenueAdminState> {
   const accessCode = readString(formData, "access_code");
+  const adminCode = getReservationAdminCode();
 
-  if (!env.reservationAdminAccessCode) {
+  if (!adminCode) {
     redirect("/verhuur/admin");
   }
 
-  if (!accessCode || accessCode !== env.reservationAdminAccessCode) {
+  if (!accessCode || accessCode !== adminCode) {
     return {
       success: false,
       message: "De admincode klopt niet."
@@ -61,8 +63,9 @@ export async function updateVenueAdminState(
 ): Promise<VenueAdminState> {
   const cookieStore = await cookies();
   const accessCookie = cookieStore.get(VENUE_ADMIN_COOKIE_NAME)?.value;
+  const adminCode = getReservationAdminCode();
 
-  if (!hasValidVenueAdminAccess(accessCookie, env.reservationAdminAccessCode)) {
+  if (!hasValidVenueAdminAccess(accessCookie, adminCode)) {
     return {
       success: false,
       message: "Geen toegang tot de verhuur-admin.",

@@ -4,7 +4,7 @@ import { GiftCardAdminAccessForm } from "@/components/gift-card-admin-access-for
 import { GiftCardRedeemForm } from "@/components/gift-card-redeem-form";
 import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
-import { env } from "@/lib/env";
+import { getGiftCardAdminCode } from "@/lib/internal-admin-access";
 import {
   GIFT_CARD_ADMIN_COOKIE_NAME,
   hasValidGiftCardAdminAccess
@@ -24,9 +24,10 @@ export const metadata: Metadata = {
 
 export default async function GiftCardRedeemPage() {
   const cookieStore = await cookies();
+  const adminCode = getGiftCardAdminCode();
   const hasAccess = hasValidGiftCardAdminAccess(
     cookieStore.get(GIFT_CARD_ADMIN_COOKIE_NAME)?.value,
-    env.giftCardAdminAccessCode
+    adminCode
   );
 
   return (

@@ -45,14 +45,6 @@ const adminSections: AdminSection[] = [
         kind: "external",
         label: "Open Sanity",
         note: "Login vereist"
-      },
-      {
-        title: "Studio-info in deze site",
-        description:
-          "Interne infopagina met uitleg over hoe de Sanity Studio voor In den Boule apart gehost wordt en hoe je schemawijzigingen deployt.",
-        href: "/studio",
-        kind: "internal",
-        label: "Open info"
       }
     ]
   },
@@ -102,14 +94,6 @@ const adminSections: AdminSection[] = [
         kind: "external",
         label: "Open Mollie",
         note: "Login vereist"
-      },
-      {
-        title: "Cadeaubon redeem",
-        description:
-          "Controleer en verzilver cadeaubonnen aan de kassa of tijdens service.",
-        href: "/cadeaubonnen/redeem",
-        kind: "internal",
-        label: "Open redeemtool"
       }
     ]
   },
@@ -127,6 +111,14 @@ const adminSections: AdminSection[] = [
         kind: "internal",
         label: "Open check-in",
         note: "Interne staffcode vereist"
+      },
+      {
+        title: "Cadeaubon redeem",
+        description:
+          "Controleer en verzilver cadeaubonnen aan de kassa of tijdens service.",
+        href: "/cadeaubonnen/redeem",
+        kind: "internal",
+        label: "Open redeemtool"
       }
     ]
   }

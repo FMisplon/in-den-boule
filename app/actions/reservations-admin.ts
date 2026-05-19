@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { readString } from "@/lib/forms";
 import { env } from "@/lib/env";
+import { getReservationAdminCode } from "@/lib/internal-admin-access";
 import {
   RESERVATION_ADMIN_COOKIE_NAME,
   createReservationAdminToken,
@@ -27,12 +28,13 @@ export async function unlockReservationAdmin(
   formData: FormData
 ): Promise<ReservationAdminState> {
   const accessCode = readString(formData, "access_code");
+  const adminCode = getReservationAdminCode();
 
-  if (!env.reservationAdminAccessCode) {
+  if (!adminCode) {
     redirect("/reservaties/admin");
   }
 
-  if (!accessCode || accessCode !== env.reservationAdminAccessCode) {
+  if (!accessCode || accessCode !== adminCode) {
     return {
       success: false,
       message: "De admincode klopt niet."
@@ -61,8 +63,9 @@ export async function updateReservationAdminState(
 ): Promise<ReservationAdminState> {
   const cookieStore = await cookies();
   const accessCookie = cookieStore.get(RESERVATION_ADMIN_COOKIE_NAME)?.value;
+  const adminCode = getReservationAdminCode();
 
-  if (!hasValidReservationAdminAccess(accessCookie, env.reservationAdminAccessCode)) {
+  if (!hasValidReservationAdminAccess(accessCookie, adminCode)) {
     return {
       success: false,
       message: "Geen toegang tot de reservatie-admin.",

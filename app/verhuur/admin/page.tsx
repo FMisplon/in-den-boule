@@ -4,7 +4,7 @@ import { PageHero } from "@/components/page-hero";
 import { SiteShell } from "@/components/site-shell";
 import { VenueAdminAccessForm } from "@/components/venue-admin-access-form";
 import { VenueAdminBoard } from "@/components/venue-admin-board";
-import { env } from "@/lib/env";
+import { getReservationAdminCode } from "@/lib/internal-admin-access";
 import {
   VENUE_ADMIN_COOKIE_NAME,
   hasValidVenueAdminAccess
@@ -25,9 +25,10 @@ export const metadata: Metadata = {
 
 export default async function VenueAdminPage() {
   const cookieStore = await cookies();
+  const adminCode = getReservationAdminCode();
   const hasAccess = hasValidVenueAdminAccess(
     cookieStore.get(VENUE_ADMIN_COOKIE_NAME)?.value,
-    env.reservationAdminAccessCode
+    adminCode
   );
 
   let inquiries: Array<{

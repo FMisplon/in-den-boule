@@ -10,6 +10,7 @@ import {
 import { normalizeGiftCardInput, resolveGiftCardStatus } from "@/lib/gift-card-core";
 import { env } from "@/lib/env";
 import { readString } from "@/lib/forms";
+import { getGiftCardAdminCode } from "@/lib/internal-admin-access";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type GiftCardRedeemState = {
@@ -27,12 +28,13 @@ export async function unlockGiftCardAdmin(
   formData: FormData
 ): Promise<GiftCardRedeemState> {
   const accessCode = readString(formData, "access_code");
+  const adminCode = getGiftCardAdminCode();
 
-  if (!env.giftCardAdminAccessCode) {
+  if (!adminCode) {
     redirect("/cadeaubonnen/redeem");
   }
 
-  if (!accessCode || accessCode !== env.giftCardAdminAccessCode) {
+  if (!accessCode || accessCode !== adminCode) {
     return {
       success: false,
       message: "De admincode klopt niet."
@@ -61,8 +63,9 @@ export async function redeemGiftCard(
 ): Promise<GiftCardRedeemState> {
   const cookieStore = await cookies();
   const accessCookie = cookieStore.get(GIFT_CARD_ADMIN_COOKIE_NAME)?.value;
+  const adminCode = getGiftCardAdminCode();
 
-  if (!hasValidGiftCardAdminAccess(accessCookie, env.giftCardAdminAccessCode)) {
+  if (!hasValidGiftCardAdminAccess(accessCookie, adminCode)) {
     return {
       success: false,
       message: "Geen toegang tot de cadeaubon-redeemtool."

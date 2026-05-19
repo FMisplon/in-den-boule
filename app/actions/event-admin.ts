@@ -2,8 +2,9 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { readString } from "@/lib/forms";
 import { env } from "@/lib/env";
+import { readString } from "@/lib/forms";
+import { getReservationAdminCode } from "@/lib/internal-admin-access";
 import {
   EVENT_ADMIN_COOKIE_NAME,
   createEventAdminToken,
@@ -20,12 +21,13 @@ export async function unlockEventAdmin(
   formData: FormData
 ): Promise<EventAdminAccessState> {
   const accessCode = readString(formData, "access_code");
+  const adminCode = getReservationAdminCode();
 
-  if (!env.reservationAdminAccessCode) {
+  if (!adminCode) {
     redirect("/events/admin");
   }
 
-  if (!accessCode || accessCode !== env.reservationAdminAccessCode) {
+  if (!accessCode || accessCode !== adminCode) {
     return {
       success: false,
       message: "De admincode klopt niet."
@@ -46,8 +48,9 @@ export async function unlockEventAdmin(
 
 export async function canAccessEventAdmin() {
   const cookieStore = await cookies();
+  const adminCode = getReservationAdminCode();
   return hasValidEventAdminAccess(
     cookieStore.get(EVENT_ADMIN_COOKIE_NAME)?.value,
-    env.reservationAdminAccessCode
+    adminCode
   );
 }

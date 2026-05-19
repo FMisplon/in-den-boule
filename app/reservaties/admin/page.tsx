@@ -4,7 +4,7 @@ import { PageHero } from "@/components/page-hero";
 import { ReservationAdminAccessForm } from "@/components/reservation-admin-access-form";
 import { ReservationAdminBoard } from "@/components/reservation-admin-board";
 import { SiteShell } from "@/components/site-shell";
-import { env } from "@/lib/env";
+import { getReservationAdminCode } from "@/lib/internal-admin-access";
 import {
   RESERVATION_ADMIN_COOKIE_NAME,
   hasValidReservationAdminAccess
@@ -25,9 +25,10 @@ export const metadata: Metadata = {
 
 export default async function ReservationAdminPage() {
   const cookieStore = await cookies();
+  const adminCode = getReservationAdminCode();
   const hasAccess = hasValidReservationAdminAccess(
     cookieStore.get(RESERVATION_ADMIN_COOKIE_NAME)?.value,
-    env.reservationAdminAccessCode
+    adminCode
   );
 
   let reservations: Array<{
