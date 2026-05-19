@@ -1,9 +1,10 @@
 "use client";
 
 import { useActionState } from "react";
-import { idleGiftCardRedeemState, redeemGiftCard } from "@/app/actions/gift-cards";
+import { redeemGiftCard } from "@/app/actions/gift-cards";
 import { FormFeedback } from "@/components/form-feedback";
 import { SubmitButton } from "@/components/submit-button";
+import { idleGiftCardRedeemState } from "@/lib/gift-card-redeem-state";
 
 export function GiftCardRedeemForm() {
   const [state, formAction] = useActionState(redeemGiftCard, idleGiftCardRedeemState);

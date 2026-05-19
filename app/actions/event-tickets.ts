@@ -19,11 +19,6 @@ export type CheckInState = {
   checkedInAt?: string;
 };
 
-export const idleCheckInState: CheckInState = {
-  success: false,
-  message: ""
-};
-
 function canAccessCheckIn(cookieValue: string | undefined) {
   return hasValidCheckInAccess(cookieValue, env.checkInAccessCode);
 }

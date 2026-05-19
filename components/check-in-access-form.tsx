@@ -1,9 +1,10 @@
 "use client";
 
 import { useActionState } from "react";
-import { idleCheckInState, unlockCheckInAccess } from "@/app/actions/event-tickets";
+import { unlockCheckInAccess } from "@/app/actions/event-tickets";
 import { FormFeedback } from "@/components/form-feedback";
 import { SubmitButton } from "@/components/submit-button";
+import { idleCheckInState } from "@/lib/check-in-state";
 
 export function CheckInAccessForm() {
   const [state, formAction] = useActionState(unlockCheckInAccess, idleCheckInState);

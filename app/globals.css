@@ -1523,6 +1523,15 @@ input[type="checkbox"] {
   font-size: clamp(1.4rem, 2vw, 1.8rem);
 }
 
+.admin-card-kicker {
+  margin: 0 0 0.35rem;
+  color: rgba(25, 19, 15, 0.78);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .admin-pill {
   display: inline-flex;
   align-items: center;

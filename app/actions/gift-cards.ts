@@ -22,11 +22,6 @@ export type GiftCardRedeemState = {
   redeemedAt?: string;
 };
 
-export const idleGiftCardRedeemState: GiftCardRedeemState = {
-  success: false,
-  message: ""
-};
-
 export async function unlockGiftCardAdmin(
   _prevState: GiftCardRedeemState,
   formData: FormData

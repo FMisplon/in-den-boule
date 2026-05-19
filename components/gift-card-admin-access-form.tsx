@@ -1,9 +1,10 @@
 "use client";
 
 import { useActionState } from "react";
-import { idleGiftCardRedeemState, unlockGiftCardAdmin } from "@/app/actions/gift-cards";
+import { unlockGiftCardAdmin } from "@/app/actions/gift-cards";
 import { FormFeedback } from "@/components/form-feedback";
 import { SubmitButton } from "@/components/submit-button";
+import { idleGiftCardRedeemState } from "@/lib/gift-card-redeem-state";
 
 export function GiftCardAdminAccessForm() {
   const [state, formAction] = useActionState(unlockGiftCardAdmin, idleGiftCardRedeemState);

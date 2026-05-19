@@ -30,6 +30,16 @@ const statusLabels: Record<string, string> = {
   archived: "Afgesloten"
 };
 
+function formatPartySizeLabel(value: string) {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return "Aantal personen onbekend";
+  }
+
+  return /persoon/i.test(trimmed) ? trimmed : `${trimmed} personen`;
+}
+
 function ReservationAdminCard({ reservation }: { reservation: ReservationRecord }) {
   const [state, formAction] = useActionState(updateReservationAdminState, {
     success: false,
@@ -55,7 +65,7 @@ function ReservationAdminCard({ reservation }: { reservation: ReservationRecord 
     <article className="admin-card">
       <div className="admin-card-topline">
         <div>
-          <p className="eyebrow">{reservation.party_size} personen</p>
+          <p className="admin-card-kicker">{formatPartySizeLabel(reservation.party_size)}</p>
           <h3>{reservation.name}</h3>
         </div>
         <span className={`admin-pill admin-pill-${status}`}>{statusLabels[status] || status}</span>

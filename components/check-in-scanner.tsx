@@ -1,9 +1,11 @@
 "use client";
 
+import jsQR from "jsqr";
 import { useActionState, useEffect, useRef, useState } from "react";
-import { checkInEventTicket, idleCheckInState } from "@/app/actions/event-tickets";
+import { checkInEventTicket } from "@/app/actions/event-tickets";
 import { FormFeedback } from "@/components/form-feedback";
 import { SubmitButton } from "@/components/submit-button";
+import { idleCheckInState } from "@/lib/check-in-state";
 
 type CheckInScannerProps = {
   requiresAccessCode: boolean;
@@ -22,13 +24,13 @@ export function CheckInScanner({ requiresAccessCode }: CheckInScannerProps) {
   const [scannerActive, setScannerActive] = useState(false);
   const [scannerMessage, setScannerMessage] = useState("");
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const detectorRef = useRef<BarcodeDetectorLike | null>(null);
   const frameRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const detectorCtor = (globalThis as { BarcodeDetector?: BarcodeDetectorCtor }).BarcodeDetector;
-    setScannerAvailable(Boolean(detectorCtor));
+    setScannerAvailable(Boolean(navigator.mediaDevices?.getUserMedia));
   }, []);
 
   useEffect(() => {
@@ -60,8 +62,8 @@ export function CheckInScanner({ requiresAccessCode }: CheckInScannerProps) {
   async function startScanner() {
     const detectorCtor = (globalThis as { BarcodeDetector?: BarcodeDetectorCtor }).BarcodeDetector;
 
-    if (!detectorCtor || !navigator.mediaDevices?.getUserMedia) {
-      setScannerMessage("Camera-scanner is niet beschikbaar op dit toestel. Plak de ticketlink of code manueel.");
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setScannerMessage("Camera-scanner is niet beschikbaar in deze browser. Plak de ticketlink of code manueel.");
       return;
     }
 
@@ -72,7 +74,7 @@ export function CheckInScanner({ requiresAccessCode }: CheckInScannerProps) {
       });
 
       streamRef.current = stream;
-      detectorRef.current = new detectorCtor({ formats: ["qr_code"] });
+      detectorRef.current = detectorCtor ? new detectorCtor({ formats: ["qr_code"] }) : null;
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
@@ -80,19 +82,49 @@ export function CheckInScanner({ requiresAccessCode }: CheckInScannerProps) {
       }
 
       setScannerActive(true);
-      setScannerMessage("Richt de camera op de QR-code van het ticket.");
+      setScannerMessage(
+        detectorRef.current
+          ? "Richt de camera op de QR-code van het ticket."
+          : "Richt de camera op de QR-code van het ticket. Safari gebruikt hier de ingebouwde beeldscanner als fallback."
+      );
 
       const scanFrame = async () => {
-        if (!videoRef.current || !detectorRef.current) {
+        if (!videoRef.current) {
+          return;
+        }
+
+        if (videoRef.current.readyState < 2) {
+          frameRef.current = requestAnimationFrame(scanFrame);
           return;
         }
 
         try {
-          const results = await detectorRef.current.detect(videoRef.current);
-          const match = results.find((item) => item.rawValue?.trim());
+          let matchedValue = "";
 
-          if (match?.rawValue) {
-            setScanValue(match.rawValue.trim());
+          if (detectorRef.current) {
+            const results = await detectorRef.current.detect(videoRef.current);
+            const match = results.find((item) => item.rawValue?.trim());
+            matchedValue = match?.rawValue?.trim() || "";
+          } else if (canvasRef.current) {
+            const width = videoRef.current.videoWidth;
+            const height = videoRef.current.videoHeight;
+
+            if (width && height) {
+              canvasRef.current.width = width;
+              canvasRef.current.height = height;
+              const context = canvasRef.current.getContext("2d", { willReadFrequently: true });
+
+              if (context) {
+                context.drawImage(videoRef.current, 0, 0, width, height);
+                const imageData = context.getImageData(0, 0, width, height);
+                const qrResult = jsQR(imageData.data, width, height);
+                matchedValue = qrResult?.data?.trim() || "";
+              }
+            }
+          }
+
+          if (matchedValue) {
+            setScanValue(matchedValue);
             setScannerMessage("QR-code gelezen. Controleer en bevestig de check-in.");
             await stopScanner();
             return;
@@ -150,10 +182,11 @@ export function CheckInScanner({ requiresAccessCode }: CheckInScannerProps) {
         {scannerAvailable ? (
           <div className="checkin-video-shell">
             <video ref={videoRef} muted playsInline className="checkin-video" />
+            <canvas ref={canvasRef} hidden aria-hidden="true" />
           </div>
         ) : (
           <p className="checkin-scanner-message">
-            Op dit toestel is geen ingebouwde QR-scanner beschikbaar. Gebruik eventueel de camera-app en plak daarna de link of code hieronder.
+            Deze browser kan de camera niet openen. Gebruik eventueel de camera-app en plak daarna de link of code hieronder.
           </p>
         )}
       </article>
