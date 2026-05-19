@@ -1595,6 +1595,127 @@ input[type="checkbox"] {
   font-size: 0.92rem;
 }
 
+.editor-hub-section {
+  padding-top: 0.4rem;
+}
+
+.editor-hub-stack {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.editor-hub-band {
+  margin-top: 0;
+}
+
+.editor-hub-band-copy {
+  margin: 0;
+  max-width: 32rem;
+  color: rgba(25, 19, 15, 0.72);
+  line-height: 1.65;
+}
+
+.editor-hub-band-copy span {
+  color: rgba(25, 19, 15, 0.92);
+  font-weight: 700;
+}
+
+.editor-hub-panel {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.editor-hub-panel-copy {
+  max-width: 42rem;
+}
+
+.editor-hub-panel-copy h2 {
+  margin: 0.2rem 0 0.8rem;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  line-height: 0.98;
+}
+
+.editor-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.editor-hub-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1.35rem;
+  border: 1px solid rgba(37, 112, 56, 0.14);
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(circle at top right, rgba(223, 200, 155, 0.14), transparent 42%),
+    rgba(255, 248, 240, 0.72);
+  color: inherit;
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+.editor-hub-card:hover,
+.editor-hub-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(37, 112, 56, 0.28);
+  background:
+    radial-gradient(circle at top right, rgba(223, 200, 155, 0.2), transparent 48%),
+    rgba(255, 248, 240, 0.82);
+}
+
+.editor-hub-card:focus-visible {
+  outline: 3px solid rgba(225, 118, 6, 0.22);
+  outline-offset: 3px;
+}
+
+.editor-hub-card-topline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.editor-hub-card-topline h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.editor-hub-card-note {
+  margin: 0.35rem 0 0;
+  color: rgba(25, 19, 15, 0.62);
+  font-size: 0.92rem;
+}
+
+.editor-hub-card-kind {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(25, 19, 15, 0.06);
+  color: rgba(25, 19, 15, 0.68);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.editor-hub-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.editor-hub-card-button {
+  justify-self: start;
+  pointer-events: none;
+}
+
 .footer-block p,
 .footer-block a,
 .footer-link-button,
@@ -1786,6 +1907,15 @@ input[type="checkbox"] {
 
   .admin-meta-grid {
     grid-template-columns: 1fr;
+  }
+
+  .editor-hub-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-hub-card-topline {
+    flex-direction: column;
+    gap: 0.7rem;
   }
 
   .site-footer {
