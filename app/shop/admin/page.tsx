@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
+import type { Metadata } from "next";
 import { PageHero } from "@/components/page-hero";
 import { ShopAdminAccessForm } from "@/components/shop-admin-access-form";
 import { ShopAdminBoard } from "@/components/shop-admin-board";
@@ -12,6 +13,16 @@ import {
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false
+    }
+  }
+};
 
 export default async function ShopAdminPage() {
   const cookieStore = await cookies();

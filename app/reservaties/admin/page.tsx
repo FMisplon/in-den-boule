@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import type { Metadata } from "next";
 import { PageHero } from "@/components/page-hero";
 import { ReservationAdminAccessForm } from "@/components/reservation-admin-access-form";
 import { ReservationAdminBoard } from "@/components/reservation-admin-board";
@@ -11,6 +12,16 @@ import {
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false
+    }
+  }
+};
 
 export default async function ReservationAdminPage() {
   const cookieStore = await cookies();

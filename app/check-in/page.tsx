@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import type { Metadata } from "next";
 import { CheckInAccessForm } from "@/components/check-in-access-form";
 import { CheckInScanner } from "@/components/check-in-scanner";
 import { PageHero } from "@/components/page-hero";
@@ -7,6 +8,16 @@ import { CHECK_IN_COOKIE_NAME, hasValidCheckInAccess } from "@/lib/check-in-acce
 import { env } from "@/lib/env";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false
+    }
+  }
+};
 
 export default async function CheckInPage() {
   const cookieStore = await cookies();

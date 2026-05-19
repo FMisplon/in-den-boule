@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import type { Metadata } from "next";
 import { GiftCardAdminAccessForm } from "@/components/gift-card-admin-access-form";
 import { GiftCardRedeemForm } from "@/components/gift-card-redeem-form";
 import { PageHero } from "@/components/page-hero";
@@ -10,6 +11,16 @@ import {
 } from "@/lib/gift-card-access";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false
+    }
+  }
+};
 
 export default async function GiftCardRedeemPage() {
   const cookieStore = await cookies();
