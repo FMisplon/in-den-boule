@@ -22,6 +22,7 @@ export function CheckInScanner({ requiresAccessCode }: CheckInScannerProps) {
   const [scanValue, setScanValue] = useState("");
   const [scannerAvailable, setScannerAvailable] = useState(false);
   const [scannerActive, setScannerActive] = useState(false);
+  const [scannerStarting, setScannerStarting] = useState(false);
   const [scannerMessage, setScannerMessage] = useState("");
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -57,9 +58,14 @@ export function CheckInScanner({ requiresAccessCode }: CheckInScannerProps) {
     streamRef.current = null;
     detectorRef.current = null;
     setScannerActive(false);
+    setScannerStarting(false);
   }
 
   async function startScanner() {
+    if (scannerStarting || scannerActive) {
+      return;
+    }
+
     const detectorCtor = (globalThis as { BarcodeDetector?: BarcodeDetectorCtor }).BarcodeDetector;
 
     if (!navigator.mediaDevices?.getUserMedia) {
@@ -67,7 +73,17 @@ export function CheckInScanner({ requiresAccessCode }: CheckInScannerProps) {
       return;
     }
 
+    setScannerStarting(true);
+    setScannerMessage("Camera wordt gestart...");
+
     try {
+      setScannerActive(true);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
+      if (!videoRef.current) {
+        throw new Error("Video-element niet beschikbaar");
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: { ideal: "environment" } },
         audio: false
@@ -76,26 +92,25 @@ export function CheckInScanner({ requiresAccessCode }: CheckInScannerProps) {
       streamRef.current = stream;
       detectorRef.current = detectorCtor ? new detectorCtor({ formats: ["qr_code"] }) : null;
 
-      if (videoRef.current) {
-        videoRef.current.muted = true;
-        videoRef.current.autoplay = true;
-        videoRef.current.setAttribute("playsinline", "true");
-        videoRef.current.srcObject = stream;
-        await new Promise<void>((resolve) => {
-          if (!videoRef.current) {
-            resolve();
-            return;
-          }
+      videoRef.current.muted = true;
+      videoRef.current.autoplay = true;
+      videoRef.current.playsInline = true;
+      videoRef.current.setAttribute("playsinline", "true");
+      videoRef.current.srcObject = stream;
+      await new Promise<void>((resolve) => {
+        if (!videoRef.current) {
+          resolve();
+          return;
+        }
 
-          const handleLoadedMetadata = () => resolve();
-          videoRef.current.addEventListener("loadedmetadata", handleLoadedMetadata, {
-            once: true
-          });
+        const handleLoadedMetadata = () => resolve();
+        videoRef.current.addEventListener("loadedmetadata", handleLoadedMetadata, {
+          once: true
         });
-        await videoRef.current.play();
-      }
+      });
+      await videoRef.current.play();
 
-      setScannerActive(true);
+      setScannerStarting(false);
       setScannerMessage(
         detectorRef.current
           ? "Richt de camera op de QR-code van het ticket."
@@ -183,8 +198,13 @@ export function CheckInScanner({ requiresAccessCode }: CheckInScannerProps) {
           </p>
         ) : null}
         <div className="checkin-scanner-actions">
-          <button className="button" type="button" onClick={startScanner} disabled={scannerActive || !scannerAvailable}>
-            {scannerActive ? "Scanner actief" : "Start QR-scanner"}
+          <button
+            className="button"
+            type="button"
+            onClick={startScanner}
+            disabled={scannerActive || scannerStarting || !scannerAvailable}
+          >
+            {scannerStarting ? "Camera start..." : scannerActive ? "Scanner actief" : "Start QR-scanner"}
           </button>
           {scannerActive ? (
             <button className="button button-secondary" type="button" onClick={stopScanner}>
@@ -193,18 +213,19 @@ export function CheckInScanner({ requiresAccessCode }: CheckInScannerProps) {
           ) : null}
         </div>
         {scannerMessage ? <p className="checkin-scanner-message">{scannerMessage}</p> : null}
-        {scannerAvailable && scannerActive ? (
-          <div className="checkin-video-shell">
+        {scannerAvailable ? (
+          <div className={`checkin-video-shell ${scannerActive ? "is-active" : ""}`}>
             <video ref={videoRef} muted playsInline className="checkin-video" />
+            {!scannerActive ? (
+              <div className="checkin-scanner-placeholder">
+                <strong>Camera start pas na een tik op de knop.</strong>
+                <p>
+                  Na <em>Start QR-scanner</em> vraagt iPhone eventueel eerst cameratoegang. Keur dat
+                  goed om live te kunnen scannen.
+                </p>
+              </div>
+            ) : null}
             <canvas ref={canvasRef} hidden aria-hidden="true" />
-          </div>
-        ) : scannerAvailable ? (
-          <div className="checkin-scanner-placeholder">
-            <strong>Camera start pas na een tik op de knop.</strong>
-            <p>
-              Na <em>Start QR-scanner</em> vraagt iPhone eventueel eerst cameratoegang. Keur dat
-              goed om live te kunnen scannen.
-            </p>
           </div>
         ) : (
           <p className="checkin-scanner-message">
